@@ -1,0 +1,14 @@
+[package]
+name = "llm-history-store-harnesses"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+description = "Harness-specific retained metadata persistence"
+
+[dependencies]
+llm-history-store-engine.workspace = true
+llm-history-types.workspace = true
+anyhow.workspace = true
+duckdb.workspace = true

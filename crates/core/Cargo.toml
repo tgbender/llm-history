@@ -1,0 +1,21 @@
+[package]
+name = "llm-history-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+llm-history-types.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+chrono-tz.workspace = true
+blake3.workspace = true
+xxhash-rust.workspace = true
+ruzstd.workspace = true
+regex.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

@@ -1,0 +1,4 @@
+# Original line endings and byte positions are fixture data.
+*.jsonl -text
+*.zst binary
+recovery/unsafe.jsonl binary

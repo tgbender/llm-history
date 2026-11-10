@@ -1,0 +1,12 @@
+[registry]
+global-min-publish-age = "3 days"
+
+[resolver]
+incompatible-publish-age = "deny"
+
+[env]
+DUCKDB_DOWNLOAD_LIB = "0"
+LIBSQLITE3_SYS_USE_PKG_CONFIG = { value = "0", force = true }
+# The published sys crate vendors release commit d54cbbe3df but stale generated
+# version defaults. Match the official v2.0.0 version string.
+CXXFLAGS = '-DDUCKDB_VERSION="v2.0.0" -DDUCKDB_PATCH_VERSION="0"'

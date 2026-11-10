@@ -1,0 +1,535 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "id": "doc-0",
+      "profile": "personal",
+      "harness": "codex",
+      "native_session_id": "thread-0",
+      "cwd": "/projects/history/0",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Publish a JSONL capture checkpoint only after the archive transaction commits."
+    },
+    {
+      "id": "doc-1",
+      "profile": "personal",
+      "harness": "claude",
+      "native_session_id": "thread-1",
+      "cwd": "/projects/history/1",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Verify the file head and committed byte boundary before accepting newly appended records."
+    },
+    {
+      "id": "doc-2",
+      "profile": "personal",
+      "harness": "codex",
+      "native_session_id": "thread-2",
+      "cwd": "/projects/history/2",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Scope native conversation identifiers by the durable source store to separate work and personal accounts."
+    },
+    {
+      "id": "doc-3",
+      "profile": "personal",
+      "harness": "claude",
+      "native_session_id": "thread-3",
+      "cwd": "/projects/history/3",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Update the configured installation root while retaining its durable store identity and message IDs."
+    },
+    {
+      "id": "doc-4",
+      "profile": "personal",
+      "harness": "codex",
+      "native_session_id": "thread-4",
+      "cwd": "/projects/history/4",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Retain archived source generations even after their original transcript files disappear."
+    },
+    {
+      "id": "doc-5",
+      "profile": "personal",
+      "harness": "claude",
+      "native_session_id": "thread-5",
+      "cwd": "/projects/history/5",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Hold an operating system worker lock to prevent two embedding processes from doing the same work."
+    },
+    {
+      "id": "doc-6",
+      "profile": "personal",
+      "harness": "codex",
+      "native_session_id": "thread-6",
+      "cwd": "/projects/history/6",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Close the main database connection before model loading and inference so foreground queries can continue."
+    },
+    {
+      "id": "doc-7",
+      "profile": "personal",
+      "harness": "claude",
+      "native_session_id": "thread-7",
+      "cwd": "/projects/history/7",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Commit complete embedding chunk sets to the main store before acknowledging staged result files."
+    },
+    {
+      "id": "doc-8",
+      "profile": "personal",
+      "harness": "codex",
+      "native_session_id": "thread-8",
+      "cwd": "/projects/history/8",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Record a sanitized embedding failure and skip that document so later documents can be indexed."
+    },
+    {
+      "id": "doc-9",
+      "profile": "personal",
+      "harness": "claude",
+      "native_session_id": "thread-9",
+      "cwd": "/projects/history/9",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Treat server errors and rate limits as transient failures without permanently marking documents as bad."
+    },
+    {
+      "id": "doc-10",
+      "profile": "work",
+      "harness": "codex",
+      "native_session_id": "thread-0",
+      "cwd": "/projects/history/10",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Count the task prefix and actual tokenizer tokens when splitting a long message into complete chunks."
+    },
+    {
+      "id": "doc-11",
+      "profile": "work",
+      "harness": "claude",
+      "native_session_id": "thread-1",
+      "cwd": "/projects/history/11",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Version model revision, query prefixes, pooling, dimensions and normalization in the embedding profile."
+    },
+    {
+      "id": "doc-12",
+      "profile": "work",
+      "harness": "codex",
+      "native_session_id": "thread-2",
+      "cwd": "/projects/history/12",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Truncate Matryoshka vectors to 256 dimensions before applying L2 normalization again."
+    },
+    {
+      "id": "doc-13",
+      "profile": "work",
+      "harness": "claude",
+      "native_session_id": "thread-3",
+      "cwd": "/projects/history/13",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Combine lexical and semantic candidate rankings using reciprocal rank fusion with a constant of sixty."
+    },
+    {
+      "id": "doc-14",
+      "profile": "work",
+      "harness": "codex",
+      "native_session_id": "thread-4",
+      "cwd": "/projects/history/14",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Pass bounded query-relevant evidence passages to the cross encoder and restore full source text for display."
+    },
+    {
+      "id": "doc-15",
+      "profile": "work",
+      "harness": "claude",
+      "native_session_id": "thread-5",
+      "cwd": "/projects/history/15",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Index intact and decomposed aliases for camelCase, acronyms, underscores and numbered identifiers."
+    },
+    {
+      "id": "doc-16",
+      "profile": "work",
+      "harness": "codex",
+      "native_session_id": "thread-6",
+      "cwd": "/projects/history/16",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Redact bearer tokens, API keys and private keys before truncating SQL cells or search passages."
+    },
+    {
+      "id": "doc-17",
+      "profile": "work",
+      "harness": "claude",
+      "native_session_id": "thread-7",
+      "cwd": "/projects/history/17",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Reconstruct each archived generation in order and verify payload hashes and byte offsets."
+    },
+    {
+      "id": "doc-18",
+      "profile": "work",
+      "harness": "codex",
+      "native_session_id": "thread-8",
+      "cwd": "/projects/history/18",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Count Claude usage once per provider message ID even when multiple content blocks repeat the same totals."
+    },
+    {
+      "id": "doc-19",
+      "profile": "work",
+      "harness": "claude",
+      "native_session_id": "thread-9",
+      "cwd": "/projects/history/19",
+      "timestamp": "2026-10-10T12:00:00Z",
+      "text": "Interpret naive dates in the selected IANA timezone and reject ambiguous daylight saving times."
+    }
+  ],
+  "queries": [
+    {
+      "id": "q-0-0",
+      "query": "atomic checkpoint",
+      "relevant": {
+        "doc-0": 2
+      },
+      "profile": "personal",
+      "source": "codex",
+      "since": "2026-10-01",
+      "project": "0"
+    },
+    {
+      "id": "q-0-1",
+      "query": "When is it safe to advance the transcript cursor?",
+      "relevant": {
+        "doc-0": 2
+      },
+      "project": "0"
+    },
+    {
+      "id": "q-1-0",
+      "query": "append guard",
+      "relevant": {
+        "doc-1": 2
+      },
+      "profile": "personal",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-1-1",
+      "query": "How can we detect a rewritten log that kept its filename?",
+      "relevant": {
+        "doc-1": 2
+      }
+    },
+    {
+      "id": "q-2-0",
+      "query": "profile isolation",
+      "relevant": {
+        "doc-2": 2
+      },
+      "profile": "personal",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-2-1",
+      "query": "How do we avoid mixing two accounts with identical thread IDs?",
+      "relevant": {
+        "doc-2": 2
+      }
+    },
+    {
+      "id": "q-3-0",
+      "query": "root relocation",
+      "relevant": {
+        "doc-3": 2
+      },
+      "profile": "personal",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-3-1",
+      "query": "Can I move a history directory without duplicating old conversations?",
+      "relevant": {
+        "doc-3": 2
+      }
+    },
+    {
+      "id": "q-4-0",
+      "query": "missing originals",
+      "relevant": {
+        "doc-4": 2
+      },
+      "profile": "personal",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-4-1",
+      "query": "Can we still recover conversations after the source files are gone?",
+      "relevant": {
+        "doc-4": 2
+      }
+    },
+    {
+      "id": "q-5-0",
+      "query": "worker singleton",
+      "relevant": {
+        "doc-5": 2
+      },
+      "profile": "personal",
+      "source": "claude",
+      "since": "2026-10-01",
+      "project": "5"
+    },
+    {
+      "id": "q-5-1",
+      "query": "How do concurrent searches avoid starting duplicate indexers?",
+      "relevant": {
+        "doc-5": 2
+      },
+      "project": "5"
+    },
+    {
+      "id": "q-6-0",
+      "query": "inference locks",
+      "relevant": {
+        "doc-6": 2
+      },
+      "profile": "personal",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-6-1",
+      "query": "Why should semantic indexing release DuckDB while computing vectors?",
+      "relevant": {
+        "doc-6": 2
+      }
+    },
+    {
+      "id": "q-7-0",
+      "query": "staged publication",
+      "relevant": {
+        "doc-7": 2
+      },
+      "profile": "personal",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-7-1",
+      "query": "What happens if indexing crashes after saving vectors but before deleting its queue entry?",
+      "relevant": {
+        "doc-7": 2
+      }
+    },
+    {
+      "id": "q-8-0",
+      "query": "poison document",
+      "relevant": {
+        "doc-8": 2
+      },
+      "profile": "personal",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-8-1",
+      "query": "How do we stop one bad input from blocking the entire semantic backlog?",
+      "relevant": {
+        "doc-8": 2
+      }
+    },
+    {
+      "id": "q-9-0",
+      "query": "transient endpoint",
+      "relevant": {
+        "doc-9": 2
+      },
+      "profile": "personal",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-9-1",
+      "query": "Should an HTTP 503 make a conversation permanently unsearchable?",
+      "relevant": {
+        "doc-9": 2
+      }
+    },
+    {
+      "id": "q-10-0",
+      "query": "token budget",
+      "relevant": {
+        "doc-10": 2
+      },
+      "profile": "work",
+      "source": "codex",
+      "since": "2026-10-01",
+      "project": "10"
+    },
+    {
+      "id": "q-10-1",
+      "query": "How should oversized Unicode messages fit within the model context window?",
+      "relevant": {
+        "doc-10": 2
+      },
+      "project": "10"
+    },
+    {
+      "id": "q-11-0",
+      "query": "embedding contract",
+      "relevant": {
+        "doc-11": 2
+      },
+      "profile": "work",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-11-1",
+      "query": "When must an engine change create a new vector index?",
+      "relevant": {
+        "doc-11": 2
+      }
+    },
+    {
+      "id": "q-12-0",
+      "query": "dimension truncation",
+      "relevant": {
+        "doc-12": 2
+      },
+      "profile": "work",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-12-1",
+      "query": "What is the correct way to shrink an EmbeddingGemma vector?",
+      "relevant": {
+        "doc-12": 2
+      }
+    },
+    {
+      "id": "q-13-0",
+      "query": "hybrid fusion",
+      "relevant": {
+        "doc-13": 2
+      },
+      "profile": "work",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-13-1",
+      "query": "How do exact code matches and paraphrase retrieval contribute to hybrid search?",
+      "relevant": {
+        "doc-13": 2
+      }
+    },
+    {
+      "id": "q-14-0",
+      "query": "reranker passage",
+      "relevant": {
+        "doc-14": 2
+      },
+      "profile": "work",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-14-1",
+      "query": "How can reranking stay within its input budget without losing the original answer?",
+      "relevant": {
+        "doc-14": 2
+      }
+    },
+    {
+      "id": "q-15-0",
+      "query": "code aliases",
+      "relevant": {
+        "doc-15": 2
+      },
+      "profile": "work",
+      "source": "claude",
+      "since": "2026-10-01",
+      "project": "15"
+    },
+    {
+      "id": "q-15-1",
+      "query": "How can a search for HTTP server match parseHTTPServer2?",
+      "relevant": {
+        "doc-15": 2
+      },
+      "project": "15"
+    },
+    {
+      "id": "q-16-0",
+      "query": "secret redaction",
+      "relevant": {
+        "doc-16": 2
+      },
+      "profile": "work",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-16-1",
+      "query": "Why must sensitive output be sanitized before shortening it?",
+      "relevant": {
+        "doc-16": 2
+      }
+    },
+    {
+      "id": "q-17-0",
+      "query": "raw verification",
+      "relevant": {
+        "doc-17": 2
+      },
+      "profile": "work",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-17-1",
+      "query": "How do we prove that exported transcripts preserve their original bytes?",
+      "relevant": {
+        "doc-17": 2
+      }
+    },
+    {
+      "id": "q-18-0",
+      "query": "usage deduplication",
+      "relevant": {
+        "doc-18": 2
+      },
+      "profile": "work",
+      "source": "codex",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-18-1",
+      "query": "How do parallel tool blocks avoid doubling token usage?",
+      "relevant": {
+        "doc-18": 2
+      }
+    },
+    {
+      "id": "q-19-0",
+      "query": "local timezone",
+      "relevant": {
+        "doc-19": 2
+      },
+      "profile": "work",
+      "source": "claude",
+      "since": "2026-10-01"
+    },
+    {
+      "id": "q-19-1",
+      "query": "How should date filters behave around daylight saving clock changes?",
+      "relevant": {
+        "doc-19": 2
+      }
+    }
+  ]
+}

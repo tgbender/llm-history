@@ -1,0 +1,12 @@
+{
+  "reviewed": [
+    {
+      "id": "RUSTSEC-2024-0436",
+      "package": "paste",
+      "version": "1.0.15",
+      "category": "unmaintained",
+      "reason": "Compile-time macro dependency of the pinned tokenizers 0.23.2. The advisory records archived maintenance status. Keep the upstream tokenizer dependency intact; review removal when upgrading tokenizers. Security advisories and any broader match remain blocking.",
+      "reviewed_on": "2026-10-26"
+    }
+  ]
+}

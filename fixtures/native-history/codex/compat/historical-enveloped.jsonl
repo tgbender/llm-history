@@ -1,0 +1,4 @@
+{"timestamp":"2025-10-25T12:00:00.000Z","type":"session_meta","payload":{"id":"00000000-0000-4000-8000-000000000050","timestamp":"2025-10-25T12:00:00.000Z","cwd":"/synthetic/project","originator":"synthetic-example","cli_version":"0.50.0","instructions":"Synthetic historical instructions.","source":"cli"}}
+{"timestamp":"2025-10-25T12:00:01.000Z","type":"response_item","payload":{"type":"message","id":null,"role":"user","content":[{"type":"input_text","text":"Inspect the synthetic project."}]}}
+{"timestamp":"2025-10-25T12:10:00.000Z","type":"compacted","payload":{"message":"Synthetic summary-only checkpoint."}}
+{"timestamp":"2026-05-10T12:10:00.000Z","type":"compacted","payload":{"message":"Synthetic historical context window.","window_id":7,"replacement_history":[{"type":"message","role":"user","content":[{"type":"input_text","text":"Retained synthetic message."}]}]}}

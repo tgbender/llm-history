@@ -1,0 +1,4 @@
+{"type":"session","id":"fixture-pi-v1","timestamp":"2026-11-07T19:00:00.000Z","cwd":"/example/project"}
+{"type":"message","timestamp":"2026-11-07T19:00:01.000Z","message":{"role":"user","content":"Fixture greeting: café 🦀\n","timestamp":1794000001000}}
+{"type":"message","timestamp":"2026-11-07T19:00:02.000Z","message":{"role":"hookMessage","customType":"fixture.hook","content":"Legacy hook message.","display":true,"timestamp":1794000002000}}
+{"type":"compaction","timestamp":"2026-11-07T19:00:03.000Z","summary":"Legacy summary.","firstKeptEntryIndex":2,"tokensBefore":50}

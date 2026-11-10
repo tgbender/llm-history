@@ -1,0 +1,743 @@
+{
+  "lockfile_version": "1.0",
+  "channel": "release",
+  "host": "x64",
+  "targets": [
+    "x64"
+  ],
+  "requested": {
+    "msvc_version": null,
+    "sdk_version": null
+  },
+  "resolved": {
+    "msvc": {
+      "toolset_version": "14.44",
+      "package_version": "14.44.17.14",
+      "vctools_version": "14.44.35207",
+      "package_id": "microsoft.vc.14.44.17.14.tools.hostx64.targetx64.base"
+    },
+    "sdk": {
+      "build_number": "26100",
+      "version": "10.0.26100.0",
+      "package_id": "microsoft.visualstudio.component.windows11sdk.26100"
+    }
+  },
+  "sources": {
+    "channel_manifest": {
+      "url": "https://aka.ms/vs/17/release/channel",
+      "sha256": "6dca3be7fd7c426e20d02b825c9798396ac8d62affcd5dba35783f5a37271ca2"
+    },
+    "vs_manifest": {
+      "url": "https://download.visualstudio.microsoft.com/download/pr/b4db4ac4-8183-4dfb-b6db-c7a289006e39/aec9d295b507694428fd684cb44ac15633ecea555348e4e6cadbdb1079e28d45/VisualStudio.vsman",
+      "sha256": "aec9d295b507694428fd684cb44ac15633ecea555348e4e6cadbdb1079e28d45"
+    }
+  },
+  "files": [
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.asan.headers.base",
+      "filename": "Microsoft.VC.14.44.17.14.ASAN.Headers.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/91752dac-9947-4dc3-bee9-d1b7120f487e/4146e40cf96f5986c59fbede3e9431bb35c7eacdf405ad8a364f153c37a1e27a/Microsoft.VC.14.44.17.14.ASAN.Headers.base.vsix",
+      "sha256": "4146e40cf96f5986c59fbede3e9431bb35c7eacdf405ad8a364f153c37a1e27a",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.asan.headers.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.asan.x64.base",
+      "filename": "Microsoft.VC.14.44.17.14.ASAN.X64.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/91752dac-9947-4dc3-bee9-d1b7120f487e/9a76a6618ff718e8c93df40a7c760c9d06a27852f0405fc68282bc53c436673e/Microsoft.VC.14.44.17.14.ASAN.X64.base.vsix",
+      "sha256": "9a76a6618ff718e8c93df40a7c760c9d06a27852f0405fc68282bc53c436673e",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.asan.x64.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.crt.headers.base",
+      "filename": "Microsoft.VC.14.44.17.14.CRT.Headers.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/c610cd8c-801b-44b8-a80a-82cc382aeb43/852382a9aa73502b7849c1bcadfb603ba7175c4e8b60e6aba03c7de711d4ece5/Microsoft.VC.14.44.17.14.CRT.Headers.base.vsix",
+      "sha256": "852382a9aa73502b7849c1bcadfb603ba7175c4e8b60e6aba03c7de711d4ece5",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.crt.headers.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.crt.redist.x64.base",
+      "filename": "Microsoft.VC.14.44.17.14.CRT.Redist.X64.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/45d3b8dd-bced-4b37-9974-142f748d710c/4aaf54db0bfc9435f7c3660e1a00237a4b556042bfeea64bde44c2e0194e6ee5/Microsoft.VC.14.44.17.14.CRT.Redist.X64.base.vsix",
+      "sha256": "4aaf54db0bfc9435f7c3660e1a00237a4b556042bfeea64bde44c2e0194e6ee5",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.crt.redist.x64.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.crt.source.base",
+      "filename": "Microsoft.VC.14.44.17.14.CRT.Source.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/c610cd8c-801b-44b8-a80a-82cc382aeb43/f3f4a483dca5e80a029f00d5d4053626d64bc7d3e30fa73294cf21d5450cf359/Microsoft.VC.14.44.17.14.CRT.Source.base.vsix",
+      "sha256": "f3f4a483dca5e80a029f00d5d4053626d64bc7d3e30fa73294cf21d5450cf359",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.crt.source.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.crt.x64.desktop.base",
+      "filename": "Microsoft.VC.14.44.17.14.CRT.x64.Desktop.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/91752dac-9947-4dc3-bee9-d1b7120f487e/3d6b398f32eafd7fb3735f83402c0658d831c3b4ee10f93f0031f7a78f311c27/Microsoft.VC.14.44.17.14.CRT.x64.Desktop.base.vsix",
+      "sha256": "3d6b398f32eafd7fb3735f83402c0658d831c3b4ee10f93f0031f7a78f311c27",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.crt.x64.desktop.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.crt.x64.store.base",
+      "filename": "Microsoft.VC.14.44.17.14.CRT.x64.Store.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/91752dac-9947-4dc3-bee9-d1b7120f487e/2fea29c858fc487873e813926d240c97235153c2bef82bf22d17cce45e7bcf57/Microsoft.VC.14.44.17.14.CRT.x64.Store.base.vsix",
+      "sha256": "2fea29c858fc487873e813926d240c97235153c2bef82bf22d17cce45e7bcf57",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.crt.x64.store.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.pgo.headers.base",
+      "filename": "Microsoft.VC.14.44.17.14.PGO.Headers.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/d2fa077f-a814-4fb2-b903-1fca7658d17e/2648898823a16a9e1a40a986de9c2678384e7a0e904284d0aeba1861dd271865/Microsoft.VC.14.44.17.14.PGO.Headers.base.vsix",
+      "sha256": "2648898823a16a9e1a40a986de9c2678384e7a0e904284d0aeba1861dd271865",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.pgo.headers.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.pgo.x64.base",
+      "filename": "Microsoft.VC.14.44.17.14.PGO.X64.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/4d5e22ab-db0c-44ef-b284-9b0fa49ac89d/d22f6dde12d81367ec119940820b355a21c1c940b1b1d405ca5ac837c86e6561/Microsoft.VC.14.44.17.14.PGO.X64.base.vsix",
+      "sha256": "d22f6dde12d81367ec119940820b355a21c1c940b1b1d405ca5ac837c86e6561",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.pgo.x64.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.premium.tools.hostx64.targetx64.base",
+      "filename": "Microsoft.VC.14.44.17.14.Premium.Tools.HostX64.TargetX64.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/4d5e22ab-db0c-44ef-b284-9b0fa49ac89d/4988bf20f7d6bb0bd6b78cc7d7131e97c9f8fe5779a8a2ed20b7d5ebc8ff9cb8/Microsoft.VC.14.44.17.14.Premium.Tools.HostX64.TargetX64.base.vsix",
+      "sha256": "4988bf20f7d6bb0bd6b78cc7d7131e97c9f8fe5779a8a2ed20b7d5ebc8ff9cb8",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.premium.tools.hostx64.targetx64.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.tools.hostx64.targetx64.base",
+      "filename": "Microsoft.VC.14.44.17.14.Tools.HostX64.TargetX64.base.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/331f11a2-d0d0-4220-a66d-089d6c890f59/cc1c0d0f44f17ec28cf9f9755a40ad6c5b73b35538ed593cb931cfce5d32d2d3/Microsoft.VC.14.44.17.14.Tools.HostX64.TargetX64.base.vsix",
+      "sha256": "cc1c0d0f44f17ec28cf9f9755a40ad6c5b73b35538ed593cb931cfce5d32d2d3",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.tools.hostx64.targetx64.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.vc.14.44.17.14.tools.hostx64.targetx64.res.base",
+      "filename": "Microsoft.VC.14.44.17.14.Tools.HostX64.TargetX64.Res.base.enu.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/331f11a2-d0d0-4220-a66d-089d6c890f59/f83ef3f3e9c65a1ec16f0ba79b5d12ab51a9a3eefc0f7b055b28b0973adf079b/Microsoft.VC.14.44.17.14.Tools.HostX64.TargetX64.Res.base.enu.vsix",
+      "sha256": "f83ef3f3e9c65a1ec16f0ba79b5d12ab51a9a3eefc0f7b055b28b0973adf079b",
+      "type": "vsix",
+      "package_ref": "microsoft.vc.14.44.17.14.tools.hostx64.targetx64.res.base",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "msvc_microsoft.visualcpp.dia.sdk",
+      "filename": "Microsoft.VisualCpp.DIA.SDK.vsix",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/22d9a522-c856-49ae-8dac-657f20f0b815/e85173a7210a2f5ff98ae42de51ac39c460bee1dfdd2fb6cf0606ee85f790010/Microsoft.VisualCpp.DIA.SDK.vsix",
+      "sha256": "e85173a7210a2f5ff98ae42de51ac39c460bee1dfdd2fb6cf0606ee85f790010",
+      "type": "vsix",
+      "package_ref": "microsoft.visualcpp.dia.sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "filename": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/d10da41a6ad6809f823ef4a92d4f6c56/universal%20crt%20headers%20libraries%20and%20sources-x86_en-us.msi",
+      "sha256": "F611CE8A9E576E3383917B04B6FBE5EE6BED8363C1A2A8E9D6F8335CBB422675",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK Desktop Headers arm64-x86_en-us.msi",
+      "filename": "Windows SDK Desktop Headers arm64-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/df535cbd9800eb2e513f3f8763990a50/windows%20sdk%20desktop%20headers%20arm64-x86_en-us.msi",
+      "sha256": "BD2C39E59C62E9F81382F843F7DF2D47A6F2CC865EE612F7ED42D27086895552",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK Desktop Headers x64-x86_en-us.msi",
+      "filename": "Windows SDK Desktop Headers x64-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/ed222baa6d1d1dc09fb45a1827e7892a/windows%20sdk%20desktop%20headers%20x64-x86_en-us.msi",
+      "sha256": "D189CA50E5632B546795922E2262794C068D6FF301860FEB4522B8B93CBB3BA8",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK Desktop Headers x86-x86_en-us.msi",
+      "filename": "Windows SDK Desktop Headers x86-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/7fad2c686fb58ea9e6dc0308a2df142f/windows%20sdk%20desktop%20headers%20x86-x86_en-us.msi",
+      "sha256": "F1E5159FEB948CE90A81DCC6A427DDE844610230CB6ED787E35D422DE527A5F8",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK Desktop Libs x64-x86_en-us.msi",
+      "filename": "Windows SDK Desktop Libs x64-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/a7dce16da158fe456395566e2dafd23d/windows%20sdk%20desktop%20libs%20x64-x86_en-us.msi",
+      "sha256": "2E956CA1CF17800B0F9811A6249B945F045ADDF18EE85FFE7AEA99EC6C27243A",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK OnecoreUap Headers arm64-x86_en-us.msi",
+      "filename": "Windows SDK OnecoreUap Headers arm64-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/37c03876b4aabf100541e432958a0e4d/windows%20sdk%20onecoreuap%20headers%20arm64-x86_en-us.msi",
+      "sha256": "3A6B88F58773193D318C84976A0C487D6FAC2046391539E78005F85A71E315D9",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK OnecoreUap Headers x64-x86_en-us.msi",
+      "filename": "Windows SDK OnecoreUap Headers x64-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/e97ca2e01a3fd50e3270b20acf1971ad/windows%20sdk%20onecoreuap%20headers%20x64-x86_en-us.msi",
+      "sha256": "14667A930569186A25E75EB35614CE43549B7406705E098DB71FFE9B31C60FAA",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK OnecoreUap Headers x86-x86_en-us.msi",
+      "filename": "Windows SDK OnecoreUap Headers x86-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/bf4c8a484028b6e592a6a9d818c21777/windows%20sdk%20onecoreuap%20headers%20x86-x86_en-us.msi",
+      "sha256": "09725127B70E645FD0C86F004A1B0204AE72D685D70B2E3856EFC00533AAEEC3",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK for Windows Store Apps Headers OnecoreUap-x86_en-us.msi",
+      "filename": "Windows SDK for Windows Store Apps Headers OnecoreUap-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/95de969f19c09fe411b779c2e2f06f0d/windows%20sdk%20for%20windows%20store%20apps%20headers%20onecoreuap-x86_en-us.msi",
+      "sha256": "BE5EE13CCC98B87211B4F3686972B00FA16F20F266FE9DC5572D62F001E0547C",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK for Windows Store Apps Headers-x86_en-us.msi",
+      "filename": "Windows SDK for Windows Store Apps Headers-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/06062c286c5533d4d2c47e613ae44793/windows%20sdk%20for%20windows%20store%20apps%20headers-x86_en-us.msi",
+      "sha256": "C9F78AE3E730EA1789A37001E204A970099D2ACC555CC537FB45EA0BB23B347C",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "filename": "Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/079ca63878193e064d8aa000670f0db3/windows%20sdk%20for%20windows%20store%20apps%20libs-x86_en-us.msi",
+      "sha256": "1381535D2F6B1894A092DA67F8A8FB048A4DFE8060CE75B3275AFFA81B02586E",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "sdk_Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "filename": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/286d62d852247d09756ce4e5612fbe3e/windows%20sdk%20for%20windows%20store%20apps%20tools-x86_en-us.msi",
+      "sha256": "8FB00DF405939D60E50A2F1F5D068284153AB3520B6B3657C9CE3796E4A60469",
+      "type": "msi",
+      "package_ref": "sdk",
+      "parent": null,
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_16ab2ea2187acffa6435e334796c8c89.cab",
+      "filename": "16ab2ea2187acffa6435e334796c8c89.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/d56a87b40b1de33c2c39a1a3d009e148/16ab2ea2187acffa6435e334796c8c89.cab",
+      "sha256": "D29E10BB5CE2E28957B5635B6EEB6A491FDB311C925B398443451F953F399BC2",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_6ee7bbee8435130a869cf971694fd9e2.cab",
+      "filename": "6ee7bbee8435130a869cf971694fd9e2.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/9a7bacb65de148f099902218ada3394b/6ee7bbee8435130a869cf971694fd9e2.cab",
+      "sha256": "04728E326214D8960A188614995B65A3E9E33F93EAF13DD3CA16FE513CDFF0DE",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_78fa3c824c2c48bd4a49ab5969adaaf7.cab",
+      "filename": "78fa3c824c2c48bd4a49ab5969adaaf7.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/721e7f21ddaab126788f6f8b5c3725b4/78fa3c824c2c48bd4a49ab5969adaaf7.cab",
+      "sha256": "6F9096BC7C182383C22A947D1B2C994D78D1742CA25163FAD8FD8C2C848419C5",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_7afc7b670accd8e3cc94cfffd516f5cb.cab",
+      "filename": "7afc7b670accd8e3cc94cfffd516f5cb.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/fdde52f2c4a6db47e015e514a79c3454/7afc7b670accd8e3cc94cfffd516f5cb.cab",
+      "sha256": "1D99DC10063C05E8B34B82AF18DB61C080809456D471674D0272F071526DF0AB",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_96076045170fe5db6d5dcf14b6f6688e.cab",
+      "filename": "96076045170fe5db6d5dcf14b6f6688e.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/510c03213f78beff83c9149c96da2ab6/96076045170fe5db6d5dcf14b6f6688e.cab",
+      "sha256": "82D970F5B628250EF72467D0826260C6A9F32252F42DAA3C31FED2A23170170E",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_a1e2a83aa8a71c48c742eeaff6e71928.cab",
+      "filename": "a1e2a83aa8a71c48c742eeaff6e71928.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/87fede232add653343acc94dbdac4118/a1e2a83aa8a71c48c742eeaff6e71928.cab",
+      "sha256": "29F8ED0537B49087321DFB7CCE60AAD7252900ECFBD81D6336FDB67056778A5D",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_b2f03f34ff83ec013b9e45c7cd8e8a73.cab",
+      "filename": "b2f03f34ff83ec013b9e45c7cd8e8a73.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/be7bcaf329bbeef873a874aee49456b7/b2f03f34ff83ec013b9e45c7cd8e8a73.cab",
+      "sha256": "A17B9674B79AC4C8D9C4516C41D6F32FCDE041BDB07EC7F0758C16EE8A62ECAC",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_beb5360d2daaa3167dea7ad16c28f996.cab",
+      "filename": "beb5360d2daaa3167dea7ad16c28f996.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/b0082c046bf17896e9730ca9f40200ac/beb5360d2daaa3167dea7ad16c28f996.cab",
+      "sha256": "6FEAABF4B1B09B4E3210ADDDB12C8C8D6702D731DA033784EF0330488F5BEF51",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_d95da93904819b1f7e68adb98b49a9c7.cab",
+      "filename": "d95da93904819b1f7e68adb98b49a9c7.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/8528492e1ce2a653db74d3988d9ee96b/d95da93904819b1f7e68adb98b49a9c7.cab",
+      "sha256": "BC3BEABEBC0A9F161BBBE69DBCE0075019CA6E40F5DF5A8B2342A8A2AB25B22A",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_eca0aa33de85194cd50ed6e0aae0156f.cab",
+      "filename": "eca0aa33de85194cd50ed6e0aae0156f.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/827f1b56c1f9090dca62cf5bef23d094/eca0aa33de85194cd50ed6e0aae0156f.cab",
+      "sha256": "C0C6CC329D2BE2DDBA902649C46EFB9064186C2185445451602C90D9C7EB3DD8",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_f9ff50431335056fb4fbac05b8268204.cab",
+      "filename": "f9ff50431335056fb4fbac05b8268204.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/8383be7caac218b9afd6a3564dbb0984/f9ff50431335056fb4fbac05b8268204.cab",
+      "sha256": "355CC1E65B9E5F02A0B3A4F32D02F9241B97030D3527166EFF6A372D5D0E1BAC",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Universal CRT Headers Libraries and Sources-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_d1de88680a8e53fe75e01e94dc0ed767.cab",
+      "filename": "d1de88680a8e53fe75e01e94dc0ed767.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/f5ae8b50cc21a7ed5bcace1a38fe8fa3/d1de88680a8e53fe75e01e94dc0ed767.cab",
+      "sha256": "9D88FA269DC02FD3FDE50A056C04D6DFCC5B8A15739AE0F3E7AC51CC1C88F5B8",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK Desktop Headers x64-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_07a57cdb41ba28cced14005f087267be.cab",
+      "filename": "07a57cdb41ba28cced14005f087267be.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/2487cb3527b23ee3c6f081e01c2a1bc0/07a57cdb41ba28cced14005f087267be.cab",
+      "sha256": "1F350449F6F598A4D9B316E69AD9B845DB8E8D919B8B34F5C07B32598F6DE319",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK Desktop Headers x86-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_2e876dd22fa5e6785f137e3422dd50ec.cab",
+      "filename": "2e876dd22fa5e6785f137e3422dd50ec.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/2f5955d08b28c63142f927aa3696c15a/2e876dd22fa5e6785f137e3422dd50ec.cab",
+      "sha256": "BD490C2DA3B5837261D43791A02EA3BB6AEF1DE787F52BEC5E7DD638BFB77F51",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK Desktop Headers x86-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_4fe4c8b88812f5339018c0eef95acdb9.cab",
+      "filename": "4fe4c8b88812f5339018c0eef95acdb9.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/9992f4e9621a59b8bd9a57cd62e0d567/4fe4c8b88812f5339018c0eef95acdb9.cab",
+      "sha256": "CADD61CAAB00B5AD3EF449EFB54F8A7B1A43A7CFB85F321B544CA578B14E179B",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK Desktop Headers x86-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_58314d0646d7e1a25e97c902166c3155.cab",
+      "filename": "58314d0646d7e1a25e97c902166c3155.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/cb954f8bc3015e25cfd985a5fff3452a/58314d0646d7e1a25e97c902166c3155.cab",
+      "sha256": "EC209A224C9B2D31F3409208D30F5A6335C55217AD384D6212C833AC83360EBA",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK Desktop Libs x64-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_43fd989a0684600a8c4dda7a6373eb59.cab",
+      "filename": "43fd989a0684600a8c4dda7a6373eb59.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/73b686165664fc0e9aa7bb209aace91d/43fd989a0684600a8c4dda7a6373eb59.cab",
+      "sha256": "0DB68CED7048A12B8890F2ABD79523B34B29484B110FF59755663118F1070019",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK OnecoreUap Headers arm64-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_b0656253ef2f688d2982eafa2e73f621.cab",
+      "filename": "b0656253ef2f688d2982eafa2e73f621.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/07311fb08fb7f55dc89e36c4a69b32e5/b0656253ef2f688d2982eafa2e73f621.cab",
+      "sha256": "DE70F656DE01FD2F2E17539B4A50DDD66E2B0AC4486DFBF870CF4DC499DB24C7",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK OnecoreUap Headers x64-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_f2e05dfd38ed343d3de77209cf3ecdae.cab",
+      "filename": "f2e05dfd38ed343d3de77209cf3ecdae.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/107cd9d9170325d1ded9e4cc47a9c4cc/f2e05dfd38ed343d3de77209cf3ecdae.cab",
+      "sha256": "C536E6742D56A05C47310C23E09A9E5A5552D914F5752FF9050EEE88E009BCF9",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK OnecoreUap Headers x86-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_e89e3dcbb016928c7e426238337d69eb.cab",
+      "filename": "e89e3dcbb016928c7e426238337d69eb.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/e37c4e19cf7a02f7b6f243de3316c9ea/e89e3dcbb016928c7e426238337d69eb.cab",
+      "sha256": "4E5F0346D59FAAE3742C79D48DF74F221B202DA347F5751CC3E53156941368F1",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Headers OnecoreUap-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_766c0ffd568bbb31bf7fb6793383e24a.cab",
+      "filename": "766c0ffd568bbb31bf7fb6793383e24a.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/b4a6e43a0c35ad8d4e8957eb581443ec/766c0ffd568bbb31bf7fb6793383e24a.cab",
+      "sha256": "C590F816F3BB15A79A0BF815CA942AEEC4A36C08FD66FA35A243C86B4F8BAC7D",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Headers-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_8125ee239710f33ea485965f76fae646.cab",
+      "filename": "8125ee239710f33ea485965f76fae646.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/e97c5af6189039047f84fbb140167fc6/8125ee239710f33ea485965f76fae646.cab",
+      "sha256": "AFCA62A1E32F28FAD347F7610C6EF663506A798DB78AC4E4CF545AEAA4C5D1D3",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Headers-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_c0aa6d435b0851bf34365aadabd0c20f.cab",
+      "filename": "c0aa6d435b0851bf34365aadabd0c20f.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/6699951ca96b8696e87c51e6b45d524a/c0aa6d435b0851bf34365aadabd0c20f.cab",
+      "sha256": "B9E05D77C4E719D4F394B5A66328CFB2DF2A80914785545EEB049A69FCB11D3C",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Headers-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_05047a45609f311645eebcac2739fc4c.cab",
+      "filename": "05047a45609f311645eebcac2739fc4c.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/67a9b258981565b78c46484efbed6945/05047a45609f311645eebcac2739fc4c.cab",
+      "sha256": "902003E4976C7BC4BCDA9F31F1D835B8072235532412770F66B0BC9F0882CB7E",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_13d68b8a7b6678a368e2d13ff4027521.cab",
+      "filename": "13d68b8a7b6678a368e2d13ff4027521.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/2160d8b73fe2e4fea3e2097084a081cd/13d68b8a7b6678a368e2d13ff4027521.cab",
+      "sha256": "0B26EDE2D22EA531D921269DFFFCD14CC71D6932CAC0F2720FCEC37079286643",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_463ad1b0783ebda908fd6c16a4abfe93.cab",
+      "filename": "463ad1b0783ebda908fd6c16a4abfe93.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/637a623c788980d4a7edf6d84e34ed70/463ad1b0783ebda908fd6c16a4abfe93.cab",
+      "sha256": "43C40559098A2C1EFBEF6AF16F97A44FD80B3BB9FE8AE117C4E6F9F3F852B8E8",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_5a22e5cde814b041749fb271547f4dd5.cab",
+      "filename": "5a22e5cde814b041749fb271547f4dd5.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/03cfd7ea3b3116d5d32d11df101dea24/5a22e5cde814b041749fb271547f4dd5.cab",
+      "sha256": "57E7E309413D05B781AE76D1B5C54DC7AFF350B6A460920F1F358E8003AABDFB",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_e10768bb6e9d0ea730280336b697da66.cab",
+      "filename": "e10768bb6e9d0ea730280336b697da66.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/b2915dcb648d1087f4a5ef20f17c9825/e10768bb6e9d0ea730280336b697da66.cab",
+      "sha256": "46E21578A4CFCE3BD6E4EACC10B92121A825CE443CC2F6CCE84B07E37B9D21BC",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_f9b24c8280986c0683fbceca5326d806.cab",
+      "filename": "f9b24c8280986c0683fbceca5326d806.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/66f36d1686d2dde0cfa99a5160a9571d/f9b24c8280986c0683fbceca5326d806.cab",
+      "sha256": "154F4A24EC22EA0C932709F0E1A2C443946B42C14291A49A280AB4EA0EAA504D",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Libs-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_2630bae9681db6a9f6722366f47d055c.cab",
+      "filename": "2630bae9681db6a9f6722366f47d055c.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/3ae346135327a40e607f140ce3622d2f/2630bae9681db6a9f6722366f47d055c.cab",
+      "sha256": "8AF58A5DDEB256460C1563040C2EB6FBABA98CD9256C43B7ADA85ED691B482D5",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_26ea25236f12b23db661acf268a70cfa.cab",
+      "filename": "26ea25236f12b23db661acf268a70cfa.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/2e095f72f39ad2f54b930abcfb65eefe/26ea25236f12b23db661acf268a70cfa.cab",
+      "sha256": "A6D81007E50B1881D58E802EF4402FF16C62FF4960B41C4263057E3173981919",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_2a30b5d1115d515c6ddd8cd6b5173835.cab",
+      "filename": "2a30b5d1115d515c6ddd8cd6b5173835.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/af7fe3431b7d0f55bff2e05f936ed6cb/2a30b5d1115d515c6ddd8cd6b5173835.cab",
+      "sha256": "B0F56FE41409081C910495B0798885996EB2AFF8E030217B515856157B815EFD",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_4a4c678668584fc994ead5b99ccf7f03.cab",
+      "filename": "4a4c678668584fc994ead5b99ccf7f03.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/a629a4c46dcf16eea949fbd0f710dba8/4a4c678668584fc994ead5b99ccf7f03.cab",
+      "sha256": "FFCAA1A818539E71CFBB12E9FA2A87CEF30F33089B0D20BC1E6C6FD24ABF2014",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_61d57a7a82309cd161a854a6f4619e52.cab",
+      "filename": "61d57a7a82309cd161a854a6f4619e52.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/ce88775024f6b22848b03dad4af285a9/61d57a7a82309cd161a854a6f4619e52.cab",
+      "sha256": "A29F471C9A242AAB488F9AFA067D45F7A462F1C12FC892D66652BE7F37A619D1",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_68de71e3e2fb9941ee5b7c77500c0508.cab",
+      "filename": "68de71e3e2fb9941ee5b7c77500c0508.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/74df559a22a30545b599371ae69022c1/68de71e3e2fb9941ee5b7c77500c0508.cab",
+      "sha256": "A5DF26654D49533E70596F234EEFBFC57B60DE73339A15DE121A425FE31BDB5B",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_69661e20556b3ca9456b946c2c881ddd.cab",
+      "filename": "69661e20556b3ca9456b946c2c881ddd.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/944d105a33e16da614cbf2a17da22954/69661e20556b3ca9456b946c2c881ddd.cab",
+      "sha256": "BEF5B038FCE288FA1DB234BD61C3E450ABECC02F5A386248625073A83010F61E",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_b82881a61b7477bd4eb5de2cd5037fe2.cab",
+      "filename": "b82881a61b7477bd4eb5de2cd5037fe2.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/b763bd4d7efe740fed4f47584af65d00/b82881a61b7477bd4eb5de2cd5037fe2.cab",
+      "sha256": "7DF7D66A1C1D9F4F64B5D071DC706A6E2FDE59CBD4C2B7CC6EAC02CF0582BD22",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_dcfb1aa345e349091a44e86ce1766566.cab",
+      "filename": "dcfb1aa345e349091a44e86ce1766566.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/50bfa8338d9ce2920b2d7ee499a9b4d4/dcfb1aa345e349091a44e86ce1766566.cab",
+      "sha256": "D512A8751E0A338028E1AC168D80B5A7722C2830677A6CD617CF5E4BE87BE353",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    },
+    {
+      "id": "cab_e3d1b35aecfccda1b4af6fe5988ac4be.cab",
+      "filename": "e3d1b35aecfccda1b4af6fe5988ac4be.cab",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/6452c1f1-dc1e-413c-8b19-991b61870a8b/47a79691f3a507955a38814a04cf616e/e3d1b35aecfccda1b4af6fe5988ac4be.cab",
+      "sha256": "B62DCA92FA3A59A6A811D181ADFB3C033C44B44B4D99892662294E3E4C34E2BA",
+      "type": "cab",
+      "package_ref": "sdk",
+      "parent": "Windows SDK for Windows Store Apps Tools-x86_en-us.msi",
+      "downloaded_path": null,
+      "extracted_paths": []
+    }
+  ],
+  "extraction_sequence": [],
+  "removed_files": []
+}

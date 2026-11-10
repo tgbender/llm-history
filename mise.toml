@@ -1,0 +1,114 @@
+[tools]
+python = "3.12.13"
+uv = "0.13.4"
+bun = "1.4.4"
+prek = "0.4.13"
+taplo = "0.10.0"
+"pypi:portablemsvc" = { version = "0.3.0", os = ["windows/x64"] }
+
+[env]
+RUSTUP_TOOLCHAIN = "beta-2026-10-18"
+DUCKDB_DOWNLOAD_LIB = "0"
+_.path = [
+  '{% if os() == "windows" %}{{ env.USERPROFILE }}{% else %}{{ env.HOME }}{% endif %}/.cargo/bin',
+]
+
+[settings]
+lockfile = true
+minimum_release_age = "3d"
+upgrade.auto_prune = false
+
+[tasks.check]
+description = "Check architecture, formatting, lint and run workspace tests"
+depends = ["architecture"]
+run = [{ task = "format:check" }, { task = "lint" }, { task = "test:rust" }]
+
+[tasks.test]
+description = "Run architecture and workspace tests"
+depends = ["architecture", "test:rust"]
+
+[tasks."test:rust"]
+description = "Run workspace Rust tests"
+run = "cargo test --workspace --locked"
+run_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows-cargo.ps1 test --workspace --locked"
+
+[tasks."format:check"]
+description = "Check Rust, maintained documentation, and TOML formatting"
+run = [
+  "cargo fmt --all --check",
+  { task = "prettier:check" },
+  { task = "taplo:check" },
+]
+
+[tasks.format]
+description = "Format Rust, maintained documentation, and TOML"
+run = [
+  "cargo fmt --all",
+  { task = "prettier:format" },
+  { task = "taplo:format" },
+]
+
+[tasks."setup:format"]
+description = "Install the locked Prettier package without lifecycle scripts"
+run = "bun install --frozen-lockfile --ignore-scripts"
+
+[tasks."prettier:check"]
+description = "Check maintained Markdown, JSON, and YAML formatting"
+depends = ["setup:format"]
+run = "bun run format:check"
+
+[tasks."prettier:format"]
+description = "Format maintained Markdown, JSON, and YAML"
+depends = ["setup:format"]
+run = "bun run format"
+
+[tasks."taplo:check"]
+description = "Check first-party TOML formatting"
+run = "taplo fmt --check"
+
+[tasks."taplo:format"]
+description = "Format first-party TOML"
+run = "taplo fmt"
+
+[tasks."hooks:install"]
+description = "Install the Git pre-push hook"
+run = "prek install --hook-type pre-push"
+
+[tasks."hooks:check"]
+description = "Run pre-push checks locally without pushing"
+run = "prek run --stage pre-push --all-files"
+
+[tasks.architecture]
+description = "Check crate ownership and Rust source boundaries with pytest"
+run = [
+  "uv sync --frozen --project tools/architecture",
+  "uv run --frozen --no-sync --project tools/architecture python -m pytest tools/architecture/tests -q",
+]
+
+[tasks.lint]
+description = "Run workspace Clippy"
+run = "cargo clippy --workspace --all-targets --locked -- -D warnings"
+run_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows-cargo.ps1 clippy --workspace --all-targets --locked -- -D warnings"
+
+[tasks.lock]
+run = ["cargo generate-lockfile", "python scripts/advisories.py"]
+
+[tasks.build]
+description = "Build the development executable"
+run = "cargo build --locked"
+run_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows-cargo.ps1 build --locked"
+
+[tasks."setup:windows"]
+description = "Install the locked x64 MSVC and Windows SDK after reviewing the Microsoft license"
+interactive = true
+run = "echo 'setup:windows requires native x64 Windows'; exit 1"
+run_windows = "portablemsvc install-from-lockfile portablemsvc.lock"
+
+[tasks.setup-native]
+description = "Install the llama.cpp inference runtime in the application cache"
+run = "python scripts/artifacts.py --fetch"
+
+[tasks.release]
+description = "Build the optimized release executable"
+run = "cargo build --release --locked"
+run_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/windows-cargo.ps1 build --release --locked"

@@ -1,0 +1,243 @@
+// Logical model for review, 2026-11-08. Neither migration SQL nor a public API.
+// Ref lines show intended joins. Primary/unique keys describe logical identity;
+// physical DuckDB constraints, indexes and batch checks are separate decisions.
+
+Project llm_history_native_content_candidate {
+  database_type: 'DuckDB'
+  Note: 'Retained native evidence and shared content, with rebuildable graph and harness projections.'
+}
+
+Table profiles {
+  id VARCHAR [pk]
+  name VARCHAR [not null, unique]
+  harness VARCHAR [not null]
+  configuration_json VARCHAR [not null]
+}
+
+Table sources {
+  id BIGINT [pk]
+  profile_id VARCHAR [not null]
+  source_kind VARCHAR [not null, note: 'Physical rollout, transcript file, SQLite store, catalog, or other native input.']
+  native_key VARCHAR [not null, note: 'Adapter-defined stable identity; for Codex use physical rollout identity when available.']
+  source_epoch UBIGINT [not null, note: 'Current continuity epoch. Advance on replacement of the same source identity.']
+
+  indexes {
+    (profile_id, source_kind, native_key) [unique]
+  }
+}
+
+Table source_locations {
+  source_id BIGINT [not null]
+  uri VARCHAR [not null]
+  encoding VARCHAR [not null, note: 'For example plain JSONL, zstd JSONL, or SQLite.']
+  availability VARCHAR [not null]
+  observed_size UBIGINT
+  observed_mtime_ns BIGINT
+
+  indexes {
+    (source_id, uri) [pk]
+  }
+}
+
+Table source_checkpoints {
+  source_id BIGINT [not null]
+  stream_key VARCHAR [not null, note: 'For example transcript, threads, or projects.']
+  source_epoch UBIGINT [not null]
+  revision UBIGINT [not null, note: 'Compare against the planned destination revision before publishing.']
+  committed_position_json VARCHAR [note: 'Complete decoded byte and ordinal, or an adapter-defined native cursor.']
+  observed_position_json VARCHAR
+  change_token_json VARCHAR [note: 'Dirty evidence can differ from the committed cursor.']
+  head_xxh64 UBIGINT
+  boundary_xxh64 UBIGINT
+  decoder_revision VARCHAR
+  decoder_state_json VARCHAR
+  pending_target_json VARCHAR [note: 'Frozen cutoff for unfinished bounded work.']
+  prepared_position_json VARCHAR
+  stage_uri VARCHAR [note: 'Private resumable preparation; does not expose active history.']
+  deferred_reason VARCHAR
+  retry_after TIMESTAMPTZ
+
+  indexes {
+    (source_id, stream_key) [pk]
+  }
+}
+
+Table captures {
+  id BIGINT [pk, note: 'Assigned at publication. Orders accepted revisions within a source stream and epoch.']
+  source_id BIGINT [not null]
+  source_epoch UBIGINT [not null, note: 'Epoch observed at capture time; old offsets keep this meaning after a rewrite.']
+  stream_key VARCHAR [not null]
+  observed_at TIMESTAMPTZ [not null]
+  location_uri VARCHAR
+  source_encoding VARCHAR
+  scope_json VARCHAR [not null]
+  frozen_cutoff_json VARCHAR
+  captured_through_json VARCHAR [note: 'Actual complete position published for this capture, when the stream has a position.']
+  coverage VARCHAR [not null, note: 'Coverage of this declared scope. A suffix or partial inventory cannot establish absence elsewhere.']
+}
+
+Table native_observations {
+  id BIGINT [pk]
+  capture_id BIGINT [not null]
+  native_locator VARCHAR [not null, note: 'Adapter-defined table and primary key, or original record address within the source epoch and stream.']
+  native_kind VARCHAR
+  ordinal UBIGINT
+  start_decoded_byte UBIGINT
+  end_decoded_byte UBIGINT [note: 'Exclusive original boundary, never an offset into reconstructed JSON.']
+  revision_token_json VARCHAR
+  present BOOLEAN [not null, note: 'False is absence evidence from a complete scope or explicit native deletion. No document is required.']
+  document_encoding VARCHAR [note: 'Versioned native JSON or typed SQLite row encoding.']
+  native_document_json VARCHAR [note: 'Full native structure; only explicitly referenced body leaves are externalized.']
+  original_record_bytes BLOB [note: 'Fallback for unsafe records, or deliberate exact capture.']
+  original_record_codec VARCHAR
+  original_record_size UBIGINT
+  decode_status VARCHAR [note: 'decoded, partial, or raw_only for a retained record.']
+  decoder_revision VARCHAR
+  decode_reason VARCHAR
+
+  Note: 'A changed row creates a new observation of the same native key. Decode status can change during replay without changing the retained evidence.'
+
+  indexes {
+    (capture_id, native_locator) [unique]
+  }
+}
+
+Table content_objects {
+  content_id BLOB [not null, note: 'Logically unique 32-byte BLAKE3 digest of the extracted body bytes. No hash index is implied.']
+  byte_length UBIGINT [not null]
+  compression VARCHAR [not null]
+  data BLOB [not null]
+}
+
+Table content_parts {
+  observation_id BIGINT [not null]
+  native_path VARCHAR [not null, note: 'JSON pointer into the retained document. Rehydration uses this side table.']
+  representation VARCHAR [not null, note: 'How the body bytes reconstruct the native leaf, e.g. UTF-8 text or encoded binary.']
+  content_id BLOB [not null]
+
+  indexes {
+    (observation_id, native_path) [pk]
+  }
+}
+
+Table retained_prefixes {
+  child_observation_id BIGINT [pk, note: 'Native child header containing the prefix claim.']
+  parent_source_id BIGINT [not null]
+  parent_source_epoch UBIGINT [not null]
+  parent_stream_key VARCHAR [not null]
+  end_ordinal_exclusive UBIGINT [not null]
+  end_decoded_byte UBIGINT [not null]
+
+  Note: 'Acquisition evidence for a resolved prefix. Publish once the target range is retained. The child keeps its original claim even while unresolved.'
+}
+
+Table nodes {
+  id BIGINT [pk]
+  profile_id VARCHAR [not null]
+  native_namespace VARCHAR [not null, note: 'Identifies the native identity domain, including parent scope for locally unique IDs.']
+  native_key VARCHAR [not null]
+  kind VARCHAR [not null]
+
+  indexes {
+    (profile_id, native_namespace, native_key) [unique]
+  }
+}
+
+Table observation_nodes {
+  observation_id BIGINT [not null]
+  node_id BIGINT [not null]
+  native_path VARCHAR [not null, note: 'Empty string for the whole document.']
+  role VARCHAR [not null]
+
+  indexes {
+    (observation_id, node_id, native_path, role) [pk]
+  }
+}
+
+Table edges {
+  id BIGINT [pk]
+  profile_id VARCHAR [not null]
+  edge_key VARCHAR [not null, note: 'Stable within the profile across assertions about this relationship.']
+  from_node_id BIGINT [not null]
+  to_node_id BIGINT [not null]
+  kind VARCHAR [not null]
+  observation_id BIGINT [not null]
+  present BOOLEAN [not null, note: 'A retraction supersedes current membership and preserves earlier evidence.']
+  attributes_json VARCHAR [note: 'An inherits_prefix edge can be rebuilt from the retained physical binding.']
+
+  Note: 'Rebuildable relationship assertions. Both endpoints and supporting evidence belong to the same profile. Preserve unresolved evidence in the native document.'
+}
+
+Table codex_thread_observations {
+  observation_id BIGINT [pk]
+  thread_id VARCHAR [not null]
+  selected_rollout_path VARCHAR
+  history_mode VARCHAR
+  name VARCHAR
+  title VARCHAR
+  cwd VARCHAR
+  archived BOOLEAN
+  project_native_id VARCHAR
+
+  Note: 'Example typed projection of a retained Codex catalog record. The native document keeps every original field.'
+}
+
+Table codex_rollout_observations {
+  observation_id BIGINT [pk]
+  thread_id VARCHAR
+  session_id VARCHAR
+  rollout_id VARCHAR
+  forked_from_id VARCHAR
+  parent_thread_id VARCHAR
+  history_base_rollout_id VARCHAR
+  base_end_ordinal UBIGINT
+  base_end_decoded_byte UBIGINT
+  subagent_history_start_ordinal UBIGINT
+
+  Note: 'Example typed projection of native lineage claims. Resolution into graph edges is separate.'
+}
+
+TableGroup Sources {
+  profiles
+  sources
+  source_locations
+  source_checkpoints
+  captures
+}
+
+TableGroup RetainedEvidence {
+  native_observations
+  content_objects
+  content_parts
+  retained_prefixes
+}
+
+TableGroup Graph {
+  nodes
+  observation_nodes
+  edges
+}
+
+TableGroup CodexProjections {
+  codex_thread_observations
+  codex_rollout_observations
+}
+
+Ref: sources.profile_id > profiles.id
+Ref: source_locations.source_id > sources.id
+Ref: source_checkpoints.source_id > sources.id
+Ref: captures.source_id > sources.id
+Ref: native_observations.capture_id > captures.id
+Ref: content_parts.observation_id > native_observations.id
+Ref: content_parts.content_id > content_objects.content_id
+Ref: retained_prefixes.child_observation_id - native_observations.id
+Ref: retained_prefixes.parent_source_id > sources.id
+Ref: nodes.profile_id > profiles.id
+Ref: observation_nodes.observation_id > native_observations.id
+Ref: observation_nodes.node_id > nodes.id
+Ref: edges.profile_id > profiles.id
+Ref: edges.from_node_id > nodes.id
+Ref: edges.to_node_id > nodes.id
+Ref: edges.observation_id > native_observations.id
+Ref: codex_thread_observations.observation_id - native_observations.id
+Ref: codex_rollout_observations.observation_id - native_observations.id

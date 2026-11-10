@@ -1,0 +1,83 @@
+{
+  "reference_commit": "a7aa83019b73469e189c27d05703bed41f856e4d",
+  "sources": [
+    {
+      "harness": "codex",
+      "file": "codex.jsonl",
+      "native_session_id": "thread-search",
+      "messages": [
+        {
+          "line_no": 2,
+          "role": "user",
+          "phase": "",
+          "text": "repair parseHTTPServer2 history incrementally"
+        },
+        {
+          "line_no": 3,
+          "role": "assistant",
+          "phase": "final_answer",
+          "text": "Use the retained generation to recover the stale history."
+        }
+      ],
+      "tools": 0,
+      "tool_results": 0,
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    {
+      "harness": "claude",
+      "file": "claude.jsonl",
+      "native_session_id": "claude:session-claude",
+      "messages": [
+        {
+          "line_no": 4,
+          "role": "user",
+          "phase": "",
+          "text": "How is history repaired?"
+        },
+        {
+          "line_no": 5,
+          "role": "assistant",
+          "phase": "commentary",
+          "text": "I will inspect it."
+        },
+        {
+          "line_no": 8,
+          "role": "assistant",
+          "phase": "final_answer",
+          "text": "It repairs stale projections transactionally."
+        }
+      ],
+      "tools": 1,
+      "tool_results": 1,
+      "input_tokens": 255,
+      "output_tokens": 17
+    }
+  ],
+  "aliases": [
+    {
+      "text": "ordinary words",
+      "expected": ""
+    },
+    {
+      "text": "parseHTTPServer foo_bar FTS2 v2.0.0",
+      "expected": "parsehttpserver parse http server foobar foo bar fts2 fts v200 v2"
+    },
+    {
+      "text": "C++ C# F# .NET",
+      "expected": "cplusplus cpp csharp fsharp"
+    },
+    {
+      "text": "src/history.rs C:\\Users\\work\\main.rs",
+      "expected": "srchistoryrs src history rs cusersworkmainrs users work main"
+    },
+    {
+      "text": "Stra\u00dfe_Name \u03a3\u03af\u03c3\u03c5\u03c6\u03bf\u03c2_Data \ufb03Value",
+      "expected": "strassename strasse name \u03c3\u03af\u03c3\u03c5\u03c6\u03bf\u03c3data \u03c3\u03af\u03c3\u03c5\u03c6\u03bf\u03c3 data"
+    },
+    {
+      "text": "HTTPServer2 duckdb::Connection /tmp/.codex-work",
+      "expected": "httpserver2 http server duckdbconnection duckdb connection tmpcodexwork tmp codex work"
+    }
+  ]
+}

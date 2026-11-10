@@ -1,0 +1,9 @@
+# Authored synthetic Pi example
+
+[example.jsonl](example.jsonl) is an **authored synthetic** native-format file. All conversation text, paths, IDs, usage and model names are invented. It covers current built-in fields; optional provider payloads and diagnostics are omitted. Short hex entry IDs illustrate normal writer IDs; the session UUID is illustrative. The numeric nested times and ISO outer times are deliberately separate. This is a schema illustration, not a captured provider response or a claim that a particular provider emitted it.
+
+Physical records show system/tool setup, user → assistant toolCall → toolResult, an initial final answer, then a sibling answer branching from that tool result. A global bookmark targets the abandoned answer. A custom_message advances the current branch, context_edit replaces its content, and compaction retains from that custom message while checkpointing the effective system/tool state. The separate usage entry adds accounting without adding a chat message. Session_info names the file globally.
+
+Default leaf is the last session_info record. Its ancestry excludes `a0000005` (the abandoned answer), while the global label on that answer remains visible. After compaction, context consists of checkpoint system message, summary, edited custom content, and the final post-compaction assistant answer. The custom edit record, usage record and session_info contribute no messages. Original custom content and both answer branches remain physically stored.
+
+This fixture is intentionally small. Additional variants are specified in [format.md](format.md): branch_summary, custom state, thinking level changes, images, diagnostics, deferred handles and nested tools. An image example block would be `{ "type": "image", "data": "aGVsbG8=", "mimeType": "image/png" }`; that base64 is illustrative text, not a valid PNG. Preserve real image bytes when capturing a real history.

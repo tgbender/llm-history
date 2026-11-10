@@ -1,0 +1,54 @@
+{
+  "initial": {
+    "sessions": 3,
+    "messages": 7,
+    "tool_calls": 2,
+    "tool_results": 2,
+    "claude_usage": {
+      "input": 255,
+      "output": 17,
+      "cached": 130,
+      "cache_write": 120,
+      "thinking": 5,
+      "total": 272,
+      "uncached": 5
+    },
+    "claude_text": [
+      "Inspect the sample files",
+      "Checking alpha and beta.",
+      "Both files are readable."
+    ]
+  },
+  "appended": {
+    "messages": 8,
+    "claude_text": [
+      "Inspect the sample files",
+      "Checking alpha and beta.",
+      "Both files are readable.",
+      "Appended duplicate usage stays deduplicated."
+    ]
+  },
+  "tools": [
+    {
+      "native_call_id": "tool-alpha",
+      "tool_name": "Read",
+      "arguments_json": "{\"path\":\"alpha.txt\"}",
+      "output_preview": "alpha contents",
+      "has_result": true
+    },
+    {
+      "native_call_id": "tool-beta",
+      "tool_name": "Read",
+      "arguments_json": "{\"path\":\"beta.txt\"}",
+      "output_preview": "beta contents",
+      "has_result": true
+    }
+  ],
+  "missing": {
+    "sources": 3
+  },
+  "replayed": {
+    "sources": 3,
+    "messages": 8
+  }
+}

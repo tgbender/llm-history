@@ -1,0 +1,7 @@
+{
+  "parent": "home/archived_sessions/rollout-2026-11-07T19-00-00-00000000-0000-4000-8000-000000000001.jsonl.zst",
+  "child": "home/sessions/2026/11/07/rollout-2026-11-07T19-00-09-00000000-0000-4000-8000-000000000002.jsonl",
+  "end_ordinal_exclusive": 9,
+  "end_decoded_byte": 2405,
+  "outside_prefix": "Parent-only suffix."
+}

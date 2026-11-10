@@ -1,0 +1,614 @@
+// Snapshot of the tables on a fresh schema 1 initialization, 2026-11-09.
+// Source: store/history/src/schema/sql and store/harnesses/src schema assets.
+// Ref lines show application joins. The SQL schema does not declare foreign keys.
+// Views, macros, generated FTS and staging tables are omitted.
+
+Project llm_history_current {
+  database_type: 'DuckDB'
+  Note: 'Implemented storage snapshot. The SQL files are authoritative.'
+}
+
+Table meta {
+  key VARCHAR [pk]
+  value VARCHAR [not null]
+}
+
+Table profiles {
+  id VARCHAR [pk]
+  name VARCHAR [unique, not null]
+  data VARCHAR [not null]
+}
+
+Table sources {
+  Note: 'Source identity, current path, availability, committed position, change evidence and parser state share this row.'
+  id BIGINT [pk]
+  profile_id VARCHAR [not null]
+  source_key VARCHAR [not null]
+  uri VARCHAR
+  committed UBIGINT
+  ordinal UBIGINT
+  prefix_hash VARCHAR
+  parser_state VARCHAR
+  generation BIGINT
+  missing BOOLEAN
+  parser_version INTEGER [default: 1]
+  observed_size UBIGINT
+  observed_mtime_ns BIGINT
+  head_xxh64 UBIGINT
+  boundary_xxh64 UBIGINT
+
+  indexes {
+    (profile_id, source_key) [unique]
+  }
+}
+
+Table generations {
+  Note: 'An append extends the current generation; a rewrite normally creates another. Completed records are archived byte for byte.'
+  id BIGINT [pk]
+  source_id BIGINT
+  number BIGINT
+  reason VARCHAR
+  bytes UBIGINT
+  lines UBIGINT
+  prefix_hash VARCHAR
+  complete BOOLEAN
+
+  indexes {
+    (source_id, number) [unique]
+  }
+}
+
+Table native_observations {
+  Note: 'Occurrence and original decoded byte range. The writer maintains uniqueness without an index on this append table.'
+  generation_id BIGINT
+  ordinal UBIGINT
+  start_byte UBIGINT
+  end_byte UBIGINT
+  payload_hash VARCHAR
+  raw_id BIGINT
+  json_valid BOOLEAN
+  capture_id BIGINT
+}
+
+Table native_documents {
+  Note: 'Hash is BLAKE3 of the entire native record. Data is a zstd compressed full line or a layout with content holes; xxh64 verifies the restored line. Logical uniqueness is maintained by the writer.'
+  hash VARCHAR
+  raw_size UBIGINT
+  xxh64 UBIGINT
+  data BLOB
+}
+
+Table captures {
+  id BIGINT [pk]
+  source_id BIGINT [not null]
+  generation_id BIGINT [not null]
+  observed_at TIMESTAMPTZ [not null, default: `now()`]
+  location_uri VARCHAR [not null]
+  encoding VARCHAR [not null]
+  physical_cutoff UBIGINT [not null]
+  start_ordinal UBIGINT [not null]
+  start_decoded_byte UBIGINT [not null]
+  end_ordinal UBIGINT [not null]
+  end_decoded_byte UBIGINT [not null]
+  complete BOOLEAN [not null]
+}
+
+Table content_objects {
+  id BLOB [not null, note: 'BLAKE3 of unescaped UTF-8 body bytes. The batch publisher enforces logical uniqueness.']
+  byte_length UBIGINT [not null]
+  data BLOB [not null, note: 'zstd compressed body']
+}
+
+Table content_parts {
+  document_hash VARCHAR [not null]
+  layout_offset UBIGINT [not null, note: 'Position of a null token in the decompressed layout.']
+  native_path VARCHAR [not null]
+  content_id BLOB [not null]
+}
+
+Table sessions {
+  id BIGINT [pk]
+  profile_id VARCHAR
+  native_id VARCHAR
+  cwd VARCHAR
+  title VARCHAR
+  model VARCHAR
+  parent_native VARCHAR
+  relation VARCHAR
+  subagent BOOLEAN
+  project VARCHAR
+
+  indexes {
+    (profile_id, native_id) [unique]
+  }
+}
+
+Table session_numbers {
+  session_no BIGINT [pk, note: 'Database-local CLI session ID, allocated from session_no_seq.']
+  session_id BIGINT [unique, not null]
+}
+
+Table message_numbers {
+  message_no BIGINT [pk, note: 'Database-local CLI message ID, allocated from message_no_seq.']
+  event_id BIGINT [unique, not null]
+}
+
+Table events {
+  Note: 'One row per projected fact. Text is stored inline; raw evidence is referenced separately.'
+  id BIGINT [pk]
+  source_id BIGINT
+  session_id BIGINT
+  ordinal UBIGINT
+  fact_index BIGINT
+  payload_hash VARCHAR
+  kind VARCHAR
+  ts VARCHAR
+  role VARCHAR
+  phase VARCHAR
+  text VARCHAR
+  text_hash VARCHAR
+  model VARCHAR
+  tool VARCHAR
+  call_id VARCHAR
+  input_tokens BIGINT
+  output_tokens BIGINT
+  cache_read BIGINT
+  active BOOLEAN
+  cache_write BIGINT [default: 0]
+  excluded BOOLEAN [default: false]
+  usage_key VARCHAR [default: '']
+  effort VARCHAR [default: '']
+  thinking_tokens BIGINT [default: 0]
+  usage_eligible BOOLEAN [default: true]
+  generation_id BIGINT
+  raw_record_id BIGINT
+  session_seq BIGINT
+  context_epoch_id BIGINT
+  timestamp_utc TIMESTAMPTZ
+  timestamp_offset_minutes INTEGER
+  timestamp_timezone VARCHAR
+  timestamp_basis VARCHAR
+  turn_id VARCHAR
+  event_kind VARCHAR
+  native_event_type VARCHAR
+  native_payload_type VARCHAR
+  metadata_json VARCHAR
+  native_item_id VARCHAR
+  native_parent_id VARCHAR
+  native_turn_id VARCHAR
+  arguments_json VARCHAR
+  agent_protocol BOOLEAN [default: false]
+}
+
+Table provider_turn_contexts {
+  event_id BIGINT [pk]
+  cwd VARCHAR
+  current_date VARCHAR
+  timezone VARCHAR
+  model VARCHAR
+  effort VARCHAR
+  approval_policy VARCHAR
+  sandbox_policy VARCHAR
+  personality VARCHAR
+  service_tier VARCHAR
+  collaboration_mode_json VARCHAR
+  workspace_roots_json VARCHAR
+}
+
+Table provider_token_events {
+  event_id BIGINT [pk]
+  token_ordinal BIGINT
+  context_line_no BIGINT
+  total_input_tokens BIGINT
+  total_cached_input_tokens BIGINT
+  total_cache_write_input_tokens BIGINT
+  total_output_tokens BIGINT
+  total_reasoning_output_tokens BIGINT
+  total_tokens BIGINT
+  last_input_tokens BIGINT
+  last_cached_input_tokens BIGINT
+  last_cache_write_input_tokens BIGINT
+  last_output_tokens BIGINT
+  last_reasoning_output_tokens BIGINT
+  last_total_tokens BIGINT
+  model_context_window BIGINT
+  limit_id VARCHAR
+}
+
+Table native_threads {
+  Note: 'Latest typed Codex metadata per profile and native thread ID.'
+  profile_id VARCHAR [not null]
+  id VARCHAR [not null]
+  rollout_path VARCHAR
+  created_at VARCHAR
+  updated_at VARCHAR
+  source VARCHAR
+  cwd VARCHAR
+  title VARCHAR
+  archived BOOLEAN
+  first_user_message VARCHAR
+  model VARCHAR
+  reasoning_effort VARCHAR
+  thread_source VARCHAR
+  preview VARCHAR
+  source_db VARCHAR
+  name VARCHAR
+  agent_path VARCHAR
+
+  indexes {
+    (profile_id, id) [pk]
+  }
+}
+
+Table catalog_snapshots {
+  Note: 'Current captured catalog per profile. The writer updates it and removes older rows.'
+  id BIGINT [pk]
+  profile_id VARCHAR
+  uri VARCHAR
+  format VARCHAR
+  digest VARCHAR
+  data VARCHAR
+  captured_at TIMESTAMPTZ
+  current BOOLEAN
+}
+
+Table native_project_assignments {
+  Note: 'Current catalog assignments. Reconciliation removes obsolete rows.'
+  profile_id VARCHAR [not null]
+  session_native VARCHAR [not null]
+  project_native VARCHAR [not null]
+
+  indexes {
+    (profile_id, session_native, project_native) [pk]
+  }
+}
+
+Table projects {
+  id BIGINT [pk]
+  profile_id VARCHAR
+  native_id VARCHAR
+  name VARCHAR
+  kind VARCHAR
+  metadata VARCHAR
+  active BOOLEAN
+
+  indexes {
+    (profile_id, native_id) [unique]
+  }
+}
+
+Table project_roots {
+  project_id BIGINT [not null]
+  path VARCHAR [not null]
+  ordinal INTEGER
+
+  indexes {
+    (project_id, path) [pk]
+  }
+}
+
+Table project_assignments {
+  session_id BIGINT [pk]
+  project_id BIGINT
+  evidence VARCHAR
+  snapshot_id BIGINT
+  basis_cwd VARCHAR [default: '']
+}
+
+Table canonical_sessions {
+  id BIGINT [pk]
+  store_id VARCHAR [not null]
+  harness_key VARCHAR [not null]
+  native_session_id VARCHAR [not null]
+  native_runtime_id VARCHAR
+  session_kind VARCHAR [not null]
+  native_session_kind VARCHAR
+  session_kind_evidence VARCHAR [not null]
+  started_at_utc TIMESTAMPTZ
+  ended_at_utc TIMESTAMPTZ
+  last_event_at_utc TIMESTAMPTZ
+  working_directory VARCHAR
+  repository_root VARCHAR
+  model VARCHAR
+  agent_label VARCHAR
+  metadata_json VARCHAR
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (store_id, harness_key, native_session_id) [unique]
+  }
+}
+
+Table canonical_session_sources {
+  session_id BIGINT [not null]
+  source_id BIGINT [not null]
+  current_generation_id BIGINT [not null]
+  first_seen_at TIMESTAMPTZ [not null]
+  last_seen_at TIMESTAMPTZ [not null]
+  active BOOLEAN [not null]
+  sequence_base BIGINT [default: 0]
+  started_at_utc TIMESTAMPTZ
+
+  indexes {
+    (session_id, source_id) [pk]
+  }
+}
+
+Table canonical_session_relations {
+  id BIGINT [pk]
+  source_session_id BIGINT [not null]
+  target_session_id BIGINT
+  target_native_session_id VARCHAR [not null]
+  relation_kind VARCHAR [not null]
+  native_relation_kind VARCHAR
+  evidence_kind VARCHAR [not null]
+  evidence_raw_record_id BIGINT
+  metadata_json VARCHAR
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (source_session_id, relation_kind, target_native_session_id) [unique]
+    target_session_id [name: 'canonical_relations_target_idx']
+  }
+}
+
+Table canonical_projects {
+  id BIGINT [pk]
+  source_id BIGINT
+  store_id VARCHAR [not null]
+  harness_key VARCHAR [not null]
+  native_project_id VARCHAR [not null]
+  project_kind VARCHAR [not null]
+  native_name VARCHAR
+  display_name VARCHAR [not null]
+  name_evidence VARCHAR [not null]
+  metadata_json VARCHAR
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (store_id, harness_key, native_project_id) [unique]
+    display_name [name: 'canonical_projects_name_idx']
+  }
+}
+
+Table canonical_project_roots {
+  project_id BIGINT [not null]
+  root_path VARCHAR [not null]
+  root_ordinal INTEGER [not null]
+  root_kind VARCHAR [not null]
+  evidence_kind VARCHAR [not null]
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (project_id, root_path) [pk]
+    root_path [name: 'canonical_project_roots_path_idx']
+  }
+}
+
+Table canonical_session_projects {
+  session_id BIGINT [not null]
+  project_id BIGINT [not null]
+  source_id BIGINT
+  evidence_kind VARCHAR [not null]
+  basis_working_directory VARCHAR
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (session_id, project_id) [pk]
+    session_id [name: 'canonical_session_projects_session_idx']
+  }
+}
+
+Table canonical_conversation_groups {
+  id BIGINT [pk]
+  root_session_id BIGINT [unique, not null]
+  resolver_version VARCHAR [not null]
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+}
+
+Table canonical_conversation_memberships {
+  conversation_group_id BIGINT [not null]
+  session_id BIGINT [not null]
+  membership_kind VARCHAR [not null]
+  evidence_kind VARCHAR [not null]
+  is_primary BOOLEAN [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (conversation_group_id, session_id) [pk]
+  }
+}
+
+Table canonical_context_epochs {
+  id BIGINT [pk]
+  session_id BIGINT [not null]
+  ordinal BIGINT [not null]
+  starts_at_event_id BIGINT
+  ends_at_event_id BIGINT
+  trigger_kind VARCHAR [not null]
+  evidence_kind VARCHAR [not null]
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (session_id, ordinal) [unique]
+  }
+}
+
+Table canonical_event_relations {
+  id BIGINT [pk]
+  session_id BIGINT [not null]
+  source_id BIGINT [not null]
+  child_event_id BIGINT [not null]
+  parent_event_id BIGINT [not null]
+  child_source_ordinal BIGINT [not null]
+  parent_source_ordinal BIGINT [not null]
+  relation_kind VARCHAR [not null]
+  native_relation_kind VARCHAR
+  evidence_kind VARCHAR [not null]
+  metadata_json VARCHAR
+  active BOOLEAN [not null]
+  created_at TIMESTAMPTZ [not null]
+  updated_at TIMESTAMPTZ [not null]
+
+  indexes {
+    (source_id, child_source_ordinal, relation_kind, parent_source_ordinal) [unique]
+    child_event_id [name: 'canonical_event_relations_child_idx']
+  }
+}
+
+Table lexical_documents {
+  Note: 'Persisted input to the generated FTS index.'
+  id BIGINT [pk]
+  source_id BIGINT
+  body VARCHAR
+  aliases VARCHAR
+}
+
+Table model_profiles {
+  id VARCHAR [pk]
+  data VARCHAR
+}
+
+Table embeddings {
+  Note: 'Vectors are native DuckDB FLOAT[] values.'
+  profile_id VARCHAR [not null]
+  message_id BIGINT [not null]
+  text_hash VARCHAR
+  chunk BIGINT [not null]
+  vector "FLOAT[]" [not null]
+
+  indexes {
+    (profile_id, message_id, chunk) [pk]
+  }
+}
+
+Table embedding_failures {
+  profile_id VARCHAR [not null]
+  message_id BIGINT [not null]
+  text_hash VARCHAR
+  reason VARCHAR
+
+  indexes {
+    (profile_id, message_id) [pk]
+  }
+}
+
+TableGroup Capture {
+  meta
+  profiles
+  sources
+  generations
+  captures
+  native_observations
+  native_documents
+  content_objects
+  content_parts
+}
+
+TableGroup Facts {
+  sessions
+  events
+  provider_turn_contexts
+  provider_token_events
+}
+
+TableGroup Catalogs {
+  native_threads
+  catalog_snapshots
+  native_project_assignments
+  projects
+  project_roots
+  project_assignments
+}
+
+TableGroup Conversations {
+  canonical_sessions
+  canonical_session_sources
+  canonical_session_relations
+  canonical_projects
+  canonical_project_roots
+  canonical_session_projects
+  canonical_conversation_groups
+  canonical_conversation_memberships
+  canonical_context_epochs
+  canonical_event_relations
+}
+
+TableGroup Search {
+  lexical_documents
+  model_profiles
+  embeddings
+  embedding_failures
+}
+
+// Selected logical joins; nullable and scoped keys reflect application lookups.
+Ref: sources.profile_id > profiles.id
+Ref: sources.(id, generation) > generations.(source_id, number)
+Ref: generations.source_id > sources.id
+Ref: captures.source_id > sources.id
+Ref: captures.generation_id > generations.id
+Ref: native_observations.generation_id > generations.id
+Ref: native_observations.capture_id > captures.id
+Ref: content_parts.document_hash > native_documents.hash
+Ref: content_parts.content_id > content_objects.id
+Ref: native_observations.payload_hash > native_documents.hash
+
+Ref: sessions.profile_id > profiles.id
+Ref: sessions.(profile_id, parent_native) > sessions.(profile_id, native_id)
+Ref: session_numbers.session_id - sessions.id
+Ref: message_numbers.event_id - events.id
+Ref: events.source_id > sources.id
+Ref: events.session_id > sessions.id
+Ref: events.generation_id > generations.id
+Ref: events.raw_record_id > native_observations.raw_id
+Ref: provider_turn_contexts.event_id - events.id
+Ref: provider_token_events.event_id - events.id
+
+Ref: native_threads.profile_id > profiles.id
+Ref: catalog_snapshots.profile_id > profiles.id
+Ref: native_project_assignments.profile_id > profiles.id
+Ref: projects.profile_id > profiles.id
+Ref: project_roots.project_id > projects.id
+Ref: project_assignments.session_id - sessions.id
+Ref: project_assignments.project_id > projects.id
+Ref: project_assignments.snapshot_id > catalog_snapshots.id
+
+Ref: canonical_sessions.id - sessions.id
+Ref: canonical_session_sources.session_id > canonical_sessions.id
+Ref: canonical_session_sources.source_id > sources.id
+Ref: canonical_session_sources.current_generation_id > generations.id
+Ref: canonical_session_relations.source_session_id > canonical_sessions.id
+Ref: canonical_session_relations.target_session_id > canonical_sessions.id
+Ref: canonical_session_relations.evidence_raw_record_id > native_observations.raw_id
+Ref: canonical_projects.source_id > sources.id
+Ref: canonical_project_roots.project_id > canonical_projects.id
+Ref: canonical_session_projects.session_id > canonical_sessions.id
+Ref: canonical_session_projects.project_id > canonical_projects.id
+Ref: canonical_conversation_groups.root_session_id - canonical_sessions.id
+Ref: canonical_conversation_memberships.conversation_group_id > canonical_conversation_groups.id
+Ref: canonical_conversation_memberships.session_id > canonical_sessions.id
+Ref: canonical_context_epochs.session_id > canonical_sessions.id
+Ref: events.context_epoch_id > canonical_context_epochs.id
+Ref: canonical_event_relations.session_id > canonical_sessions.id
+Ref: canonical_event_relations.child_event_id > events.id
+Ref: canonical_event_relations.parent_event_id > events.id
+
+Ref: lexical_documents.source_id > sources.id
+Ref: embeddings.profile_id > model_profiles.id
+Ref: embeddings.message_id > events.id
+Ref: embedding_failures.profile_id > model_profiles.id
+Ref: embedding_failures.message_id > events.id

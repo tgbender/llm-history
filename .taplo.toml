@@ -1,0 +1,11 @@
+include = [
+  ".cargo/config.toml",
+  ".taplo.toml",
+  "Cargo.toml",
+  "bunfig.toml",
+  "crates/**/Cargo.toml",
+  "mise.toml",
+  "rust-toolchain.toml",
+  "tools/architecture/policy.toml",
+  "tools/architecture/pyproject.toml",
+]

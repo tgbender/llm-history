@@ -1,0 +1,2515 @@
+{
+  "source_revision": "2bc8e7f5459b084afa482c7aac3f56fef36286b3",
+  "reviewed_at": "2026-11-07",
+  "scope": "Four explicitly inspected release snapshots; evidence of saved formats, not an exhaustive release timeline or historical acceptance allowlist.",
+  "snapshots": [
+    {
+      "release": "0.20.0",
+      "source_revision": "45aed5edd139c38132de044596fdd55e47236657",
+      "release_commit_date": "2025-08-08",
+      "wire_family": "unwrapped",
+      "release_range_claim": null,
+      "inspected_sources": [
+        "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs",
+        "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs",
+        "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs"
+      ],
+      "enums": {
+        "EventMsg": {
+          "attributes": [
+            "#[derive(Debug, Clone, Deserialize, Serialize, Display)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]",
+            "#[strum(serialize_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L355-L424",
+          "variants": [
+            {
+              "rust_variant": "Error",
+              "attributes": [],
+              "rust_declaration": "Error(ErrorEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L357-L357"
+            },
+            {
+              "rust_variant": "TaskStarted",
+              "attributes": [],
+              "rust_declaration": "TaskStarted",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L360-L360"
+            },
+            {
+              "rust_variant": "TaskComplete",
+              "attributes": [],
+              "rust_declaration": "TaskComplete(TaskCompleteEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L363-L363"
+            },
+            {
+              "rust_variant": "TokenCount",
+              "attributes": [],
+              "rust_declaration": "TokenCount(TokenUsage)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L367-L367"
+            },
+            {
+              "rust_variant": "AgentMessage",
+              "attributes": [],
+              "rust_declaration": "AgentMessage(AgentMessageEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L370-L370"
+            },
+            {
+              "rust_variant": "AgentMessageDelta",
+              "attributes": [],
+              "rust_declaration": "AgentMessageDelta(AgentMessageDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L373-L373"
+            },
+            {
+              "rust_variant": "AgentReasoning",
+              "attributes": [],
+              "rust_declaration": "AgentReasoning(AgentReasoningEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L376-L376"
+            },
+            {
+              "rust_variant": "AgentReasoningDelta",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningDelta(AgentReasoningDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L379-L379"
+            },
+            {
+              "rust_variant": "AgentReasoningRawContent",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningRawContent(AgentReasoningRawContentEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L382-L382"
+            },
+            {
+              "rust_variant": "AgentReasoningRawContentDelta",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningRawContentDelta(AgentReasoningRawContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L385-L385"
+            },
+            {
+              "rust_variant": "SessionConfigured",
+              "attributes": [],
+              "rust_declaration": "SessionConfigured(SessionConfiguredEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L388-L388"
+            },
+            {
+              "rust_variant": "McpToolCallBegin",
+              "attributes": [],
+              "rust_declaration": "McpToolCallBegin(McpToolCallBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L390-L390"
+            },
+            {
+              "rust_variant": "McpToolCallEnd",
+              "attributes": [],
+              "rust_declaration": "McpToolCallEnd(McpToolCallEndEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L392-L392"
+            },
+            {
+              "rust_variant": "ExecCommandBegin",
+              "attributes": [],
+              "rust_declaration": "ExecCommandBegin(ExecCommandBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L395-L395"
+            },
+            {
+              "rust_variant": "ExecCommandOutputDelta",
+              "attributes": [],
+              "rust_declaration": "ExecCommandOutputDelta(ExecCommandOutputDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L398-L398"
+            },
+            {
+              "rust_variant": "ExecCommandEnd",
+              "attributes": [],
+              "rust_declaration": "ExecCommandEnd(ExecCommandEndEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L400-L400"
+            },
+            {
+              "rust_variant": "ExecApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ExecApprovalRequest(ExecApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L402-L402"
+            },
+            {
+              "rust_variant": "ApplyPatchApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ApplyPatchApprovalRequest(ApplyPatchApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L404-L404"
+            },
+            {
+              "rust_variant": "BackgroundEvent",
+              "attributes": [],
+              "rust_declaration": "BackgroundEvent(BackgroundEventEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L406-L406"
+            },
+            {
+              "rust_variant": "PatchApplyBegin",
+              "attributes": [],
+              "rust_declaration": "PatchApplyBegin(PatchApplyBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L410-L410"
+            },
+            {
+              "rust_variant": "PatchApplyEnd",
+              "attributes": [],
+              "rust_declaration": "PatchApplyEnd(PatchApplyEndEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L413-L413"
+            },
+            {
+              "rust_variant": "TurnDiff",
+              "attributes": [],
+              "rust_declaration": "TurnDiff(TurnDiffEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L415-L415"
+            },
+            {
+              "rust_variant": "GetHistoryEntryResponse",
+              "attributes": [],
+              "rust_declaration": "GetHistoryEntryResponse(GetHistoryEntryResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L418-L418"
+            },
+            {
+              "rust_variant": "PlanUpdate",
+              "attributes": [],
+              "rust_declaration": "PlanUpdate(UpdatePlanArgs)",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L420-L420"
+            },
+            {
+              "rust_variant": "ShutdownComplete",
+              "attributes": [],
+              "rust_declaration": "ShutdownComplete",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/protocol.rs#L423-L423"
+            }
+          ]
+        },
+        "ResponseItem": {
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L39-L82",
+          "variants": [
+            {
+              "rust_variant": "Message",
+              "attributes": [],
+              "rust_declaration": "Message {\n        id: Option<String>,\n        role: String,\n        content: Vec<ContentItem>,\n    }",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L40-L44"
+            },
+            {
+              "rust_variant": "Reasoning",
+              "attributes": [],
+              "rust_declaration": "Reasoning {\n        id: String,\n        summary: Vec<ReasoningItemReasoningSummary>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        content: Option<Vec<ReasoningItemContent>>,\n        encrypted_content: Option<String>,\n    }",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L45-L51"
+            },
+            {
+              "rust_variant": "LocalShellCall",
+              "attributes": [],
+              "rust_declaration": "LocalShellCall {\n        /// Set when using the chat completions API.\n        id: Option<String>,\n        /// Set when using the Responses API.\n        call_id: Option<String>,\n        status: LocalShellStatus,\n        action: LocalShellAction,\n    }",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L52-L59"
+            },
+            {
+              "rust_variant": "FunctionCall",
+              "attributes": [],
+              "rust_declaration": "FunctionCall {\n        id: Option<String>,\n        name: String,\n        // The Responses API returns the function call arguments as a *string* that contains\n        // JSON, not as an already\u2011parsed object. We keep it as a raw string here and let\n        // Session::handle_function_call parse it into a Value. This exactly matches the\n        // Chat Completions + Responses API behavior.\n        arguments: String,\n        call_id: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L60-L69"
+            },
+            {
+              "rust_variant": "FunctionCallOutput",
+              "attributes": [],
+              "rust_declaration": "FunctionCallOutput {\n        call_id: String,\n        output: FunctionCallOutputPayload,\n    }",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L76-L79"
+            },
+            {
+              "rust_variant": "Other",
+              "attributes": [
+                "#[serde(other)]"
+              ],
+              "rust_declaration": "Other",
+              "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L81-L81"
+            }
+          ]
+        }
+      },
+      "payload_declarations": [
+        {
+          "rust_type": "ContentItem",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ContentItem {\n    InputText { text: String },\n    InputImage { image_url: String },\n    OutputText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L31-L35"
+        },
+        {
+          "rust_type": "FunctionCallOutputPayload",
+          "attributes": [
+            "#[derive(Debug, Clone, PartialEq)]"
+          ],
+          "rust_declaration": "pub struct FunctionCallOutputPayload {\n    pub content: String,\n    pub success: Option<bool>,\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L201-L204"
+        },
+        {
+          "rust_type": "LocalShellAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellAction {\n    Exec(LocalShellExecAction),\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L122-L124"
+        },
+        {
+          "rust_type": "LocalShellExecAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]"
+          ],
+          "rust_declaration": "pub struct LocalShellExecAction {\n    pub command: Vec<String>,\n    pub timeout_ms: Option<u64>,\n    pub working_directory: Option<String>,\n    pub env: Option<HashMap<String, String>>,\n    pub user: Option<String>,\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L127-L133"
+        },
+        {
+          "rust_type": "LocalShellStatus",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]",
+            "#[serde(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellStatus {\n    Completed,\n    InProgress,\n    Incomplete,\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L114-L118"
+        },
+        {
+          "rust_type": "ReasoningItemContent",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemContent {\n    ReasoningText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L143-L145"
+        },
+        {
+          "rust_type": "ReasoningItemReasoningSummary",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemReasoningSummary {\n    SummaryText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L137-L139"
+        },
+        {
+          "rust_type": "SavedSession",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Default, Clone)]"
+          ],
+          "rust_declaration": "pub struct SavedSession {\n    pub session: SessionMeta,\n    #[serde(default)]\n    pub items: Vec<ResponseItem>,\n    #[serde(default)]\n    pub state: SessionStateSnapshot,\n    pub session_id: Uuid,\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs#L48-L55"
+        },
+        {
+          "rust_type": "SessionMeta",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Default)]"
+          ],
+          "rust_declaration": "pub struct SessionMeta {\n    pub id: Uuid,\n    pub timestamp: String,\n    pub instructions: Option<String>,\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs#L30-L34"
+        },
+        {
+          "rust_type": "SessionMetaWithGit",
+          "attributes": [
+            "#[derive(Serialize)]"
+          ],
+          "rust_declaration": "struct SessionMetaWithGit {\n    #[serde(flatten)]\n    meta: SessionMeta,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    git: Option<GitInfo>,\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs#L37-L42"
+        },
+        {
+          "rust_type": "SessionStateSnapshot",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Default, Clone)]"
+          ],
+          "rust_declaration": "pub struct SessionStateSnapshot {}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs#L45-L45"
+        }
+      ],
+      "codec_and_reader_evidence": [
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl Serialize for FunctionCallOutputPayload {\n    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>\n    where\n        S: Serializer,\n    {\n        // The upstream TypeScript CLI always serializes `output` as a *plain string* regardless\n        // of whether the function call succeeded or failed. The boolean is purely informational\n        // for local bookkeeping and is NOT sent to the OpenAI endpoint. Sending the nested object\n        // form `{ content, success:false }` triggers the 400 we are still seeing. Mirror the JS CLI\n        // exactly: always emit a bare string.\n\n        serializer.serialize_str(&self.content)\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L212-L225"
+        },
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl<'de> Deserialize<'de> for FunctionCallOutputPayload {\n    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>\n    where\n        D: Deserializer<'de>,\n    {\n        let s = String::deserialize(deserializer)?;\n        Ok(FunctionCallOutputPayload {\n            content: s,\n            success: None,\n        })\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/models.rs#L227-L238"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "record_items",
+          "rust_declaration": "pub(crate) async fn record_items(&self, items: &[ResponseItem]) -> std::io::Result<()> {\n        let mut filtered = Vec::new();\n        for item in items {\n            match item {\n                // Note that function calls may look a bit strange if they are\n                // \"fully qualified MCP tool calls,\" so we could consider\n                // reformatting them in that case.\n                ResponseItem::Message { .. }\n                | ResponseItem::LocalShellCall { .. }\n                | ResponseItem::FunctionCall { .. }\n                | ResponseItem::FunctionCallOutput { .. }\n                | ResponseItem::Reasoning { .. } => filtered.push(item.clone()),\n                ResponseItem::Other => {\n                    // These should never be serialized.\n                    continue;\n                }\n            }\n        }\n        if filtered.is_empty() {\n            return Ok(());\n        }\n        self.tx\n            .send(RolloutCmd::AddItems(filtered))\n            .await\n            .map_err(|e| IoError::other(format!(\"failed to queue rollout items: {e}\")))\n    }",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs#L124-L149"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "resume",
+          "rust_declaration": "pub async fn resume(\n        path: &Path,\n        cwd: std::path::PathBuf,\n    ) -> std::io::Result<(Self, SavedSession)> {\n        info!(\"Resuming rollout from {path:?}\");\n        let text = tokio::fs::read_to_string(path).await?;\n        let mut lines = text.lines();\n        let meta_line = lines\n            .next()\n            .ok_or_else(|| IoError::other(\"empty session file\"))?;\n        let session: SessionMeta = serde_json::from_str(meta_line)\n            .map_err(|e| IoError::other(format!(\"failed to parse session meta: {e}\")))?;\n        let mut items = Vec::new();\n        let mut state = SessionStateSnapshot::default();\n\n        for line in lines {\n            if line.trim().is_empty() {\n                continue;\n            }\n            let v: Value = match serde_json::from_str(line) {\n                Ok(v) => v,\n                Err(_) => continue,\n            };\n            if v.get(\"record_type\")\n                .and_then(|rt| rt.as_str())\n                .map(|s| s == \"state\")\n                .unwrap_or(false)\n            {\n                if let Ok(s) = serde_json::from_value::<SessionStateSnapshot>(v.clone()) {\n                    state = s\n                }\n                continue;\n            }\n            match serde_json::from_value::<ResponseItem>(v.clone()) {\n                Ok(item) => match item {\n                    ResponseItem::Message { .. }\n                    | ResponseItem::LocalShellCall { .. }\n                    | ResponseItem::FunctionCall { .. }\n                    | ResponseItem::FunctionCallOutput { .. }\n                    | ResponseItem::Reasoning { .. } => items.push(item),\n                    ResponseItem::Other => {}\n                },\n                Err(e) => {\n                    warn!(\"failed to parse item: {v:?}, error: {e}\");\n                }\n            }\n        }\n\n        let saved = SavedSession {\n            session: session.clone(),\n            items: items.clone(),\n            state: state.clone(),\n            session_id: session.id,\n        };\n\n        let file = std::fs::OpenOptions::new()\n            .append(true)\n            .read(true)\n            .open(path)?;\n\n        let (tx, rx) = mpsc::channel::<RolloutCmd>(256);\n        tokio::task::spawn(rollout_writer(\n            tokio::fs::File::from_std(file),\n            rx,\n            None,\n            cwd,\n        ));\n        info!(\"Resumed rollout successfully from {path:?}\");\n        Ok((Self { tx }, saved))\n    }",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs#L158-L227"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "write_line",
+          "rust_declaration": "async fn write_line(&mut self, item: &impl serde::Serialize) -> std::io::Result<()> {\n        let mut json = serde_json::to_string(item)?;\n        json.push('\\n');\n        let _ = self.file.write_all(json.as_bytes()).await;\n        self.file.flush().await?;\n        Ok(())\n    }",
+          "source": "https://github.com/openai/codex/blob/45aed5edd139c38132de044596fdd55e47236657/codex-rs/core/src/rollout.rs#L355-L361"
+        }
+      ]
+    },
+    {
+      "release": "0.50.0",
+      "source_revision": "b4123b7b1db22a3c0a8b133a23c7b30a477d7b65",
+      "release_commit_date": "2025-10-25",
+      "wire_family": "enveloped",
+      "release_range_claim": null,
+      "inspected_sources": [
+        "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs",
+        "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs",
+        "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/recorder.rs",
+        "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/policy.rs"
+      ],
+      "enums": {
+        "RolloutItem": {
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", content = \"payload\", rename_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L970-L976",
+          "variants": [
+            {
+              "rust_variant": "SessionMeta",
+              "attributes": [],
+              "rust_declaration": "SessionMeta(SessionMetaLine)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L971-L971"
+            },
+            {
+              "rust_variant": "ResponseItem",
+              "attributes": [],
+              "rust_declaration": "ResponseItem(ResponseItem)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L972-L972"
+            },
+            {
+              "rust_variant": "Compacted",
+              "attributes": [],
+              "rust_declaration": "Compacted(CompactedItem)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L973-L973"
+            },
+            {
+              "rust_variant": "TurnContext",
+              "attributes": [],
+              "rust_declaration": "TurnContext(TurnContextItem)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L974-L974"
+            },
+            {
+              "rust_variant": "EventMsg",
+              "attributes": [],
+              "rust_declaration": "EventMsg(EventMsg)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L975-L975"
+            }
+          ]
+        },
+        "EventMsg": {
+          "attributes": [
+            "#[derive(Debug, Clone, Deserialize, Serialize, Display, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]",
+            "#[strum(serialize_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L428-L534",
+          "variants": [
+            {
+              "rust_variant": "Error",
+              "attributes": [],
+              "rust_declaration": "Error(ErrorEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L430-L430"
+            },
+            {
+              "rust_variant": "TaskStarted",
+              "attributes": [],
+              "rust_declaration": "TaskStarted(TaskStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L433-L433"
+            },
+            {
+              "rust_variant": "TaskComplete",
+              "attributes": [],
+              "rust_declaration": "TaskComplete(TaskCompleteEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L436-L436"
+            },
+            {
+              "rust_variant": "TokenCount",
+              "attributes": [],
+              "rust_declaration": "TokenCount(TokenCountEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L440-L440"
+            },
+            {
+              "rust_variant": "AgentMessage",
+              "attributes": [],
+              "rust_declaration": "AgentMessage(AgentMessageEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L443-L443"
+            },
+            {
+              "rust_variant": "UserMessage",
+              "attributes": [],
+              "rust_declaration": "UserMessage(UserMessageEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L446-L446"
+            },
+            {
+              "rust_variant": "AgentMessageDelta",
+              "attributes": [],
+              "rust_declaration": "AgentMessageDelta(AgentMessageDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L449-L449"
+            },
+            {
+              "rust_variant": "AgentReasoning",
+              "attributes": [],
+              "rust_declaration": "AgentReasoning(AgentReasoningEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L452-L452"
+            },
+            {
+              "rust_variant": "AgentReasoningDelta",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningDelta(AgentReasoningDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L455-L455"
+            },
+            {
+              "rust_variant": "AgentReasoningRawContent",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningRawContent(AgentReasoningRawContentEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L458-L458"
+            },
+            {
+              "rust_variant": "AgentReasoningRawContentDelta",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningRawContentDelta(AgentReasoningRawContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L461-L461"
+            },
+            {
+              "rust_variant": "AgentReasoningSectionBreak",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningSectionBreak(AgentReasoningSectionBreakEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L463-L463"
+            },
+            {
+              "rust_variant": "SessionConfigured",
+              "attributes": [],
+              "rust_declaration": "SessionConfigured(SessionConfiguredEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L466-L466"
+            },
+            {
+              "rust_variant": "McpToolCallBegin",
+              "attributes": [],
+              "rust_declaration": "McpToolCallBegin(McpToolCallBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L468-L468"
+            },
+            {
+              "rust_variant": "McpToolCallEnd",
+              "attributes": [],
+              "rust_declaration": "McpToolCallEnd(McpToolCallEndEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L470-L470"
+            },
+            {
+              "rust_variant": "WebSearchBegin",
+              "attributes": [],
+              "rust_declaration": "WebSearchBegin(WebSearchBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L472-L472"
+            },
+            {
+              "rust_variant": "WebSearchEnd",
+              "attributes": [],
+              "rust_declaration": "WebSearchEnd(WebSearchEndEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L474-L474"
+            },
+            {
+              "rust_variant": "ExecCommandBegin",
+              "attributes": [],
+              "rust_declaration": "ExecCommandBegin(ExecCommandBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L477-L477"
+            },
+            {
+              "rust_variant": "ExecCommandOutputDelta",
+              "attributes": [],
+              "rust_declaration": "ExecCommandOutputDelta(ExecCommandOutputDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L480-L480"
+            },
+            {
+              "rust_variant": "ExecCommandEnd",
+              "attributes": [],
+              "rust_declaration": "ExecCommandEnd(ExecCommandEndEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L482-L482"
+            },
+            {
+              "rust_variant": "ViewImageToolCall",
+              "attributes": [],
+              "rust_declaration": "ViewImageToolCall(ViewImageToolCallEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L485-L485"
+            },
+            {
+              "rust_variant": "ExecApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ExecApprovalRequest(ExecApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L487-L487"
+            },
+            {
+              "rust_variant": "ApplyPatchApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ApplyPatchApprovalRequest(ApplyPatchApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L489-L489"
+            },
+            {
+              "rust_variant": "BackgroundEvent",
+              "attributes": [],
+              "rust_declaration": "BackgroundEvent(BackgroundEventEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L491-L491"
+            },
+            {
+              "rust_variant": "StreamError",
+              "attributes": [],
+              "rust_declaration": "StreamError(StreamErrorEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L495-L495"
+            },
+            {
+              "rust_variant": "PatchApplyBegin",
+              "attributes": [],
+              "rust_declaration": "PatchApplyBegin(PatchApplyBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L499-L499"
+            },
+            {
+              "rust_variant": "PatchApplyEnd",
+              "attributes": [],
+              "rust_declaration": "PatchApplyEnd(PatchApplyEndEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L502-L502"
+            },
+            {
+              "rust_variant": "TurnDiff",
+              "attributes": [],
+              "rust_declaration": "TurnDiff(TurnDiffEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L504-L504"
+            },
+            {
+              "rust_variant": "GetHistoryEntryResponse",
+              "attributes": [],
+              "rust_declaration": "GetHistoryEntryResponse(GetHistoryEntryResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L507-L507"
+            },
+            {
+              "rust_variant": "McpListToolsResponse",
+              "attributes": [],
+              "rust_declaration": "McpListToolsResponse(McpListToolsResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L510-L510"
+            },
+            {
+              "rust_variant": "ListCustomPromptsResponse",
+              "attributes": [],
+              "rust_declaration": "ListCustomPromptsResponse(ListCustomPromptsResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L513-L513"
+            },
+            {
+              "rust_variant": "PlanUpdate",
+              "attributes": [],
+              "rust_declaration": "PlanUpdate(UpdatePlanArgs)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L515-L515"
+            },
+            {
+              "rust_variant": "TurnAborted",
+              "attributes": [],
+              "rust_declaration": "TurnAborted(TurnAbortedEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L517-L517"
+            },
+            {
+              "rust_variant": "ShutdownComplete",
+              "attributes": [],
+              "rust_declaration": "ShutdownComplete",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L520-L520"
+            },
+            {
+              "rust_variant": "ConversationPath",
+              "attributes": [],
+              "rust_declaration": "ConversationPath(ConversationPathResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L522-L522"
+            },
+            {
+              "rust_variant": "EnteredReviewMode",
+              "attributes": [],
+              "rust_declaration": "EnteredReviewMode(ReviewRequest)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L525-L525"
+            },
+            {
+              "rust_variant": "ExitedReviewMode",
+              "attributes": [],
+              "rust_declaration": "ExitedReviewMode(ExitedReviewModeEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L528-L528"
+            },
+            {
+              "rust_variant": "RawResponseItem",
+              "attributes": [],
+              "rust_declaration": "RawResponseItem(ResponseItem)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L530-L530"
+            },
+            {
+              "rust_variant": "ItemStarted",
+              "attributes": [],
+              "rust_declaration": "ItemStarted(ItemStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L532-L532"
+            },
+            {
+              "rust_variant": "ItemCompleted",
+              "attributes": [],
+              "rust_declaration": "ItemCompleted(ItemCompletedEvent)",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L533-L533"
+            }
+          ]
+        },
+        "ResponseItem": {
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L45-L121",
+          "variants": [
+            {
+              "rust_variant": "Message",
+              "attributes": [],
+              "rust_declaration": "Message {\n        #[serde(skip_serializing)]\n        id: Option<String>,\n        role: String,\n        content: Vec<ContentItem>,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L46-L51"
+            },
+            {
+              "rust_variant": "Reasoning",
+              "attributes": [],
+              "rust_declaration": "Reasoning {\n        #[serde(default, skip_serializing)]\n        id: String,\n        summary: Vec<ReasoningItemReasoningSummary>,\n        #[serde(default, skip_serializing_if = \"should_serialize_reasoning_content\")]\n        content: Option<Vec<ReasoningItemContent>>,\n        encrypted_content: Option<String>,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L52-L59"
+            },
+            {
+              "rust_variant": "LocalShellCall",
+              "attributes": [],
+              "rust_declaration": "LocalShellCall {\n        /// Set when using the chat completions API.\n        #[serde(skip_serializing)]\n        id: Option<String>,\n        /// Set when using the Responses API.\n        call_id: Option<String>,\n        status: LocalShellStatus,\n        action: LocalShellAction,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L60-L68"
+            },
+            {
+              "rust_variant": "FunctionCall",
+              "attributes": [],
+              "rust_declaration": "FunctionCall {\n        #[serde(skip_serializing)]\n        id: Option<String>,\n        name: String,\n        // The Responses API returns the function call arguments as a *string* that contains\n        // JSON, not as an already\u2011parsed object. We keep it as a raw string here and let\n        // Session::handle_function_call parse it into a Value. This exactly matches the\n        // Chat Completions + Responses API behavior.\n        arguments: String,\n        call_id: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L69-L79"
+            },
+            {
+              "rust_variant": "FunctionCallOutput",
+              "attributes": [],
+              "rust_declaration": "FunctionCallOutput {\n        call_id: String,\n        output: FunctionCallOutputPayload,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L86-L89"
+            },
+            {
+              "rust_variant": "CustomToolCall",
+              "attributes": [],
+              "rust_declaration": "CustomToolCall {\n        #[serde(skip_serializing)]\n        id: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        status: Option<String>,\n\n        call_id: String,\n        name: String,\n        input: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L90-L99"
+            },
+            {
+              "rust_variant": "CustomToolCallOutput",
+              "attributes": [],
+              "rust_declaration": "CustomToolCallOutput {\n        call_id: String,\n        output: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L100-L103"
+            },
+            {
+              "rust_variant": "WebSearchCall",
+              "attributes": [],
+              "rust_declaration": "WebSearchCall {\n        #[serde(skip_serializing)]\n        id: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        status: Option<String>,\n        action: WebSearchAction,\n    }",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L112-L118"
+            },
+            {
+              "rust_variant": "Other",
+              "attributes": [
+                "#[serde(other)]"
+              ],
+              "rust_declaration": "Other",
+              "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L120-L120"
+            }
+          ]
+        }
+      },
+      "payload_declarations": [
+        {
+          "rust_type": "CompactedItem",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct CompactedItem {\n    pub message: String,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L979-L981"
+        },
+        {
+          "rust_type": "ContentItem",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ContentItem {\n    InputText { text: String },\n    InputImage { image_url: String },\n    OutputText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L37-L41"
+        },
+        {
+          "rust_type": "FunctionCallOutputPayload",
+          "attributes": [
+            "#[derive(Debug, Clone, PartialEq, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct FunctionCallOutputPayload {\n    pub content: String,\n    // TODO(jif) drop this.\n    pub success: Option<bool>,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L261-L265"
+        },
+        {
+          "rust_type": "LocalShellAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellAction {\n    Exec(LocalShellExecAction),\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L173-L175"
+        },
+        {
+          "rust_type": "LocalShellExecAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct LocalShellExecAction {\n    pub command: Vec<String>,\n    pub timeout_ms: Option<u64>,\n    pub working_directory: Option<String>,\n    pub env: Option<HashMap<String, String>>,\n    pub user: Option<String>,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L178-L184"
+        },
+        {
+          "rust_type": "LocalShellStatus",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellStatus {\n    Completed,\n    InProgress,\n    Incomplete,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L165-L169"
+        },
+        {
+          "rust_type": "ReasoningItemContent",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemContent {\n    ReasoningText { text: String },\n    Text { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L204-L207"
+        },
+        {
+          "rust_type": "ReasoningItemReasoningSummary",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemReasoningSummary {\n    SummaryText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L198-L200"
+        },
+        {
+          "rust_type": "RolloutLine",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, JsonSchema)]"
+          ],
+          "rust_declaration": "pub struct RolloutLine {\n    pub timestamp: String,\n    #[serde(flatten)]\n    pub item: RolloutItem,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L1007-L1011"
+        },
+        {
+          "rust_type": "SessionMeta",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct SessionMeta {\n    pub id: ConversationId,\n    pub timestamp: String,\n    pub cwd: PathBuf,\n    pub originator: String,\n    pub cli_version: String,\n    pub instructions: Option<String>,\n    #[serde(default)]\n    pub source: SessionSource,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L935-L944"
+        },
+        {
+          "rust_type": "SessionMetaLine",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct SessionMetaLine {\n    #[serde(flatten)]\n    pub meta: SessionMeta,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub git: Option<GitInfo>,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L961-L966"
+        },
+        {
+          "rust_type": "SessionSource",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Copy, Clone, Debug, PartialEq, Eq, JsonSchema, TS, Default)]",
+            "#[serde(rename_all = \"lowercase\")]",
+            "#[ts(rename_all = \"lowercase\")]"
+          ],
+          "rust_declaration": "pub enum SessionSource {\n    Cli,\n    #[default]\n    VSCode,\n    Exec,\n    Mcp,\n    #[serde(other)]\n    Unknown,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L924-L932"
+        },
+        {
+          "rust_type": "TurnContextItem",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct TurnContextItem {\n    pub cwd: PathBuf,\n    pub approval_policy: AskForApproval,\n    pub sandbox_policy: SandboxPolicy,\n    pub model: String,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub effort: Option<ReasoningEffortConfig>,\n    pub summary: ReasoningSummaryConfig,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/protocol.rs#L996-L1004"
+        },
+        {
+          "rust_type": "WebSearchAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum WebSearchAction {\n    Search {\n        query: String,\n    },\n    #[serde(other)]\n    Other,\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L188-L194"
+        }
+      ],
+      "codec_and_reader_evidence": [
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "should_persist_response_item",
+          "rust_declaration": "pub(crate) fn should_persist_response_item(item: &ResponseItem) -> bool {\n    match item {\n        ResponseItem::Message { .. }\n        | ResponseItem::Reasoning { .. }\n        | ResponseItem::LocalShellCall { .. }\n        | ResponseItem::FunctionCall { .. }\n        | ResponseItem::FunctionCallOutput { .. }\n        | ResponseItem::CustomToolCall { .. }\n        | ResponseItem::CustomToolCallOutput { .. }\n        | ResponseItem::WebSearchCall { .. } => true,\n        ResponseItem::Other => false,\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/policy.rs#L20-L32"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "should_persist_event_msg",
+          "rust_declaration": "pub(crate) fn should_persist_event_msg(ev: &EventMsg) -> bool {\n    match ev {\n        EventMsg::UserMessage(_)\n        | EventMsg::AgentMessage(_)\n        | EventMsg::AgentReasoning(_)\n        | EventMsg::AgentReasoningRawContent(_)\n        | EventMsg::TokenCount(_)\n        | EventMsg::EnteredReviewMode(_)\n        | EventMsg::ExitedReviewMode(_)\n        | EventMsg::TurnAborted(_) => true,\n        EventMsg::Error(_)\n        | EventMsg::TaskStarted(_)\n        | EventMsg::TaskComplete(_)\n        | EventMsg::AgentMessageDelta(_)\n        | EventMsg::AgentReasoningDelta(_)\n        | EventMsg::AgentReasoningRawContentDelta(_)\n        | EventMsg::AgentReasoningSectionBreak(_)\n        | EventMsg::RawResponseItem(_)\n        | EventMsg::SessionConfigured(_)\n        | EventMsg::McpToolCallBegin(_)\n        | EventMsg::McpToolCallEnd(_)\n        | EventMsg::WebSearchBegin(_)\n        | EventMsg::WebSearchEnd(_)\n        | EventMsg::ExecCommandBegin(_)\n        | EventMsg::ExecCommandOutputDelta(_)\n        | EventMsg::ExecCommandEnd(_)\n        | EventMsg::ExecApprovalRequest(_)\n        | EventMsg::ApplyPatchApprovalRequest(_)\n        | EventMsg::BackgroundEvent(_)\n        | EventMsg::StreamError(_)\n        | EventMsg::PatchApplyBegin(_)\n        | EventMsg::PatchApplyEnd(_)\n        | EventMsg::TurnDiff(_)\n        | EventMsg::GetHistoryEntryResponse(_)\n        | EventMsg::McpListToolsResponse(_)\n        | EventMsg::ListCustomPromptsResponse(_)\n        | EventMsg::PlanUpdate(_)\n        | EventMsg::ShutdownComplete\n        | EventMsg::ViewImageToolCall(_)\n        | EventMsg::ConversationPath(_)\n        | EventMsg::ItemStarted(_)\n        | EventMsg::ItemCompleted(_) => false,\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/policy.rs#L36-L79"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "is_persisted_response_item",
+          "rust_declaration": "pub(crate) fn is_persisted_response_item(item: &RolloutItem) -> bool {\n    match item {\n        RolloutItem::ResponseItem(item) => should_persist_response_item(item),\n        RolloutItem::EventMsg(ev) => should_persist_event_msg(ev),\n        // Persist Codex executive markers so we can analyze flows (e.g., compaction, API turns).\n        RolloutItem::Compacted(_) | RolloutItem::TurnContext(_) | RolloutItem::SessionMeta(_) => {\n            true\n        }\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/policy.rs#L7-L16"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "record_items",
+          "rust_declaration": "pub(crate) async fn record_items(&self, items: &[RolloutItem]) -> std::io::Result<()> {\n        let mut filtered = Vec::new();\n        for item in items {\n            // Note that function calls may look a bit strange if they are\n            // \"fully qualified MCP tool calls,\" so we could consider\n            // reformatting them in that case.\n            if is_persisted_response_item(item) {\n                filtered.push(item.clone());\n            }\n        }\n        if filtered.is_empty() {\n            return Ok(());\n        }\n        self.tx\n            .send(RolloutCmd::AddItems(filtered))\n            .await\n            .map_err(|e| IoError::other(format!(\"failed to queue rollout items: {e}\")))\n    }",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/recorder.rs#L169-L186"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "write_rollout_item",
+          "rust_declaration": "async fn write_rollout_item(&mut self, rollout_item: RolloutItem) -> std::io::Result<()> {\n        let timestamp_format: &[FormatItem] = format_description!(\n            \"[year]-[month]-[day]T[hour]:[minute]:[second].[subsecond digits:3]Z\"\n        );\n        let timestamp = OffsetDateTime::now_utc()\n            .format(timestamp_format)\n            .map_err(|e| IoError::other(format!(\"failed to format timestamp: {e}\")))?;\n\n        let line = RolloutLine {\n            timestamp,\n            item: rollout_item,\n        };\n        self.write_line(&line).await\n    }",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/recorder.rs#L396-L409"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "write_line",
+          "rust_declaration": "async fn write_line(&mut self, item: &impl serde::Serialize) -> std::io::Result<()> {\n        let mut json = serde_json::to_string(item)?;\n        json.push('\\n');\n        self.file.write_all(json.as_bytes()).await?;\n        self.file.flush().await?;\n        Ok(())\n    }",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/recorder.rs#L410-L416"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "resume",
+          "rust_declaration": "pub fn resume(path: PathBuf) -> Self {\n        Self::Resume { path }\n    }",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/core/src/rollout/recorder.rs#L88-L90"
+        },
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl Serialize for FunctionCallOutputPayload {\n    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>\n    where\n        S: Serializer,\n    {\n        // The upstream TypeScript CLI always serializes `output` as a *plain string* regardless\n        // of whether the function call succeeded or failed. The boolean is purely informational\n        // for local bookkeeping and is NOT sent to the OpenAI endpoint. Sending the nested object\n        // form `{ content, success:false }` triggers the 400 we are still seeing. Mirror the JS CLI\n        // exactly: always emit a bare string.\n\n        serializer.serialize_str(&self.content)\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L273-L286"
+        },
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl<'de> Deserialize<'de> for FunctionCallOutputPayload {\n    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>\n    where\n        D: Deserializer<'de>,\n    {\n        let s = String::deserialize(deserializer)?;\n        Ok(FunctionCallOutputPayload {\n            content: s,\n            success: None,\n        })\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/b4123b7b1db22a3c0a8b133a23c7b30a477d7b65/codex-rs/protocol/src/models.rs#L288-L299"
+        }
+      ]
+    },
+    {
+      "release": "0.100.0",
+      "source_revision": "8272f9a71ee7364d8de992418103628f8a17eb6f",
+      "release_commit_date": "2026-02-12",
+      "wire_family": "enveloped",
+      "release_range_claim": null,
+      "inspected_sources": [
+        "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs",
+        "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs",
+        "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/recorder.rs",
+        "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/policy.rs"
+      ],
+      "enums": {
+        "RolloutItem": {
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", content = \"payload\", rename_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1874-L1880",
+          "variants": [
+            {
+              "rust_variant": "SessionMeta",
+              "attributes": [],
+              "rust_declaration": "SessionMeta(SessionMetaLine)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1875-L1875"
+            },
+            {
+              "rust_variant": "ResponseItem",
+              "attributes": [],
+              "rust_declaration": "ResponseItem(ResponseItem)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1876-L1876"
+            },
+            {
+              "rust_variant": "Compacted",
+              "attributes": [],
+              "rust_declaration": "Compacted(CompactedItem)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1877-L1877"
+            },
+            {
+              "rust_variant": "TurnContext",
+              "attributes": [],
+              "rust_declaration": "TurnContext(TurnContextItem)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1878-L1878"
+            },
+            {
+              "rust_variant": "EventMsg",
+              "attributes": [],
+              "rust_declaration": "EventMsg(EventMsg)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1879-L1879"
+            }
+          ]
+        },
+        "EventMsg": {
+          "attributes": [
+            "#[derive(Debug, Clone, Deserialize, Serialize, Display, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]",
+            "#[ts(tag = \"type\")]",
+            "#[strum(serialize_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L868-L1050",
+          "variants": [
+            {
+              "rust_variant": "Error",
+              "attributes": [],
+              "rust_declaration": "Error(ErrorEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L870-L870"
+            },
+            {
+              "rust_variant": "Warning",
+              "attributes": [],
+              "rust_declaration": "Warning(WarningEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L874-L874"
+            },
+            {
+              "rust_variant": "ContextCompacted",
+              "attributes": [],
+              "rust_declaration": "ContextCompacted(ContextCompactedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L877-L877"
+            },
+            {
+              "rust_variant": "ThreadRolledBack",
+              "attributes": [],
+              "rust_declaration": "ThreadRolledBack(ThreadRolledBackEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L880-L880"
+            },
+            {
+              "rust_variant": "TurnStarted",
+              "attributes": [
+                "#[serde(rename = \"task_started\", alias = \"turn_started\")]"
+              ],
+              "rust_declaration": "TurnStarted(TurnStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L885-L885"
+            },
+            {
+              "rust_variant": "TurnComplete",
+              "attributes": [
+                "#[serde(rename = \"task_complete\", alias = \"turn_complete\")]"
+              ],
+              "rust_declaration": "TurnComplete(TurnCompleteEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L890-L890"
+            },
+            {
+              "rust_variant": "TokenCount",
+              "attributes": [],
+              "rust_declaration": "TokenCount(TokenCountEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L894-L894"
+            },
+            {
+              "rust_variant": "AgentMessage",
+              "attributes": [],
+              "rust_declaration": "AgentMessage(AgentMessageEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L897-L897"
+            },
+            {
+              "rust_variant": "UserMessage",
+              "attributes": [],
+              "rust_declaration": "UserMessage(UserMessageEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L900-L900"
+            },
+            {
+              "rust_variant": "AgentMessageDelta",
+              "attributes": [],
+              "rust_declaration": "AgentMessageDelta(AgentMessageDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L903-L903"
+            },
+            {
+              "rust_variant": "AgentReasoning",
+              "attributes": [],
+              "rust_declaration": "AgentReasoning(AgentReasoningEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L906-L906"
+            },
+            {
+              "rust_variant": "AgentReasoningDelta",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningDelta(AgentReasoningDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L909-L909"
+            },
+            {
+              "rust_variant": "AgentReasoningRawContent",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningRawContent(AgentReasoningRawContentEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L912-L912"
+            },
+            {
+              "rust_variant": "AgentReasoningRawContentDelta",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningRawContentDelta(AgentReasoningRawContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L915-L915"
+            },
+            {
+              "rust_variant": "AgentReasoningSectionBreak",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningSectionBreak(AgentReasoningSectionBreakEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L917-L917"
+            },
+            {
+              "rust_variant": "SessionConfigured",
+              "attributes": [],
+              "rust_declaration": "SessionConfigured(SessionConfiguredEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L920-L920"
+            },
+            {
+              "rust_variant": "ThreadNameUpdated",
+              "attributes": [],
+              "rust_declaration": "ThreadNameUpdated(ThreadNameUpdatedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L923-L923"
+            },
+            {
+              "rust_variant": "McpStartupUpdate",
+              "attributes": [],
+              "rust_declaration": "McpStartupUpdate(McpStartupUpdateEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L926-L926"
+            },
+            {
+              "rust_variant": "McpStartupComplete",
+              "attributes": [],
+              "rust_declaration": "McpStartupComplete(McpStartupCompleteEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L929-L929"
+            },
+            {
+              "rust_variant": "McpToolCallBegin",
+              "attributes": [],
+              "rust_declaration": "McpToolCallBegin(McpToolCallBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L931-L931"
+            },
+            {
+              "rust_variant": "McpToolCallEnd",
+              "attributes": [],
+              "rust_declaration": "McpToolCallEnd(McpToolCallEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L933-L933"
+            },
+            {
+              "rust_variant": "WebSearchBegin",
+              "attributes": [],
+              "rust_declaration": "WebSearchBegin(WebSearchBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L935-L935"
+            },
+            {
+              "rust_variant": "WebSearchEnd",
+              "attributes": [],
+              "rust_declaration": "WebSearchEnd(WebSearchEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L937-L937"
+            },
+            {
+              "rust_variant": "ExecCommandBegin",
+              "attributes": [],
+              "rust_declaration": "ExecCommandBegin(ExecCommandBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L940-L940"
+            },
+            {
+              "rust_variant": "ExecCommandOutputDelta",
+              "attributes": [],
+              "rust_declaration": "ExecCommandOutputDelta(ExecCommandOutputDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L943-L943"
+            },
+            {
+              "rust_variant": "TerminalInteraction",
+              "attributes": [],
+              "rust_declaration": "TerminalInteraction(TerminalInteractionEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L946-L946"
+            },
+            {
+              "rust_variant": "ExecCommandEnd",
+              "attributes": [],
+              "rust_declaration": "ExecCommandEnd(ExecCommandEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L948-L948"
+            },
+            {
+              "rust_variant": "ViewImageToolCall",
+              "attributes": [],
+              "rust_declaration": "ViewImageToolCall(ViewImageToolCallEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L951-L951"
+            },
+            {
+              "rust_variant": "ExecApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ExecApprovalRequest(ExecApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L953-L953"
+            },
+            {
+              "rust_variant": "RequestUserInput",
+              "attributes": [],
+              "rust_declaration": "RequestUserInput(RequestUserInputEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L955-L955"
+            },
+            {
+              "rust_variant": "DynamicToolCallRequest",
+              "attributes": [],
+              "rust_declaration": "DynamicToolCallRequest(DynamicToolCallRequest)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L957-L957"
+            },
+            {
+              "rust_variant": "ElicitationRequest",
+              "attributes": [],
+              "rust_declaration": "ElicitationRequest(ElicitationRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L959-L959"
+            },
+            {
+              "rust_variant": "ApplyPatchApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ApplyPatchApprovalRequest(ApplyPatchApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L961-L961"
+            },
+            {
+              "rust_variant": "DeprecationNotice",
+              "attributes": [],
+              "rust_declaration": "DeprecationNotice(DeprecationNoticeEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L965-L965"
+            },
+            {
+              "rust_variant": "BackgroundEvent",
+              "attributes": [],
+              "rust_declaration": "BackgroundEvent(BackgroundEventEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L967-L967"
+            },
+            {
+              "rust_variant": "UndoStarted",
+              "attributes": [],
+              "rust_declaration": "UndoStarted(UndoStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L969-L969"
+            },
+            {
+              "rust_variant": "UndoCompleted",
+              "attributes": [],
+              "rust_declaration": "UndoCompleted(UndoCompletedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L971-L971"
+            },
+            {
+              "rust_variant": "StreamError",
+              "attributes": [],
+              "rust_declaration": "StreamError(StreamErrorEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L975-L975"
+            },
+            {
+              "rust_variant": "PatchApplyBegin",
+              "attributes": [],
+              "rust_declaration": "PatchApplyBegin(PatchApplyBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L979-L979"
+            },
+            {
+              "rust_variant": "PatchApplyEnd",
+              "attributes": [],
+              "rust_declaration": "PatchApplyEnd(PatchApplyEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L982-L982"
+            },
+            {
+              "rust_variant": "TurnDiff",
+              "attributes": [],
+              "rust_declaration": "TurnDiff(TurnDiffEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L984-L984"
+            },
+            {
+              "rust_variant": "GetHistoryEntryResponse",
+              "attributes": [],
+              "rust_declaration": "GetHistoryEntryResponse(GetHistoryEntryResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L987-L987"
+            },
+            {
+              "rust_variant": "McpListToolsResponse",
+              "attributes": [],
+              "rust_declaration": "McpListToolsResponse(McpListToolsResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L990-L990"
+            },
+            {
+              "rust_variant": "ListCustomPromptsResponse",
+              "attributes": [],
+              "rust_declaration": "ListCustomPromptsResponse(ListCustomPromptsResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L993-L993"
+            },
+            {
+              "rust_variant": "ListSkillsResponse",
+              "attributes": [],
+              "rust_declaration": "ListSkillsResponse(ListSkillsResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L996-L996"
+            },
+            {
+              "rust_variant": "ListRemoteSkillsResponse",
+              "attributes": [],
+              "rust_declaration": "ListRemoteSkillsResponse(ListRemoteSkillsResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L999-L999"
+            },
+            {
+              "rust_variant": "RemoteSkillDownloaded",
+              "attributes": [],
+              "rust_declaration": "RemoteSkillDownloaded(RemoteSkillDownloadedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1002-L1002"
+            },
+            {
+              "rust_variant": "SkillsUpdateAvailable",
+              "attributes": [],
+              "rust_declaration": "SkillsUpdateAvailable",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1005-L1005"
+            },
+            {
+              "rust_variant": "PlanUpdate",
+              "attributes": [],
+              "rust_declaration": "PlanUpdate(UpdatePlanArgs)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1007-L1007"
+            },
+            {
+              "rust_variant": "TurnAborted",
+              "attributes": [],
+              "rust_declaration": "TurnAborted(TurnAbortedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1009-L1009"
+            },
+            {
+              "rust_variant": "ShutdownComplete",
+              "attributes": [],
+              "rust_declaration": "ShutdownComplete",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1012-L1012"
+            },
+            {
+              "rust_variant": "EnteredReviewMode",
+              "attributes": [],
+              "rust_declaration": "EnteredReviewMode(ReviewRequest)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1015-L1015"
+            },
+            {
+              "rust_variant": "ExitedReviewMode",
+              "attributes": [],
+              "rust_declaration": "ExitedReviewMode(ExitedReviewModeEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1018-L1018"
+            },
+            {
+              "rust_variant": "RawResponseItem",
+              "attributes": [],
+              "rust_declaration": "RawResponseItem(RawResponseItemEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1020-L1020"
+            },
+            {
+              "rust_variant": "ItemStarted",
+              "attributes": [],
+              "rust_declaration": "ItemStarted(ItemStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1022-L1022"
+            },
+            {
+              "rust_variant": "ItemCompleted",
+              "attributes": [],
+              "rust_declaration": "ItemCompleted(ItemCompletedEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1023-L1023"
+            },
+            {
+              "rust_variant": "AgentMessageContentDelta",
+              "attributes": [],
+              "rust_declaration": "AgentMessageContentDelta(AgentMessageContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1025-L1025"
+            },
+            {
+              "rust_variant": "PlanDelta",
+              "attributes": [],
+              "rust_declaration": "PlanDelta(PlanDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1026-L1026"
+            },
+            {
+              "rust_variant": "ReasoningContentDelta",
+              "attributes": [],
+              "rust_declaration": "ReasoningContentDelta(ReasoningContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1027-L1027"
+            },
+            {
+              "rust_variant": "ReasoningRawContentDelta",
+              "attributes": [],
+              "rust_declaration": "ReasoningRawContentDelta(ReasoningRawContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1028-L1028"
+            },
+            {
+              "rust_variant": "CollabAgentSpawnBegin",
+              "attributes": [],
+              "rust_declaration": "CollabAgentSpawnBegin(CollabAgentSpawnBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1031-L1031"
+            },
+            {
+              "rust_variant": "CollabAgentSpawnEnd",
+              "attributes": [],
+              "rust_declaration": "CollabAgentSpawnEnd(CollabAgentSpawnEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1033-L1033"
+            },
+            {
+              "rust_variant": "CollabAgentInteractionBegin",
+              "attributes": [],
+              "rust_declaration": "CollabAgentInteractionBegin(CollabAgentInteractionBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1035-L1035"
+            },
+            {
+              "rust_variant": "CollabAgentInteractionEnd",
+              "attributes": [],
+              "rust_declaration": "CollabAgentInteractionEnd(CollabAgentInteractionEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1037-L1037"
+            },
+            {
+              "rust_variant": "CollabWaitingBegin",
+              "attributes": [],
+              "rust_declaration": "CollabWaitingBegin(CollabWaitingBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1039-L1039"
+            },
+            {
+              "rust_variant": "CollabWaitingEnd",
+              "attributes": [],
+              "rust_declaration": "CollabWaitingEnd(CollabWaitingEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1041-L1041"
+            },
+            {
+              "rust_variant": "CollabCloseBegin",
+              "attributes": [],
+              "rust_declaration": "CollabCloseBegin(CollabCloseBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1043-L1043"
+            },
+            {
+              "rust_variant": "CollabCloseEnd",
+              "attributes": [],
+              "rust_declaration": "CollabCloseEnd(CollabCloseEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1045-L1045"
+            },
+            {
+              "rust_variant": "CollabResumeBegin",
+              "attributes": [],
+              "rust_declaration": "CollabResumeBegin(CollabResumeBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1047-L1047"
+            },
+            {
+              "rust_variant": "CollabResumeEnd",
+              "attributes": [],
+              "rust_declaration": "CollabResumeEnd(CollabResumeEndEvent)",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1049-L1049"
+            }
+          ]
+        },
+        "ResponseItem": {
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L93-L196",
+          "variants": [
+            {
+              "rust_variant": "Message",
+              "attributes": [],
+              "rust_declaration": "Message {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        role: String,\n        content: Vec<ContentItem>,\n        // Do not use directly, no available consistently across all providers.\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        end_turn: Option<bool>,\n        // Optional output-message phase (for example: \"commentary\", \"final_answer\").\n        // Availability varies by provider/model, so downstream consumers must\n        // preserve fallback behavior when this is absent.\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        phase: Option<MessagePhase>,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L94-L110"
+            },
+            {
+              "rust_variant": "Reasoning",
+              "attributes": [],
+              "rust_declaration": "Reasoning {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: String,\n        summary: Vec<ReasoningItemReasoningSummary>,\n        #[serde(default, skip_serializing_if = \"should_serialize_reasoning_content\")]\n        #[ts(optional)]\n        content: Option<Vec<ReasoningItemContent>>,\n        encrypted_content: Option<String>,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L111-L120"
+            },
+            {
+              "rust_variant": "LocalShellCall",
+              "attributes": [],
+              "rust_declaration": "LocalShellCall {\n        /// Legacy id field retained for compatibility with older payloads.\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        /// Set when using the Responses API.\n        call_id: Option<String>,\n        status: LocalShellStatus,\n        action: LocalShellAction,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L121-L130"
+            },
+            {
+              "rust_variant": "FunctionCall",
+              "attributes": [],
+              "rust_declaration": "FunctionCall {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        name: String,\n        // The Responses API returns the function call arguments as a *string* that contains\n        // JSON, not as an already\u2011parsed object. We keep it as a raw string here and let\n        // Session::handle_function_call parse it into a Value.\n        arguments: String,\n        call_id: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L131-L141"
+            },
+            {
+              "rust_variant": "FunctionCallOutput",
+              "attributes": [],
+              "rust_declaration": "FunctionCallOutput {\n        call_id: String,\n        output: FunctionCallOutputPayload,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L147-L150"
+            },
+            {
+              "rust_variant": "CustomToolCall",
+              "attributes": [],
+              "rust_declaration": "CustomToolCall {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        status: Option<String>,\n\n        call_id: String,\n        name: String,\n        input: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L151-L162"
+            },
+            {
+              "rust_variant": "CustomToolCallOutput",
+              "attributes": [],
+              "rust_declaration": "CustomToolCallOutput {\n        call_id: String,\n        output: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L163-L166"
+            },
+            {
+              "rust_variant": "WebSearchCall",
+              "attributes": [],
+              "rust_declaration": "WebSearchCall {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        status: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        action: Option<WebSearchAction>,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L175-L185"
+            },
+            {
+              "rust_variant": "GhostSnapshot",
+              "attributes": [],
+              "rust_declaration": "GhostSnapshot {\n        ghost_commit: GhostCommit,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L187-L189"
+            },
+            {
+              "rust_variant": "Compaction",
+              "attributes": [
+                "#[serde(alias = \"compaction_summary\")]"
+              ],
+              "rust_declaration": "Compaction {\n        encrypted_content: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L191-L193"
+            },
+            {
+              "rust_variant": "Other",
+              "attributes": [
+                "#[serde(other)]"
+              ],
+              "rust_declaration": "Other",
+              "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L195-L195"
+            }
+          ]
+        }
+      },
+      "payload_declarations": [
+        {
+          "rust_type": "CompactedItem",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct CompactedItem {\n    pub message: String,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub replacement_history: Option<Vec<ResponseItem>>,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1883-L1887"
+        },
+        {
+          "rust_type": "ContentItem",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ContentItem {\n    InputText { text: String },\n    InputImage { image_url: String },\n    OutputText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L69-L73"
+        },
+        {
+          "rust_type": "FunctionCallOutputContentItem",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum FunctionCallOutputContentItem {\n    // Do not rename, these are serialized and used directly in the responses API.\n    InputText { text: String },\n    // Do not rename, these are serialized and used directly in the responses API.\n    InputImage { image_url: String },\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L791-L796"
+        },
+        {
+          "rust_type": "FunctionCallOutputPayload",
+          "attributes": [
+            "#[derive(Debug, Default, Clone, PartialEq, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct FunctionCallOutputPayload {\n    pub body: FunctionCallOutputBody,\n    pub success: Option<bool>,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L850-L853"
+        },
+        {
+          "rust_type": "LocalShellAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellAction {\n    Exec(LocalShellExecAction),\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L659-L661"
+        },
+        {
+          "rust_type": "LocalShellExecAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct LocalShellExecAction {\n    pub command: Vec<String>,\n    pub timeout_ms: Option<u64>,\n    pub working_directory: Option<String>,\n    pub env: Option<HashMap<String, String>>,\n    pub user: Option<String>,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L664-L670"
+        },
+        {
+          "rust_type": "LocalShellStatus",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellStatus {\n    Completed,\n    InProgress,\n    Incomplete,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L651-L655"
+        },
+        {
+          "rust_type": "MessagePhase",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema, TS)]",
+            "#[serde(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum MessagePhase {\n    /// Mid-turn assistant text (for example preamble/progress narration).\n    ///\n    /// Additional tool calls or assistant output may follow before turn\n    /// completion.\n    Commentary,\n    /// The assistant's terminal answer text for the current turn.\n    FinalAnswer,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L81-L89"
+        },
+        {
+          "rust_type": "ReasoningItemContent",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemContent {\n    ReasoningText { text: String },\n    Text { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L709-L712"
+        },
+        {
+          "rust_type": "ReasoningItemReasoningSummary",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemReasoningSummary {\n    SummaryText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L703-L705"
+        },
+        {
+          "rust_type": "RolloutLine",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, JsonSchema)]"
+          ],
+          "rust_declaration": "pub struct RolloutLine {\n    pub timestamp: String,\n    #[serde(flatten)]\n    pub item: RolloutItem,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1936-L1940"
+        },
+        {
+          "rust_type": "SessionMeta",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct SessionMeta {\n    pub id: ThreadId,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub forked_from_id: Option<ThreadId>,\n    pub timestamp: String,\n    pub cwd: PathBuf,\n    pub originator: String,\n    pub cli_version: String,\n    #[serde(default)]\n    pub source: SessionSource,\n    pub model_provider: Option<String>,\n    /// base_instructions for the session. This *should* always be present when creating a new session,\n    /// but may be missing for older sessions. If not present, fall back to rendering the base_instructions\n    /// from ModelsManager.\n    pub base_instructions: Option<BaseInstructions>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub dynamic_tools: Option<Vec<DynamicToolSpec>>,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1828-L1845"
+        },
+        {
+          "rust_type": "SessionMetaLine",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct SessionMetaLine {\n    #[serde(flatten)]\n    pub meta: SessionMeta,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub git: Option<GitInfo>,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1865-L1870"
+        },
+        {
+          "rust_type": "SessionSource",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema, TS, Default)]",
+            "#[serde(rename_all = \"lowercase\")]",
+            "#[ts(rename_all = \"lowercase\")]"
+          ],
+          "rust_declaration": "pub enum SessionSource {\n    Cli,\n    #[default]\n    VSCode,\n    Exec,\n    Mcp,\n    SubAgent(SubAgentSource),\n    #[serde(other)]\n    Unknown,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1769-L1778"
+        },
+        {
+          "rust_type": "SubAgentSource",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema, TS)]",
+            "#[serde(rename_all = \"snake_case\")]",
+            "#[ts(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum SubAgentSource {\n    Review,\n    Compact,\n    ThreadSpawn {\n        parent_thread_id: ThreadId,\n        depth: i32,\n    },\n    Other(String),\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1783-L1791"
+        },
+        {
+          "rust_type": "TurnContextItem",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct TurnContextItem {\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub turn_id: Option<String>,\n    pub cwd: PathBuf,\n    pub approval_policy: AskForApproval,\n    pub sandbox_policy: SandboxPolicy,\n    pub model: String,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub personality: Option<Personality>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub collaboration_mode: Option<CollaborationMode>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub effort: Option<ReasoningEffortConfig>,\n    pub summary: ReasoningSummaryConfig,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub user_instructions: Option<String>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub developer_instructions: Option<String>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub final_output_json_schema: Option<Value>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub truncation_policy: Option<TruncationPolicy>,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/protocol.rs#L1904-L1926"
+        },
+        {
+          "rust_type": "WebSearchAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum WebSearchAction {\n    Search {\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        query: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        queries: Option<Vec<String>>,\n    },\n    OpenPage {\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        url: Option<String>,\n    },\n    FindInPage {\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        url: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        pattern: Option<String>,\n    },\n\n    #[serde(other)]\n    Other,\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L674-L699"
+        }
+      ],
+      "codec_and_reader_evidence": [
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "should_persist_response_item",
+          "rust_declaration": "pub(crate) fn should_persist_response_item(item: &ResponseItem) -> bool {\n    match item {\n        ResponseItem::Message { .. }\n        | ResponseItem::Reasoning { .. }\n        | ResponseItem::LocalShellCall { .. }\n        | ResponseItem::FunctionCall { .. }\n        | ResponseItem::FunctionCallOutput { .. }\n        | ResponseItem::CustomToolCall { .. }\n        | ResponseItem::CustomToolCallOutput { .. }\n        | ResponseItem::WebSearchCall { .. }\n        | ResponseItem::GhostSnapshot { .. }\n        | ResponseItem::Compaction { .. } => true,\n        ResponseItem::Other => false,\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/policy.rs#L20-L34"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "should_persist_event_msg",
+          "rust_declaration": "pub(crate) fn should_persist_event_msg(ev: &EventMsg) -> bool {\n    match ev {\n        EventMsg::UserMessage(_)\n        | EventMsg::AgentMessage(_)\n        | EventMsg::AgentReasoning(_)\n        | EventMsg::AgentReasoningRawContent(_)\n        | EventMsg::TokenCount(_)\n        | EventMsg::ContextCompacted(_)\n        | EventMsg::EnteredReviewMode(_)\n        | EventMsg::ExitedReviewMode(_)\n        | EventMsg::ThreadRolledBack(_)\n        | EventMsg::UndoCompleted(_)\n        | EventMsg::TurnAborted(_)\n        | EventMsg::TurnStarted(_)\n        | EventMsg::TurnComplete(_) => true,\n        EventMsg::ItemCompleted(event) => {\n            // Plan items are derived from streaming tags and are not part of the\n            // raw ResponseItem history, so we persist their completion to replay\n            // them on resume without bloating rollouts with every item lifecycle.\n            matches!(event.item, codex_protocol::items::TurnItem::Plan(_))\n        }\n        EventMsg::Error(_)\n        | EventMsg::Warning(_)\n        | EventMsg::AgentMessageDelta(_)\n        | EventMsg::AgentReasoningDelta(_)\n        | EventMsg::AgentReasoningRawContentDelta(_)\n        | EventMsg::AgentReasoningSectionBreak(_)\n        | EventMsg::RawResponseItem(_)\n        | EventMsg::SessionConfigured(_)\n        | EventMsg::ThreadNameUpdated(_)\n        | EventMsg::McpToolCallBegin(_)\n        | EventMsg::McpToolCallEnd(_)\n        | EventMsg::WebSearchBegin(_)\n        | EventMsg::WebSearchEnd(_)\n        | EventMsg::ExecCommandBegin(_)\n        | EventMsg::TerminalInteraction(_)\n        | EventMsg::ExecCommandOutputDelta(_)\n        | EventMsg::ExecCommandEnd(_)\n        | EventMsg::ExecApprovalRequest(_)\n        | EventMsg::RequestUserInput(_)\n        | EventMsg::DynamicToolCallRequest(_)\n        | EventMsg::ElicitationRequest(_)\n        | EventMsg::ApplyPatchApprovalRequest(_)\n        | EventMsg::BackgroundEvent(_)\n        | EventMsg::StreamError(_)\n        | EventMsg::PatchApplyBegin(_)\n        | EventMsg::PatchApplyEnd(_)\n        | EventMsg::TurnDiff(_)\n        | EventMsg::GetHistoryEntryResponse(_)\n        | EventMsg::UndoStarted(_)\n        | EventMsg::McpListToolsResponse(_)\n        | EventMsg::McpStartupUpdate(_)\n        | EventMsg::McpStartupComplete(_)\n        | EventMsg::ListCustomPromptsResponse(_)\n        | EventMsg::ListSkillsResponse(_)\n        | EventMsg::ListRemoteSkillsResponse(_)\n        | EventMsg::RemoteSkillDownloaded(_)\n        | EventMsg::PlanUpdate(_)\n        | EventMsg::ShutdownComplete\n        | EventMsg::ViewImageToolCall(_)\n        | EventMsg::DeprecationNotice(_)\n        | EventMsg::ItemStarted(_)\n        | EventMsg::AgentMessageContentDelta(_)\n        | EventMsg::PlanDelta(_)\n        | EventMsg::ReasoningContentDelta(_)\n        | EventMsg::ReasoningRawContentDelta(_)\n        | EventMsg::SkillsUpdateAvailable\n        | EventMsg::CollabAgentSpawnBegin(_)\n        | EventMsg::CollabAgentSpawnEnd(_)\n        | EventMsg::CollabAgentInteractionBegin(_)\n        | EventMsg::CollabAgentInteractionEnd(_)\n        | EventMsg::CollabWaitingBegin(_)\n        | EventMsg::CollabWaitingEnd(_)\n        | EventMsg::CollabCloseBegin(_)\n        | EventMsg::CollabCloseEnd(_)\n        | EventMsg::CollabResumeBegin(_)\n        | EventMsg::CollabResumeEnd(_) => false,\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/policy.rs#L56-L134"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "is_persisted_response_item",
+          "rust_declaration": "pub(crate) fn is_persisted_response_item(item: &RolloutItem) -> bool {\n    match item {\n        RolloutItem::ResponseItem(item) => should_persist_response_item(item),\n        RolloutItem::EventMsg(ev) => should_persist_event_msg(ev),\n        // Persist Codex executive markers so we can analyze flows (e.g., compaction, API turns).\n        RolloutItem::Compacted(_) | RolloutItem::TurnContext(_) | RolloutItem::SessionMeta(_) => {\n            true\n        }\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/policy.rs#L7-L16"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "resume",
+          "rust_declaration": "pub fn resume(path: PathBuf) -> Self {\n        Self::Resume { path }\n    }",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/recorder.rs#L117-L119"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "record_items",
+          "rust_declaration": "pub(crate) async fn record_items(&self, items: &[RolloutItem]) -> std::io::Result<()> {\n        let mut filtered = Vec::new();\n        for item in items {\n            // Note that function calls may look a bit strange if they are\n            // \"fully qualified MCP tool calls,\" so we could consider\n            // reformatting them in that case.\n            if is_persisted_response_item(item) {\n                filtered.push(item.clone());\n            }\n        }\n        if filtered.is_empty() {\n            return Ok(());\n        }\n        self.tx\n            .send(RolloutCmd::AddItems(filtered))\n            .await\n            .map_err(|e| IoError::other(format!(\"failed to queue rollout items: {e}\")))\n    }",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/recorder.rs#L416-L433"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "load_rollout_items",
+          "rust_declaration": "pub(crate) async fn load_rollout_items(\n        path: &Path,\n    ) -> std::io::Result<(Vec<RolloutItem>, Option<ThreadId>, usize)> {\n        trace!(\"Resuming rollout from {path:?}\");\n        let text = tokio::fs::read_to_string(path).await?;\n        if text.trim().is_empty() {\n            return Err(IoError::other(\"empty session file\"));\n        }\n\n        let mut items: Vec<RolloutItem> = Vec::new();\n        let mut thread_id: Option<ThreadId> = None;\n        let mut parse_errors = 0usize;\n        for line in text.lines() {\n            if line.trim().is_empty() {\n                continue;\n            }\n            let v: Value = match serde_json::from_str(line) {\n                Ok(v) => v,\n                Err(e) => {\n                    warn!(\"failed to parse line as JSON: {line:?}, error: {e}\");\n                    parse_errors = parse_errors.saturating_add(1);\n                    continue;\n                }\n            };\n\n            // Parse the rollout line structure\n            match serde_json::from_value::<RolloutLine>(v.clone()) {\n                Ok(rollout_line) => match rollout_line.item {\n                    RolloutItem::SessionMeta(session_meta_line) => {\n                        // Use the FIRST SessionMeta encountered in the file as the canonical\n                        // thread id and main session information. Keep all items intact.\n                        if thread_id.is_none() {\n                            thread_id = Some(session_meta_line.meta.id);\n                        }\n                        items.push(RolloutItem::SessionMeta(session_meta_line));\n                    }\n                    RolloutItem::ResponseItem(item) => {\n                        items.push(RolloutItem::ResponseItem(item));\n                    }\n                    RolloutItem::Compacted(item) => {\n                        items.push(RolloutItem::Compacted(item));\n                    }\n                    RolloutItem::TurnContext(item) => {\n                        items.push(RolloutItem::TurnContext(item));\n                    }\n                    RolloutItem::EventMsg(_ev) => {\n                        items.push(RolloutItem::EventMsg(_ev));\n                    }\n                },\n                Err(e) => {\n                    trace!(\"failed to parse rollout line: {e}\");\n                    parse_errors = parse_errors.saturating_add(1);\n                }\n            }\n        }\n\n        tracing::debug!(\n            \"Resumed rollout with {} items, thread ID: {:?}, parse errors: {}\",\n            items.len(),\n            thread_id,\n            parse_errors,\n        );\n        Ok((items, thread_id, parse_errors))\n    }",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/recorder.rs#L459-L522"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "write_rollout_item",
+          "rust_declaration": "async fn write_rollout_item(&mut self, rollout_item: &RolloutItem) -> std::io::Result<()> {\n        let timestamp_format: &[FormatItem] = format_description!(\n            \"[year]-[month]-[day]T[hour]:[minute]:[second].[subsecond digits:3]Z\"\n        );\n        let timestamp = OffsetDateTime::now_utc()\n            .format(timestamp_format)\n            .map_err(|e| IoError::other(format!(\"failed to format timestamp: {e}\")))?;\n\n        let line = RolloutLineRef {\n            timestamp,\n            item: rollout_item,\n        };\n        self.write_line(&line).await\n    }",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/recorder.rs#L842-L855"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "write_line",
+          "rust_declaration": "async fn write_line(&mut self, item: &impl serde::Serialize) -> std::io::Result<()> {\n        let mut json = serde_json::to_string(item)?;\n        json.push('\\n');\n        self.file.write_all(json.as_bytes()).await?;\n        self.file.flush().await?;\n        Ok(())\n    }",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/core/src/rollout/recorder.rs#L856-L862"
+        },
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl Serialize for FunctionCallOutputPayload {\n    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>\n    where\n        S: Serializer,\n    {\n        match &self.body {\n            FunctionCallOutputBody::Text(content) => serializer.serialize_str(content),\n            FunctionCallOutputBody::ContentItems(items) => items.serialize(serializer),\n        }\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L930-L940"
+        },
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl<'de> Deserialize<'de> for FunctionCallOutputPayload {\n    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>\n    where\n        D: Deserializer<'de>,\n    {\n        let body = FunctionCallOutputBody::deserialize(deserializer)?;\n        Ok(FunctionCallOutputPayload {\n            body,\n            success: None,\n        })\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/8272f9a71ee7364d8de992418103628f8a17eb6f/codex-rs/protocol/src/models.rs#L942-L953"
+        }
+      ]
+    },
+    {
+      "release": "0.140.0",
+      "source_revision": "6506579001c322927a3e4bd440563267a7ac6c1f",
+      "release_commit_date": "2026-06-15",
+      "wire_family": "enveloped",
+      "release_range_claim": null,
+      "inspected_sources": [
+        "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs",
+        "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs",
+        "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/recorder.rs",
+        "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/policy.rs"
+      ],
+      "enums": {
+        "RolloutItem": {
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", content = \"payload\", rename_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2910-L2918",
+          "variants": [
+            {
+              "rust_variant": "SessionMeta",
+              "attributes": [],
+              "rust_declaration": "SessionMeta(SessionMetaLine)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2911-L2911"
+            },
+            {
+              "rust_variant": "ResponseItem",
+              "attributes": [],
+              "rust_declaration": "ResponseItem(ResponseItem)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2912-L2912"
+            },
+            {
+              "rust_variant": "InterAgentCommunication",
+              "attributes": [],
+              "rust_declaration": "InterAgentCommunication(InterAgentCommunication)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2914-L2914"
+            },
+            {
+              "rust_variant": "Compacted",
+              "attributes": [],
+              "rust_declaration": "Compacted(CompactedItem)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2915-L2915"
+            },
+            {
+              "rust_variant": "TurnContext",
+              "attributes": [],
+              "rust_declaration": "TurnContext(TurnContextItem)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2916-L2916"
+            },
+            {
+              "rust_variant": "EventMsg",
+              "attributes": [],
+              "rust_declaration": "EventMsg(EventMsg)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2917-L2917"
+            }
+          ]
+        },
+        "EventMsg": {
+          "attributes": [
+            "#[derive(Debug, Clone, Deserialize, Serialize, Display, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]",
+            "#[ts(tag = \"type\")]",
+            "#[strum(serialize_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1180-L1377",
+          "variants": [
+            {
+              "rust_variant": "Error",
+              "attributes": [],
+              "rust_declaration": "Error(ErrorEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1182-L1182"
+            },
+            {
+              "rust_variant": "Warning",
+              "attributes": [],
+              "rust_declaration": "Warning(WarningEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1186-L1186"
+            },
+            {
+              "rust_variant": "GuardianWarning",
+              "attributes": [],
+              "rust_declaration": "GuardianWarning(WarningEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1189-L1189"
+            },
+            {
+              "rust_variant": "RealtimeConversationStarted",
+              "attributes": [],
+              "rust_declaration": "RealtimeConversationStarted(RealtimeConversationStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1192-L1192"
+            },
+            {
+              "rust_variant": "RealtimeConversationRealtime",
+              "attributes": [],
+              "rust_declaration": "RealtimeConversationRealtime(RealtimeConversationRealtimeEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1195-L1195"
+            },
+            {
+              "rust_variant": "RealtimeConversationClosed",
+              "attributes": [],
+              "rust_declaration": "RealtimeConversationClosed(RealtimeConversationClosedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1198-L1198"
+            },
+            {
+              "rust_variant": "RealtimeConversationSdp",
+              "attributes": [],
+              "rust_declaration": "RealtimeConversationSdp(RealtimeConversationSdpEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1201-L1201"
+            },
+            {
+              "rust_variant": "ModelReroute",
+              "attributes": [],
+              "rust_declaration": "ModelReroute(ModelRerouteEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1204-L1204"
+            },
+            {
+              "rust_variant": "ModelVerification",
+              "attributes": [],
+              "rust_declaration": "ModelVerification(ModelVerificationEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1207-L1207"
+            },
+            {
+              "rust_variant": "TurnModerationMetadata",
+              "attributes": [],
+              "rust_declaration": "TurnModerationMetadata(TurnModerationMetadataEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1210-L1210"
+            },
+            {
+              "rust_variant": "ContextCompacted",
+              "attributes": [],
+              "rust_declaration": "ContextCompacted(ContextCompactedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1213-L1213"
+            },
+            {
+              "rust_variant": "ThreadRolledBack",
+              "attributes": [],
+              "rust_declaration": "ThreadRolledBack(ThreadRolledBackEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1216-L1216"
+            },
+            {
+              "rust_variant": "TurnStarted",
+              "attributes": [
+                "#[serde(rename = \"task_started\", alias = \"turn_started\")]"
+              ],
+              "rust_declaration": "TurnStarted(TurnStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1221-L1221"
+            },
+            {
+              "rust_variant": "ThreadSettingsApplied",
+              "attributes": [],
+              "rust_declaration": "ThreadSettingsApplied(ThreadSettingsAppliedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1225-L1225"
+            },
+            {
+              "rust_variant": "TurnComplete",
+              "attributes": [
+                "#[serde(rename = \"task_complete\", alias = \"turn_complete\")]"
+              ],
+              "rust_declaration": "TurnComplete(TurnCompleteEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1230-L1230"
+            },
+            {
+              "rust_variant": "TokenCount",
+              "attributes": [],
+              "rust_declaration": "TokenCount(TokenCountEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1234-L1234"
+            },
+            {
+              "rust_variant": "AgentMessage",
+              "attributes": [],
+              "rust_declaration": "AgentMessage(AgentMessageEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1237-L1237"
+            },
+            {
+              "rust_variant": "UserMessage",
+              "attributes": [],
+              "rust_declaration": "UserMessage(UserMessageEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1240-L1240"
+            },
+            {
+              "rust_variant": "AgentReasoning",
+              "attributes": [],
+              "rust_declaration": "AgentReasoning(AgentReasoningEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1243-L1243"
+            },
+            {
+              "rust_variant": "AgentReasoningRawContent",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningRawContent(AgentReasoningRawContentEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1246-L1246"
+            },
+            {
+              "rust_variant": "AgentReasoningSectionBreak",
+              "attributes": [],
+              "rust_declaration": "AgentReasoningSectionBreak(AgentReasoningSectionBreakEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1249-L1249"
+            },
+            {
+              "rust_variant": "SessionConfigured",
+              "attributes": [],
+              "rust_declaration": "SessionConfigured(SessionConfiguredEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1252-L1252"
+            },
+            {
+              "rust_variant": "ThreadGoalUpdated",
+              "attributes": [],
+              "rust_declaration": "ThreadGoalUpdated(ThreadGoalUpdatedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1255-L1255"
+            },
+            {
+              "rust_variant": "McpStartupUpdate",
+              "attributes": [],
+              "rust_declaration": "McpStartupUpdate(McpStartupUpdateEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1258-L1258"
+            },
+            {
+              "rust_variant": "McpStartupComplete",
+              "attributes": [],
+              "rust_declaration": "McpStartupComplete(McpStartupCompleteEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1261-L1261"
+            },
+            {
+              "rust_variant": "McpToolCallBegin",
+              "attributes": [],
+              "rust_declaration": "McpToolCallBegin(McpToolCallBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1263-L1263"
+            },
+            {
+              "rust_variant": "McpToolCallEnd",
+              "attributes": [],
+              "rust_declaration": "McpToolCallEnd(McpToolCallEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1265-L1265"
+            },
+            {
+              "rust_variant": "WebSearchBegin",
+              "attributes": [],
+              "rust_declaration": "WebSearchBegin(WebSearchBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1267-L1267"
+            },
+            {
+              "rust_variant": "WebSearchEnd",
+              "attributes": [],
+              "rust_declaration": "WebSearchEnd(WebSearchEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1269-L1269"
+            },
+            {
+              "rust_variant": "ImageGenerationBegin",
+              "attributes": [],
+              "rust_declaration": "ImageGenerationBegin(ImageGenerationBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1271-L1271"
+            },
+            {
+              "rust_variant": "ImageGenerationEnd",
+              "attributes": [],
+              "rust_declaration": "ImageGenerationEnd(ImageGenerationEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1273-L1273"
+            },
+            {
+              "rust_variant": "ExecCommandBegin",
+              "attributes": [],
+              "rust_declaration": "ExecCommandBegin(ExecCommandBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1276-L1276"
+            },
+            {
+              "rust_variant": "ExecCommandOutputDelta",
+              "attributes": [],
+              "rust_declaration": "ExecCommandOutputDelta(ExecCommandOutputDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1279-L1279"
+            },
+            {
+              "rust_variant": "TerminalInteraction",
+              "attributes": [],
+              "rust_declaration": "TerminalInteraction(TerminalInteractionEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1282-L1282"
+            },
+            {
+              "rust_variant": "ExecCommandEnd",
+              "attributes": [],
+              "rust_declaration": "ExecCommandEnd(ExecCommandEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1284-L1284"
+            },
+            {
+              "rust_variant": "ViewImageToolCall",
+              "attributes": [],
+              "rust_declaration": "ViewImageToolCall(ViewImageToolCallEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1287-L1287"
+            },
+            {
+              "rust_variant": "ExecApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ExecApprovalRequest(ExecApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1289-L1289"
+            },
+            {
+              "rust_variant": "RequestPermissions",
+              "attributes": [],
+              "rust_declaration": "RequestPermissions(RequestPermissionsEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1291-L1291"
+            },
+            {
+              "rust_variant": "RequestUserInput",
+              "attributes": [],
+              "rust_declaration": "RequestUserInput(RequestUserInputEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1293-L1293"
+            },
+            {
+              "rust_variant": "DynamicToolCallRequest",
+              "attributes": [],
+              "rust_declaration": "DynamicToolCallRequest(DynamicToolCallRequest)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1295-L1295"
+            },
+            {
+              "rust_variant": "DynamicToolCallResponse",
+              "attributes": [],
+              "rust_declaration": "DynamicToolCallResponse(DynamicToolCallResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1297-L1297"
+            },
+            {
+              "rust_variant": "ElicitationRequest",
+              "attributes": [],
+              "rust_declaration": "ElicitationRequest(ElicitationRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1299-L1299"
+            },
+            {
+              "rust_variant": "ApplyPatchApprovalRequest",
+              "attributes": [],
+              "rust_declaration": "ApplyPatchApprovalRequest(ApplyPatchApprovalRequestEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1301-L1301"
+            },
+            {
+              "rust_variant": "GuardianAssessment",
+              "attributes": [],
+              "rust_declaration": "GuardianAssessment(GuardianAssessmentEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1304-L1304"
+            },
+            {
+              "rust_variant": "DeprecationNotice",
+              "attributes": [],
+              "rust_declaration": "DeprecationNotice(DeprecationNoticeEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1308-L1308"
+            },
+            {
+              "rust_variant": "StreamError",
+              "attributes": [],
+              "rust_declaration": "StreamError(StreamErrorEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1312-L1312"
+            },
+            {
+              "rust_variant": "PatchApplyBegin",
+              "attributes": [],
+              "rust_declaration": "PatchApplyBegin(PatchApplyBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1316-L1316"
+            },
+            {
+              "rust_variant": "PatchApplyUpdated",
+              "attributes": [],
+              "rust_declaration": "PatchApplyUpdated(PatchApplyUpdatedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1319-L1319"
+            },
+            {
+              "rust_variant": "PatchApplyEnd",
+              "attributes": [],
+              "rust_declaration": "PatchApplyEnd(PatchApplyEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1322-L1322"
+            },
+            {
+              "rust_variant": "TurnDiff",
+              "attributes": [],
+              "rust_declaration": "TurnDiff(TurnDiffEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1324-L1324"
+            },
+            {
+              "rust_variant": "RealtimeConversationListVoicesResponse",
+              "attributes": [],
+              "rust_declaration": "RealtimeConversationListVoicesResponse(RealtimeConversationListVoicesResponseEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1327-L1327"
+            },
+            {
+              "rust_variant": "PlanUpdate",
+              "attributes": [],
+              "rust_declaration": "PlanUpdate(UpdatePlanArgs)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1329-L1329"
+            },
+            {
+              "rust_variant": "TurnAborted",
+              "attributes": [],
+              "rust_declaration": "TurnAborted(TurnAbortedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1331-L1331"
+            },
+            {
+              "rust_variant": "ShutdownComplete",
+              "attributes": [],
+              "rust_declaration": "ShutdownComplete",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1334-L1334"
+            },
+            {
+              "rust_variant": "EnteredReviewMode",
+              "attributes": [],
+              "rust_declaration": "EnteredReviewMode(ReviewRequest)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1337-L1337"
+            },
+            {
+              "rust_variant": "ExitedReviewMode",
+              "attributes": [],
+              "rust_declaration": "ExitedReviewMode(ExitedReviewModeEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1340-L1340"
+            },
+            {
+              "rust_variant": "RawResponseItem",
+              "attributes": [],
+              "rust_declaration": "RawResponseItem(RawResponseItemEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1342-L1342"
+            },
+            {
+              "rust_variant": "ItemStarted",
+              "attributes": [],
+              "rust_declaration": "ItemStarted(ItemStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1344-L1344"
+            },
+            {
+              "rust_variant": "ItemCompleted",
+              "attributes": [],
+              "rust_declaration": "ItemCompleted(ItemCompletedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1345-L1345"
+            },
+            {
+              "rust_variant": "HookStarted",
+              "attributes": [],
+              "rust_declaration": "HookStarted(HookStartedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1346-L1346"
+            },
+            {
+              "rust_variant": "HookCompleted",
+              "attributes": [],
+              "rust_declaration": "HookCompleted(HookCompletedEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1347-L1347"
+            },
+            {
+              "rust_variant": "AgentMessageContentDelta",
+              "attributes": [],
+              "rust_declaration": "AgentMessageContentDelta(AgentMessageContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1349-L1349"
+            },
+            {
+              "rust_variant": "PlanDelta",
+              "attributes": [],
+              "rust_declaration": "PlanDelta(PlanDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1350-L1350"
+            },
+            {
+              "rust_variant": "ReasoningContentDelta",
+              "attributes": [],
+              "rust_declaration": "ReasoningContentDelta(ReasoningContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1351-L1351"
+            },
+            {
+              "rust_variant": "ReasoningRawContentDelta",
+              "attributes": [],
+              "rust_declaration": "ReasoningRawContentDelta(ReasoningRawContentDeltaEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1352-L1352"
+            },
+            {
+              "rust_variant": "CollabAgentSpawnBegin",
+              "attributes": [],
+              "rust_declaration": "CollabAgentSpawnBegin(CollabAgentSpawnBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1355-L1355"
+            },
+            {
+              "rust_variant": "CollabAgentSpawnEnd",
+              "attributes": [],
+              "rust_declaration": "CollabAgentSpawnEnd(CollabAgentSpawnEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1357-L1357"
+            },
+            {
+              "rust_variant": "CollabAgentInteractionBegin",
+              "attributes": [],
+              "rust_declaration": "CollabAgentInteractionBegin(CollabAgentInteractionBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1359-L1359"
+            },
+            {
+              "rust_variant": "CollabAgentInteractionEnd",
+              "attributes": [],
+              "rust_declaration": "CollabAgentInteractionEnd(CollabAgentInteractionEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1361-L1361"
+            },
+            {
+              "rust_variant": "CollabWaitingBegin",
+              "attributes": [],
+              "rust_declaration": "CollabWaitingBegin(CollabWaitingBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1363-L1363"
+            },
+            {
+              "rust_variant": "CollabWaitingEnd",
+              "attributes": [],
+              "rust_declaration": "CollabWaitingEnd(CollabWaitingEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1365-L1365"
+            },
+            {
+              "rust_variant": "CollabCloseBegin",
+              "attributes": [],
+              "rust_declaration": "CollabCloseBegin(CollabCloseBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1367-L1367"
+            },
+            {
+              "rust_variant": "CollabCloseEnd",
+              "attributes": [],
+              "rust_declaration": "CollabCloseEnd(CollabCloseEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1369-L1369"
+            },
+            {
+              "rust_variant": "CollabResumeBegin",
+              "attributes": [],
+              "rust_declaration": "CollabResumeBegin(CollabResumeBeginEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1371-L1371"
+            },
+            {
+              "rust_variant": "CollabResumeEnd",
+              "attributes": [],
+              "rust_declaration": "CollabResumeEnd(CollabResumeEndEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1373-L1373"
+            },
+            {
+              "rust_variant": "SubAgentActivity",
+              "attributes": [],
+              "rust_declaration": "SubAgentActivity(SubAgentActivityEvent)",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L1376-L1376"
+            }
+          ]
+        },
+        "ResponseItem": {
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L755-L911",
+          "variants": [
+            {
+              "rust_variant": "Message",
+              "attributes": [],
+              "rust_declaration": "Message {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        role: String,\n        content: Vec<ContentItem>,\n        // Optional output-message phase (for example: \"commentary\", \"final_answer\").\n        // Availability varies by provider/model, so downstream consumers must\n        // preserve fallback behavior when this is absent.\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        phase: Option<MessagePhase>,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L756-L768"
+            },
+            {
+              "rust_variant": "AgentMessage",
+              "attributes": [],
+              "rust_declaration": "AgentMessage {\n        author: String,\n        recipient: String,\n        content: Vec<AgentMessageInputContent>,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L769-L773"
+            },
+            {
+              "rust_variant": "Reasoning",
+              "attributes": [],
+              "rust_declaration": "Reasoning {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        #[schemars(skip)]\n        id: String,\n        summary: Vec<ReasoningItemReasoningSummary>,\n        #[serde(default, skip_serializing_if = \"should_serialize_reasoning_content\")]\n        #[ts(optional)]\n        content: Option<Vec<ReasoningItemContent>>,\n        encrypted_content: Option<String>,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L774-L784"
+            },
+            {
+              "rust_variant": "LocalShellCall",
+              "attributes": [],
+              "rust_declaration": "LocalShellCall {\n        /// Legacy id field retained for compatibility with older payloads.\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        /// Set when using the Responses API.\n        call_id: Option<String>,\n        status: LocalShellStatus,\n        action: LocalShellAction,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L785-L794"
+            },
+            {
+              "rust_variant": "FunctionCall",
+              "attributes": [],
+              "rust_declaration": "FunctionCall {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        name: String,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        namespace: Option<String>,\n        // The Responses API returns the function call arguments as a *string* that contains\n        // JSON, not as an already\u2011parsed object. We keep it as a raw string here and let\n        // Session::handle_function_call parse it into a Value.\n        arguments: String,\n        call_id: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L795-L808"
+            },
+            {
+              "rust_variant": "ToolSearchCall",
+              "attributes": [],
+              "rust_declaration": "ToolSearchCall {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        call_id: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        status: Option<String>,\n        execution: String,\n        #[ts(type = \"unknown\")]\n        arguments: serde_json::Value,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L809-L820"
+            },
+            {
+              "rust_variant": "FunctionCallOutput",
+              "attributes": [],
+              "rust_declaration": "FunctionCallOutput {\n        call_id: String,\n        #[ts(as = \"FunctionCallOutputBody\")]\n        #[schemars(with = \"FunctionCallOutputBody\")]\n        output: FunctionCallOutputPayload,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L826-L831"
+            },
+            {
+              "rust_variant": "CustomToolCall",
+              "attributes": [],
+              "rust_declaration": "CustomToolCall {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        status: Option<String>,\n\n        call_id: String,\n        name: String,\n        input: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L832-L843"
+            },
+            {
+              "rust_variant": "CustomToolCallOutput",
+              "attributes": [],
+              "rust_declaration": "CustomToolCallOutput {\n        call_id: String,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        name: Option<String>,\n        #[ts(as = \"FunctionCallOutputBody\")]\n        #[schemars(with = \"FunctionCallOutputBody\")]\n        output: FunctionCallOutputPayload,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L847-L855"
+            },
+            {
+              "rust_variant": "ToolSearchOutput",
+              "attributes": [],
+              "rust_declaration": "ToolSearchOutput {\n        call_id: Option<String>,\n        status: String,\n        execution: String,\n        #[ts(type = \"unknown[]\")]\n        tools: Vec<serde_json::Value>,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L856-L862"
+            },
+            {
+              "rust_variant": "WebSearchCall",
+              "attributes": [],
+              "rust_declaration": "WebSearchCall {\n        #[serde(default, skip_serializing)]\n        #[ts(skip)]\n        id: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        status: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        action: Option<WebSearchAction>,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L871-L881"
+            },
+            {
+              "rust_variant": "ImageGenerationCall",
+              "attributes": [],
+              "rust_declaration": "ImageGenerationCall {\n        id: String,\n        status: String,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        revised_prompt: Option<String>,\n        result: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L891-L898"
+            },
+            {
+              "rust_variant": "Compaction",
+              "attributes": [
+                "#[serde(alias = \"compaction_summary\")]"
+              ],
+              "rust_declaration": "Compaction {\n        encrypted_content: String,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L900-L902"
+            },
+            {
+              "rust_variant": "CompactionTrigger",
+              "attributes": [],
+              "rust_declaration": "CompactionTrigger",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L903-L903"
+            },
+            {
+              "rust_variant": "ContextCompaction",
+              "attributes": [],
+              "rust_declaration": "ContextCompaction {\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        encrypted_content: Option<String>,\n    }",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L904-L908"
+            },
+            {
+              "rust_variant": "Other",
+              "attributes": [
+                "#[serde(other)]"
+              ],
+              "rust_declaration": "Other",
+              "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L910-L910"
+            }
+          ]
+        }
+      },
+      "payload_declarations": [
+        {
+          "rust_type": "CompactedItem",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct CompactedItem {\n    pub message: String,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub replacement_history: Option<Vec<ResponseItem>>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub window_id: Option<u64>,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2921-L2927"
+        },
+        {
+          "rust_type": "ContentItem",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ContentItem {\n    InputText {\n        text: String,\n    },\n    InputImage {\n        image_url: String,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        detail: Option<ImageDetail>,\n    },\n    OutputText {\n        text: String,\n    },\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L704-L717"
+        },
+        {
+          "rust_type": "FunctionCallOutputContentItem",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum FunctionCallOutputContentItem {\n    // Do not rename, these are serialized and used directly in the responses API.\n    InputText {\n        text: String,\n    },\n    // Do not rename, these are serialized and used directly in the responses API.\n    InputImage {\n        image_url: String,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        detail: Option<ImageDetail>,\n    },\n    EncryptedContent {\n        encrypted_content: String,\n    },\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1350-L1365"
+        },
+        {
+          "rust_type": "FunctionCallOutputPayload",
+          "attributes": [
+            "#[derive(Debug, Default, Clone, PartialEq, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct FunctionCallOutputPayload {\n    pub body: FunctionCallOutputBody,\n    pub success: Option<bool>,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1423-L1426"
+        },
+        {
+          "rust_type": "LocalShellAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellAction {\n    Exec(LocalShellExecAction),\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1198-L1200"
+        },
+        {
+          "rust_type": "LocalShellExecAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct LocalShellExecAction {\n    pub command: Vec<String>,\n    pub timeout_ms: Option<u64>,\n    pub working_directory: Option<String>,\n    pub env: Option<HashMap<String, String>>,\n    pub user: Option<String>,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1203-L1209"
+        },
+        {
+          "rust_type": "LocalShellStatus",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum LocalShellStatus {\n    Completed,\n    InProgress,\n    Incomplete,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1190-L1194"
+        },
+        {
+          "rust_type": "MessagePhase",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema, TS)]",
+            "#[serde(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum MessagePhase {\n    /// Mid-turn assistant text (for example preamble/progress narration).\n    ///\n    /// Additional tool calls or assistant output may follow before turn\n    /// completion.\n    Commentary,\n    /// The assistant's terminal answer text for the current turn.\n    FinalAnswer,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L743-L751"
+        },
+        {
+          "rust_type": "ReasoningItemContent",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemContent {\n    ReasoningText { text: String },\n    Text { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1249-L1252"
+        },
+        {
+          "rust_type": "ReasoningItemReasoningSummary",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum ReasoningItemReasoningSummary {\n    SummaryText { text: String },\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1243-L1245"
+        },
+        {
+          "rust_type": "RolloutLine",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, JsonSchema)]"
+          ],
+          "rust_declaration": "pub struct RolloutLine {\n    pub timestamp: String,\n    #[serde(flatten)]\n    pub item: RolloutItem,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L3065-L3069"
+        },
+        {
+          "rust_type": "SessionMeta",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct SessionMeta {\n    pub id: ThreadId,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub forked_from_id: Option<ThreadId>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub parent_thread_id: Option<ThreadId>,\n    pub timestamp: String,\n    pub cwd: PathBuf,\n    pub originator: String,\n    pub cli_version: String,\n    #[serde(default)]\n    pub source: SessionSource,\n    /// Optional analytics source classification for this thread.\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub thread_source: Option<ThreadSource>,\n    /// Optional random unique nickname assigned to an AgentControl-spawned sub-agent.\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub agent_nickname: Option<String>,\n    /// Optional role (agent_role) assigned to an AgentControl-spawned sub-agent.\n    #[serde(default, alias = \"agent_type\", skip_serializing_if = \"Option::is_none\")]\n    pub agent_role: Option<String>,\n    /// Optional canonical agent path assigned to an AgentControl-spawned sub-agent.\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub agent_path: Option<String>,\n    pub model_provider: Option<String>,\n    /// base_instructions for the session. This *should* always be present when creating a new session,\n    /// but may be missing for older sessions. If not present, fall back to rendering the base_instructions\n    /// from ModelsManager.\n    pub base_instructions: Option<BaseInstructions>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub dynamic_tools: Option<Vec<DynamicToolSpec>>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub memory_mode: Option<String>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub multi_agent_version: Option<MultiAgentVersion>,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2839-L2874"
+        },
+        {
+          "rust_type": "SessionMetaLine",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Debug, Clone, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct SessionMetaLine {\n    #[serde(flatten)]\n    pub meta: SessionMeta,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub git: Option<GitInfo>,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2901-L2906"
+        },
+        {
+          "rust_type": "SessionSource",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema, TS, Default)]",
+            "#[serde(rename_all = \"lowercase\")]",
+            "#[ts(rename_all = \"lowercase\")]"
+          ],
+          "rust_declaration": "pub enum SessionSource {\n    Cli,\n    #[default]\n    VSCode,\n    Exec,\n    Mcp,\n    Custom(String),\n    Internal(InternalSessionSource),\n    SubAgent(SubAgentSource),\n    #[serde(other)]\n    Unknown,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2550-L2561"
+        },
+        {
+          "rust_type": "SubAgentSource",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema, TS)]",
+            "#[serde(rename_all = \"snake_case\")]",
+            "#[ts(rename_all = \"snake_case\")]"
+          ],
+          "rust_declaration": "pub enum SubAgentSource {\n    Review,\n    Compact,\n    ThreadSpawn {\n        parent_thread_id: ThreadId,\n        depth: i32,\n        #[serde(default)]\n        agent_path: Option<AgentPath>,\n        #[serde(default)]\n        agent_nickname: Option<String>,\n        #[serde(default, alias = \"agent_type\")]\n        agent_role: Option<String>,\n    },\n    MemoryConsolidation,\n    Other(String),\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2628-L2643"
+        },
+        {
+          "rust_type": "TurnContextItem",
+          "attributes": [
+            "#[derive(Serialize, Deserialize, Clone, Debug, JsonSchema, TS)]"
+          ],
+          "rust_declaration": "pub struct TurnContextItem {\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub turn_id: Option<String>,\n    pub cwd: PathBuf,\n    /// Effective workspace roots used to materialize symbolic\n    /// `:workspace_roots` filesystem permissions in `permission_profile`.\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub workspace_roots: Option<Vec<AbsolutePathBuf>>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub current_date: Option<String>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub timezone: Option<String>,\n    pub approval_policy: AskForApproval,\n    pub sandbox_policy: SandboxPolicy,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub permission_profile: Option<PermissionProfile>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub network: Option<TurnContextNetworkItem>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub file_system_sandbox_policy: Option<FileSystemSandboxPolicy>,\n    pub model: String,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub comp_hash: Option<String>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub personality: Option<Personality>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub collaboration_mode: Option<CollaborationMode>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub multi_agent_version: Option<MultiAgentVersion>,\n    #[serde(default, skip_serializing_if = \"Option::is_none\")]\n    pub realtime_active: Option<bool>,\n    #[serde(skip_serializing_if = \"Option::is_none\")]\n    pub effort: Option<ReasoningEffortConfig>,\n    // Compatibility-only field written with a default value so older Codex\n    // versions can deserialize turn-context rollout items. It is no longer\n    // read by context reconstruction and should be removed in a future schema\n    // cleanup.\n    pub summary: ReasoningSummaryConfig,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/protocol.rs#L2953-L2991"
+        },
+        {
+          "rust_type": "WebSearchAction",
+          "attributes": [
+            "#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema, TS)]",
+            "#[serde(tag = \"type\", rename_all = \"snake_case\")]",
+            "#[schemars(rename = \"ResponsesApiWebSearchAction\")]"
+          ],
+          "rust_declaration": "pub enum WebSearchAction {\n    Search {\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        query: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        queries: Option<Vec<String>>,\n    },\n    OpenPage {\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        url: Option<String>,\n    },\n    FindInPage {\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        url: Option<String>,\n        #[serde(default, skip_serializing_if = \"Option::is_none\")]\n        #[ts(optional)]\n        pattern: Option<String>,\n    },\n\n    #[serde(other)]\n    Other,\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1214-L1239"
+        }
+      ],
+      "codec_and_reader_evidence": [
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl Serialize for FunctionCallOutputPayload {\n    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>\n    where\n        S: Serializer,\n    {\n        match &self.body {\n            FunctionCallOutputBody::Text(content) => serializer.serialize_str(content),\n            FunctionCallOutputBody::ContentItems(items) => items.serialize(serializer),\n        }\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1503-L1513"
+        },
+        {
+          "kind": "custom_output_codec",
+          "rust_declaration": "impl<'de> Deserialize<'de> for FunctionCallOutputPayload {\n    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>\n    where\n        D: Deserializer<'de>,\n    {\n        let body = FunctionCallOutputBody::deserialize(deserializer)?;\n        Ok(FunctionCallOutputPayload {\n            body,\n            success: None,\n        })\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/protocol/src/models.rs#L1515-L1526"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "should_persist_response_item",
+          "rust_declaration": "pub fn should_persist_response_item(item: &ResponseItem) -> bool {\n    match item {\n        ResponseItem::Message { .. }\n        | ResponseItem::AgentMessage { .. }\n        | ResponseItem::Reasoning { .. }\n        | ResponseItem::LocalShellCall { .. }\n        | ResponseItem::FunctionCall { .. }\n        | ResponseItem::ToolSearchCall { .. }\n        | ResponseItem::FunctionCallOutput { .. }\n        | ResponseItem::ToolSearchOutput { .. }\n        | ResponseItem::CustomToolCall { .. }\n        | ResponseItem::CustomToolCallOutput { .. }\n        | ResponseItem::WebSearchCall { .. }\n        | ResponseItem::ImageGenerationCall { .. }\n        | ResponseItem::Compaction { .. }\n        | ResponseItem::ContextCompaction { .. } => true,\n        ResponseItem::CompactionTrigger => false,\n        ResponseItem::Other => false,\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/policy.rs#L31-L50"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "should_persist_event_msg",
+          "rust_declaration": "pub fn should_persist_event_msg(ev: &EventMsg) -> bool {\n    match ev {\n        EventMsg::UserMessage(_)\n        | EventMsg::AgentMessage(_)\n        | EventMsg::AgentReasoning(_)\n        | EventMsg::AgentReasoningRawContent(_)\n        | EventMsg::PatchApplyEnd(_)\n        | EventMsg::TokenCount(_)\n        | EventMsg::ThreadGoalUpdated(_)\n        | EventMsg::ContextCompacted(_)\n        | EventMsg::EnteredReviewMode(_)\n        | EventMsg::ExitedReviewMode(_)\n        | EventMsg::McpToolCallEnd(_)\n        | EventMsg::ThreadRolledBack(_)\n        | EventMsg::TurnAborted(_)\n        | EventMsg::TurnStarted(_)\n        | EventMsg::TurnComplete(_)\n        | EventMsg::WebSearchEnd(_)\n        | EventMsg::ImageGenerationEnd(_)\n        | EventMsg::SubAgentActivity(_) => true,\n        EventMsg::ItemCompleted(event) => {\n            // Plan items are derived from streaming tags and are not part of the\n            // raw ResponseItem history, so we persist their completion to replay\n            // them on resume without bloating rollouts with every item lifecycle.\n            matches!(event.item, codex_protocol::items::TurnItem::Plan(_))\n        }\n        EventMsg::Error(_)\n        | EventMsg::GuardianAssessment(_)\n        | EventMsg::ExecCommandEnd(_)\n        | EventMsg::ViewImageToolCall(_)\n        | EventMsg::CollabAgentSpawnEnd(_)\n        | EventMsg::CollabAgentInteractionEnd(_)\n        | EventMsg::CollabWaitingEnd(_)\n        | EventMsg::CollabCloseEnd(_)\n        | EventMsg::CollabResumeEnd(_)\n        | EventMsg::DynamicToolCallRequest(_)\n        | EventMsg::DynamicToolCallResponse(_)\n        | EventMsg::Warning(_)\n        | EventMsg::GuardianWarning(_)\n        | EventMsg::RealtimeConversationStarted(_)\n        | EventMsg::RealtimeConversationSdp(_)\n        | EventMsg::RealtimeConversationRealtime(_)\n        | EventMsg::RealtimeConversationClosed(_)\n        | EventMsg::ModelReroute(_)\n        | EventMsg::ModelVerification(_)\n        | EventMsg::TurnModerationMetadata(_)\n        | EventMsg::AgentReasoningSectionBreak(_)\n        | EventMsg::RawResponseItem(_)\n        | EventMsg::SessionConfigured(_)\n        | EventMsg::ThreadSettingsApplied(_)\n        | EventMsg::McpToolCallBegin(_)\n        | EventMsg::ExecCommandBegin(_)\n        | EventMsg::TerminalInteraction(_)\n        | EventMsg::ExecCommandOutputDelta(_)\n        | EventMsg::ExecApprovalRequest(_)\n        | EventMsg::RequestPermissions(_)\n        | EventMsg::RequestUserInput(_)\n        | EventMsg::ElicitationRequest(_)\n        | EventMsg::ApplyPatchApprovalRequest(_)\n        | EventMsg::StreamError(_)\n        | EventMsg::PatchApplyBegin(_)\n        | EventMsg::PatchApplyUpdated(_)\n        | EventMsg::TurnDiff(_)\n        | EventMsg::RealtimeConversationListVoicesResponse(_)\n        | EventMsg::McpStartupUpdate(_)\n        | EventMsg::McpStartupComplete(_)\n        | EventMsg::WebSearchBegin(_)\n        | EventMsg::PlanUpdate(_)\n        | EventMsg::ShutdownComplete\n        | EventMsg::DeprecationNotice(_)\n        | EventMsg::ItemStarted(_)\n        | EventMsg::HookStarted(_)\n        | EventMsg::HookCompleted(_)\n        | EventMsg::AgentMessageContentDelta(_)\n        | EventMsg::PlanDelta(_)\n        | EventMsg::ReasoningContentDelta(_)\n        | EventMsg::ReasoningRawContentDelta(_)\n        | EventMsg::ImageGenerationBegin(_)\n        | EventMsg::CollabAgentSpawnBegin(_)\n        | EventMsg::CollabAgentInteractionBegin(_)\n        | EventMsg::CollabWaitingBegin(_)\n        | EventMsg::CollabCloseBegin(_)\n        | EventMsg::CollabResumeBegin(_) => false,\n    }\n}",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/policy.rs#L77-L161"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "write_rollout_item",
+          "rust_declaration": "async fn write_rollout_item(&mut self, rollout_item: &RolloutItem) -> std::io::Result<()> {\n        let timestamp_format: &[FormatItem] = format_description!(\n            \"[year]-[month]-[day]T[hour]:[minute]:[second].[subsecond digits:3]Z\"\n        );\n        let timestamp = OffsetDateTime::now_utc()\n            .format(timestamp_format)\n            .map_err(|e| IoError::other(format!(\"failed to format timestamp: {e}\")))?;\n\n        let line = RolloutLineRef {\n            timestamp,\n            item: rollout_item,\n        };\n        self.write_line(&line).await\n    }",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/recorder.rs#L1663-L1676"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "write_line",
+          "rust_declaration": "async fn write_line(&mut self, item: &impl serde::Serialize) -> std::io::Result<()> {\n        let mut json = serde_json::to_string(item)?;\n        json.push('\\n');\n        self.file.write_all(json.as_bytes()).await?;\n        self.file.flush().await?;\n        Ok(())\n    }",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/recorder.rs#L1677-L1683"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "resume",
+          "rust_declaration": "pub fn resume(path: PathBuf) -> Self {\n        Self::Resume { path }\n    }",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/recorder.rs#L195-L197"
+        },
+        {
+          "kind": "writer_reader_or_policy",
+          "rust_name": "load_rollout_items",
+          "rust_declaration": "pub async fn load_rollout_items(\n        path: &Path,\n    ) -> std::io::Result<(Vec<RolloutItem>, Option<ThreadId>, usize)> {\n        trace!(\"Resuming rollout from {path:?}\");\n        let mut items: Vec<RolloutItem> = Vec::new();\n        let mut thread_id: Option<ThreadId> = None;\n        let mut parse_errors = 0usize;\n        let mut reader = compression::open_rollout_line_reader(path).await?;\n        let mut saw_non_empty_line = false;\n        while let Some(line) = reader.next_line().await? {\n            if line.trim().is_empty() {\n                continue;\n            }\n            saw_non_empty_line = true;\n            let mut v: Value = match serde_json::from_str(&line) {\n                Ok(v) => v,\n                Err(e) => {\n                    warn!(\"failed to parse line as JSON: {line:?}, error: {e}\");\n                    parse_errors = parse_errors.saturating_add(1);\n                    continue;\n                }\n            };\n            if strip_legacy_ghost_snapshot_rollout_line(&mut v) {\n                trace!(\"skipping legacy ghost_snapshot rollout line\");\n                continue;\n            }\n\n            // Parse the rollout line structure\n            match serde_json::from_value::<RolloutLine>(v.clone()) {\n                Ok(rollout_line) => {\n                    let item = rollout_line.item;\n                    // Use the FIRST SessionMeta encountered in the file as the canonical\n                    // thread id and main session information. Keep all items intact.\n                    if thread_id.is_none()\n                        && let RolloutItem::SessionMeta(session_meta_line) = &item\n                    {\n                        thread_id = Some(session_meta_line.meta.id);\n                    }\n                    items.push(item);\n                }\n                Err(e) => {\n                    trace!(\"failed to parse rollout line: {e}\");\n                    parse_errors = parse_errors.saturating_add(1);\n                }\n            }\n        }\n        if !saw_non_empty_line {\n            return Err(IoError::other(\"empty session file\"));\n        }\n\n        tracing::debug!(\n            \"Resumed rollout with {} items, thread ID: {:?}, parse errors: {}\",\n            items.len(),\n            thread_id,\n            parse_errors,\n        );\n        Ok((items, thread_id, parse_errors))\n    }",
+          "source": "https://github.com/openai/codex/blob/6506579001c322927a3e4bd440563267a7ac6c1f/codex-rs/rollout/src/recorder.rs#L842-L899"
+        }
+      ]
+    }
+  ]
+}

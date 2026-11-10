@@ -1,0 +1,11 @@
+/target/
+/node_modules/
+/private/
+/.cache/
+/.tmp/
+*.duckdb
+*.duckdb.wal
+*.lock.tmp
+__pycache__/
+.venv/
+.pytest_cache/

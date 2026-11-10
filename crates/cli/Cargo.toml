@@ -1,0 +1,30 @@
+[package]
+name = "llm-history-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "llm-history"
+path = "src/main.rs"
+
+[dependencies]
+llm-history-store.workspace = true
+llm-history-core.workspace = true
+llm-history-types.workspace = true
+llm-history-app.workspace = true
+llm-history-search.workspace = true
+llm-history-models.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+comfy-table.workspace = true
+chrono.workspace = true
+fs2.workspace = true
+ctrlc.workspace = true
+tempfile.workspace = true
+
+[dev-dependencies]
+rusqlite.workspace = true

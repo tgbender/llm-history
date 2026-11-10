@@ -1,0 +1,6 @@
+{"id":"00000000-0000-4000-8000-000000000020","timestamp":"2025-08-08T12:00:00.000Z","instructions":"Synthetic instructions."}
+{"type":"message","id":null,"role":"user","content":[{"type":"input_text","text":"Read the synthetic file."}]}
+{"type":"function_call","id":null,"name":"shell","arguments":"{\"command\":[\"cat\",\"example.txt\"]}","call_id":"synthetic-call"}
+{"type":"function_call_output","call_id":"synthetic-call","output":"Synthetic file content."}
+{"type":"message","id":null,"role":"assistant","content":[{"type":"output_text","text":"The file contains synthetic text."}]}
+{"record_type":"state"}

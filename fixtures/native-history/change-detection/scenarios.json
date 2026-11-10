@@ -1,0 +1,56 @@
+{
+  "files": {
+    "codex": {
+      "home": "codex/home",
+      "transcript": "sessions/2026/11/07/rollout-2026-11-07T19-00-09-00000000-0000-4000-8000-000000000002.jsonl",
+      "initial_lines": 5,
+      "metadata": ["state_5.sqlite", "thread_history_1.sqlite", "session_index.jsonl"],
+      "sqlite": {
+        "state_5.sqlite": ["codex/state.sql"],
+        "thread_history_1.sqlite": [
+          "codex/thread-history.sql",
+          "change-detection/codex-child-projection.sql"
+        ]
+      },
+      "thread_id": "00000000-0000-4000-8000-000000000002",
+      "catalog_update": "change-detection/codex-catalog-update.sql"
+    },
+    "claude-code": {
+      "home": "claude-code/home",
+      "transcript": "projects/-synthetic-project/00000000-0000-4000-8000-000000000011/subagents/agent-a123456.jsonl",
+      "initial_lines": 2,
+      "metadata": [
+        "projects/-synthetic-project/00000000-0000-4000-8000-000000000011.jsonl",
+        "projects/-synthetic-project/00000000-0000-4000-8000-000000000011/subagents/agent-a123456.meta.json"
+      ]
+    },
+    "pi": {
+      "home": "pi",
+      "transcript": "sessions/--example-project--/2026-11-06T21-20-00-000Z_019a5966-1000-7000-8000-000000000001.jsonl",
+      "initial_lines": 20,
+      "metadata": [],
+      "replacement": {"from": "Fixture greeting", "to": "Updated greeting"}
+    },
+    "tau": {
+      "home": "tau",
+      "transcript": "sessions/example-project-b8c7d3/fixture-tau-active.jsonl",
+      "initial_lines": 16,
+      "metadata": [
+        "sessions/example-project-b8c7d3/index.jsonl",
+        "sessions/index.jsonl",
+        "sessions/archive.jsonl"
+      ],
+      "orphan": {
+        "from": "tau/sessions/fixture-tau-archived.jsonl",
+        "to": "sessions/example-project-b8c7d3/fixture-tau-unindexed.jsonl"
+      }
+    }
+  },
+  "opencode": {
+    "sqlite": ["opencode/schema.sql", "opencode/seed.sql"],
+    "settle": "opencode/settle-tool.sql",
+    "delete": "opencode/delete-source-rows.sql",
+    "session_id": "ses_fixture",
+    "message_id": "msg_split"
+  }
+}

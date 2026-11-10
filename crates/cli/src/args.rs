@@ -1,0 +1,738 @@
+//! Command-line arguments.
+use clap::builder::{PossibleValue, PossibleValuesParser, TypedValueParser};
+use clap::{Args, Parser, Subcommand};
+use llm_history_types::Harness;
+use llm_history_types::query::Mode;
+use std::path::PathBuf;
+
+const SESSION_KINDS: [&str; 5] = [
+    "interactive",
+    "subagent",
+    "automation",
+    "guardian",
+    "unknown",
+];
+fn search_modes() -> impl TypedValueParser<Value = Mode> {
+    PossibleValuesParser::new([
+        PossibleValue::new("lexical").help("Any of the words, best match first"),
+        PossibleValue::new("exact").help(
+            "The whole query as one literal, case-insensitive string, newest first, \
+             showing the matched message rather than its answer",
+        ),
+        PossibleValue::new("semantic").help("Similar meaning, using embeddings"),
+        PossibleValue::new("hybrid").help("Lexical and semantic combined"),
+        PossibleValue::new("auto")
+            .help("Hybrid when cached embeddings are available, otherwise lexical"),
+    ])
+    .try_map(|mode| mode.parse::<Mode>())
+}
+const SOURCE_KEYS: [&str; 4] = ["all", "codex", "claude", "cursor"];
+
+#[derive(Parser)]
+#[command(
+    name = "llm-history",
+    version,
+    about = "Local coding-agent history with lossless archives and profile-scoped search",
+    after_help = "Read history:\n  llm-history search --mode semantic --role user --limit 5 'what went wrong?'\n  llm-history show ID --before 2 --after 2\n  llm-history similar ID --role user --other-sessions --per-session 1\n\nUse --no-refresh --no-background to search a fixed archive. Use plain text for reading and --json for parsing. Open context before counting related hits as separate incidents."
+)]
+pub(crate) struct App {
+    /// DuckDB memory ceiling in MiB.
+    #[arg(long, global = true, default_value_t = 1024)]
+    pub(crate) memory_mib: u64,
+    /// Maximum uncompressed data per ingestion batch, in MiB.
+    #[arg(long, global = true, default_value_t = 64)]
+    pub(crate) batch_mib: usize,
+    /// Maximum records per ingestion write batch.
+    #[arg(long, global = true, default_value_t = 20000)]
+    pub(crate) batch_records: usize,
+    /// Database path; defaults to ~/.local/share/llm-history-rs/history.duckdb.
+    #[arg(long, global = true, env = "LLM_HISTORY_RS_DB")]
+    pub(crate) db: Option<PathBuf>,
+    /// Directory for the llama.cpp runtime; models use the Hugging Face cache.
+    #[arg(long, global = true, env = "LLM_HISTORY_RS_CACHE")]
+    pub(crate) cache: Option<PathBuf>,
+    /// Print JSON for programmatic use.
+    #[arg(long, global = true)]
+    pub(crate) json: bool,
+    #[command(subcommand)]
+    pub(crate) command: Commands,
+}
+#[derive(Subcommand)]
+pub(crate) enum Commands {
+    /// Create the database and discover the default Codex and Claude roots.
+    Init,
+    #[command(subcommand)]
+    /// Add, list, enable, disable or relocate independent history profiles.
+    Profile(Profiles),
+    /// Import new transcript records and refresh native project/session metadata.
+    Update {
+        /// Reimport live sources even when their metadata is unchanged.
+        #[arg(long)]
+        repair: bool,
+        /// Select a history profile; repeat to select several.
+        #[arg(long)]
+        profile: Vec<String>,
+        /// Select codex, claude, cursor, or all history sources.
+        #[arg(long, value_parser = SOURCE_KEYS)]
+        source: Option<String>,
+        /// Skip automatic background embedding work.
+        #[arg(long, overrides_with = "_background")]
+        no_background: bool,
+        /// Python's explicit default; overrides an earlier --no-background.
+        #[arg(long = "background", hide = true, overrides_with = "no_background")]
+        _background: bool,
+        #[command(flatten)]
+        inference: Inference,
+    },
+    /// Search conversation messages using lexical, semantic, hybrid or exact matching.
+    Search(Box<Search>),
+    /// Find messages similar to an indexed message using its stored embeddings.
+    Similar(SimilarArgs),
+    /// Show a message by ID, with optional surrounding conversation.
+    Show(ShowArgs),
+    /// List recent sessions, including titles, models and project metadata.
+    #[command(mut_arg("limit", |arg| arg.default_value("30")))]
+    Sessions(SessionArgs),
+    /// List discovered projects or refresh their native assignments.
+    Projects(ProjectArgs),
+    /// Rebuild parsed facts from retained archives while preserving message IDs.
+    Reprocess(ReprocessArgs),
+    /// Summarize deduplicated token usage by day or week.
+    #[command(mut_arg("limit", |arg| arg.default_value(None::<&str>).help("Limit usage periods; omit to include all periods")))]
+    Usage(UsageArgs),
+    /// Show source coverage, entity counts and timestamp ranges.
+    Status(ProfileSelection),
+    /// Query history SQL views with bounded, read-only results.
+    Sql(SqlArgs),
+    #[command(subcommand)]
+    /// Inspect or export the original captured transcript bytes.
+    Raw(Raw),
+    #[command(subcommand)]
+    /// Create, list, verify or restore database snapshots.
+    Archive(Archive),
+    #[command(subcommand)]
+    /// List, explicitly download or verify the local Gemma and Qwen models.
+    Models(Models),
+    #[command(subcommand)]
+    /// Manage search indexes and resumable background embedding work.
+    Semantic(Semantic),
+    #[command(subcommand)]
+    /// Maintain the Rust history database.
+    Db(Database),
+}
+#[derive(Args)]
+pub(crate) struct ShowArgs {
+    /// Short message ID from search or similar.
+    #[arg(value_parser = clap::value_parser!(i64).range(1..))]
+    pub(crate) id: i64,
+    /// Number of preceding conversation messages to include.
+    #[arg(long, default_value_t = 0)]
+    pub(crate) before: usize,
+    /// Number of following conversation messages to include.
+    #[arg(long, default_value_t = 0)]
+    pub(crate) after: usize,
+    /// Select a history profile; repeat to select several.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    /// Total character budget for displayed message text.
+    #[arg(long, default_value_t = 6000)]
+    pub(crate) max_output_chars: usize,
+    /// Show matching text without credential redaction.
+    #[arg(long)]
+    pub(crate) no_redact: bool,
+    /// Print complete selected text without output limits.
+    #[arg(long)]
+    pub(crate) full: bool,
+}
+
+#[derive(Args)]
+pub(crate) struct SimilarArgs {
+    /// Message ID from search or show.
+    #[arg(value_parser = clap::value_parser!(i64).range(1..))]
+    pub(crate) id: i64,
+    /// Search these profiles instead of just the anchor's profile.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    /// Restrict results to a harness.
+    #[arg(long, value_parser = SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+    /// Restrict results to a project.
+    #[arg(long)]
+    pub(crate) project: Option<String>,
+    /// Restrict results to user or assistant messages.
+    #[arg(long, value_parser = ["user", "assistant"])]
+    pub(crate) role: Option<String>,
+    /// Exclude every message in the anchor's session.
+    #[arg(long)]
+    pub(crate) other_sessions: bool,
+    /// Maximum results to return.
+    #[arg(long, default_value_t = 10, value_parser = clap::value_parser!(u16).range(1..=100))]
+    pub(crate) limit: u16,
+    /// Maximum results from one session.
+    #[arg(long, default_value_t = 2, value_parser = clap::value_parser!(u16).range(1..=100))]
+    pub(crate) per_session: u16,
+    /// Select the existing 768- or 256-dimensional Gemma 2 index.
+    #[arg(long, default_value_t = 768)]
+    pub(crate) dimensions: usize,
+}
+#[derive(Subcommand)]
+pub(crate) enum Profiles {
+    /// Register an independent history root.
+    Add {
+        name: String,
+        /// History format: codex, claude, or cursor.
+        #[arg(long)]
+        harness: Harness,
+        /// History root directory for this independent profile.
+        #[arg(long)]
+        root: PathBuf,
+        /// Optional account label.
+        #[arg(long)]
+        account: Option<String>,
+        /// Optional provider/backend label.
+        #[arg(long)]
+        backend: Option<String>,
+    },
+    /// List the configured entries.
+    List,
+    /// Resume imports for this profile.
+    Enable { name: String },
+    /// Stop imports while retaining archived data.
+    Disable { name: String },
+    /// Change a profile root while preserving its identity.
+    Relocate { name: String, root: PathBuf },
+}
+#[derive(Args, Default)]
+pub(crate) struct ProfileSelection {
+    /// Select a named history profile; repeat to select several.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    /// Select codex, claude, cursor, or all history sources.
+    #[arg(long, value_parser = SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+}
+#[derive(Args, Default)]
+pub(crate) struct ProjectSelection {
+    /// Select a history profile; repeat to select several.
+    #[arg(long, global = true)]
+    pub(crate) profile: Vec<String>,
+    /// Select codex, claude, cursor, or all history sources.
+    #[arg(long,global=true,value_parser=SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+    /// Maximum projects to list (default: 100).
+    #[arg(long, global = true)]
+    pub(crate) limit: Option<usize>,
+}
+
+#[derive(Args, Default)]
+pub(crate) struct Selection {
+    /// Select a history profile; repeat to select several.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    /// Select codex, claude, cursor, or all history sources.
+    #[arg(long, value_parser = SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+    /// Include records at or after this ISO date or timestamp.
+    #[arg(long)]
+    pub(crate) since: Option<String>,
+    /// Include records at or before this ISO date or timestamp.
+    #[arg(long)]
+    pub(crate) until: Option<String>,
+    /// IANA timezone for date filters and usage periods; local detects this system.
+    #[arg(long, default_value = "local")]
+    pub(crate) timezone: String,
+    /// Maximum results to return.
+    #[arg(long, default_value = "100")]
+    pub(crate) limit: Option<usize>,
+}
+#[derive(Args)]
+pub(crate) struct SessionArgs {
+    #[command(flatten)]
+    pub(crate) selection: Selection,
+    /// Include sessions created by subagents.
+    #[arg(long)]
+    pub(crate) include_subagents: bool,
+    /// Only sessions of this kind, including hidden subagent and guardian sessions.
+    #[arg(long, value_parser = SESSION_KINDS)]
+    pub(crate) kind: Option<String>,
+    /// List the oldest sessions first.
+    #[arg(long)]
+    pub(crate) oldest_first: bool,
+}
+#[derive(Subcommand)]
+pub(crate) enum Database {
+    /// Reclaim unused space while retaining every stored table and row.
+    Compact,
+}
+#[derive(Args)]
+pub(crate) struct ProjectArgs {
+    /// Include inactive projects and unused working-directory fallbacks.
+    #[arg(long = "all", global = true)]
+    pub(crate) include_inactive: bool,
+    #[command(flatten)]
+    pub(crate) selection: ProjectSelection,
+    #[command(subcommand)]
+    pub(crate) command: Option<ProjectCommand>,
+}
+#[derive(Subcommand)]
+pub(crate) enum ProjectCommand {
+    /// List discovered project roots and session counts.
+    List,
+    /// Refresh native project catalogs and their session assignments.
+    Backfill,
+}
+#[derive(Args)]
+pub(crate) struct ReprocessArgs {
+    /// Select a history profile; repeat to select several.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    /// Select codex, claude, cursor, or all history sources.
+    #[arg(long, value_parser = SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+    /// Select an archived source ID; repeat to select several.
+    #[arg(long)]
+    pub(crate) source_id: Vec<i64>,
+    /// Report which archived sources would be reprocessed.
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+}
+#[derive(Args)]
+pub(crate) struct UsageArgs {
+    #[command(flatten)]
+    pub(crate) selection: Selection,
+    /// Group usage by ISO week.
+    #[arg(long)]
+    pub(crate) weekly: bool,
+    /// Split usage periods by model and reasoning effort.
+    #[arg(long)]
+    pub(crate) by_model: bool,
+}
+#[derive(Args)]
+pub(crate) struct Search {
+    /// Words, code identifiers or a natural-language question.
+    #[arg(allow_hyphen_values = true)]
+    pub(crate) query: String,
+    /// How the query is matched.
+    #[arg(long, default_value = "lexical", value_parser = search_modes())]
+    pub(crate) mode: Mode,
+    /// Rerank candidates using the configured local Qwen model or endpoint; not available with --mode exact.
+    #[arg(long)]
+    pub(crate) rerank: bool,
+    /// Disable model reranking.
+    #[arg(long)]
+    pub(crate) no_rerank: bool,
+    /// Maximum candidates passed to the reranker.
+    #[arg(long,default_value_t=25,value_parser=clap::value_parser!(u16).range(1..=100))]
+    pub(crate) rerank_depth: u16,
+    /// Select a history profile; repeat to select several.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    /// Select codex, claude, cursor, or all history sources.
+    #[arg(long, value_parser = SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+    /// Include records at or after this ISO date or timestamp.
+    #[arg(long)]
+    pub(crate) since: Option<String>,
+    /// Include records at or before this ISO date or timestamp.
+    #[arg(long)]
+    pub(crate) until: Option<String>,
+    /// IANA timezone for date filters and usage periods; local detects this system.
+    #[arg(long, default_value = "local")]
+    pub(crate) timezone: String,
+    /// Filter by user or assistant role.
+    #[arg(long, value_parser = ["user", "assistant"])]
+    pub(crate) role: Option<String>,
+    /// Include this native thread ID; repeat to select several.
+    #[arg(long)]
+    pub(crate) thread: Vec<String>,
+    /// Filter to an exact session working directory.
+    #[arg(long)]
+    pub(crate) cwd: Option<String>,
+    /// Filter to working directories at or below this path.
+    #[arg(long)]
+    pub(crate) under: Option<String>,
+    /// Filter by native project name or ID.
+    #[arg(long)]
+    pub(crate) project: Option<String>,
+    /// Exclude subagent sessions.
+    #[arg(long, overrides_with = "_include_subagents")]
+    pub(crate) no_subagents: bool,
+    /// Python's explicit default; overrides an earlier --no-subagents.
+    #[arg(
+        long = "include-subagents",
+        hide = true,
+        overrides_with = "no_subagents"
+    )]
+    pub(crate) _include_subagents: bool,
+    /// Include agent coordination and protocol messages.
+    #[arg(long)]
+    pub(crate) include_agent_protocol: bool,
+    /// Only sessions of this kind; subagent and guardian include their protocol messages. Guardian prompts are searched by their reviewed action, not the quoted transcript.
+    #[arg(long, value_parser = SESSION_KINDS, conflicts_with = "no_subagents")]
+    pub(crate) kind: Option<String>,
+    /// Maximum results to return.
+    #[arg(long,alias="top",default_value_t=5,value_parser=clap::value_parser!(u16).range(1..=100))]
+    pub(crate) limit: u16,
+    /// Maximum search results from one session.
+    #[arg(long,default_value_t=2,value_parser=clap::value_parser!(u16).range(1..=100))]
+    pub(crate) per_session: u16,
+    /// Maximum characters in a result passage.
+    #[arg(long, default_value_t = 1000)]
+    pub(crate) snippet_chars: usize,
+    /// Total character budget for displayed message text.
+    #[arg(long, default_value_t = 5000)]
+    pub(crate) max_output_chars: usize,
+    /// Print complete selected text without output limits.
+    #[arg(long)]
+    pub(crate) full: bool,
+    /// Show matching text without credential redaction.
+    #[arg(long)]
+    pub(crate) no_redact: bool,
+    /// Include retrieval scores, model coverage and timing details.
+    #[arg(long)]
+    pub(crate) explain: bool,
+    /// Search the existing archive without importing live changes.
+    #[arg(long, conflicts_with = "force_refresh", overrides_with = "_refresh")]
+    pub(crate) no_refresh: bool,
+    /// Python's explicit default; overrides an earlier --no-refresh.
+    #[arg(long = "refresh", hide = true, overrides_with = "no_refresh")]
+    pub(crate) _refresh: bool,
+    /// Refresh now, bypassing the change check and failure backoff.
+    #[arg(long)]
+    pub(crate) force_refresh: bool,
+    /// Skip automatic background embedding work.
+    #[arg(long, overrides_with = "_background")]
+    pub(crate) no_background: bool,
+    /// Python's explicit default; overrides an earlier --no-background.
+    #[arg(long = "background", hide = true, overrides_with = "no_background")]
+    pub(crate) _background: bool,
+    #[command(flatten)]
+    pub(crate) inference: Inference,
+}
+#[derive(Args, Clone)]
+pub(crate) struct Inference {
+    /// Allow automatic background work to use the configured remote endpoint.
+    #[arg(long, env = "LLM_HISTORY_RS_BACKGROUND_REMOTE")]
+    pub(crate) background_remote: bool,
+    /// Compatible embedding server URL; otherwise use cached local Gemma.
+    #[arg(long, env = "LLM_HISTORY_RS_EMBEDDING_ENDPOINT")]
+    pub(crate) endpoint: Option<String>,
+    /// Model alias served by the embedding endpoint.
+    #[arg(long)]
+    pub(crate) model_name: Option<String>,
+    /// Read the embedding endpoint API key from this file.
+    #[arg(long)]
+    pub(crate) api_key_file: Option<PathBuf>,
+    /// Compatible reranking server URL; otherwise use cached local Qwen.
+    #[arg(long, env = "LLM_HISTORY_RS_RERANKER_ENDPOINT")]
+    pub(crate) rerank_endpoint: Option<String>,
+    /// Model alias served by the reranking endpoint.
+    #[arg(long)]
+    pub(crate) rerank_model_name: Option<String>,
+    /// Read the reranking endpoint API key from this file.
+    #[arg(long)]
+    pub(crate) rerank_api_key_file: Option<PathBuf>,
+    /// Gemma embedding dimensions: 768 or 256.
+    #[arg(long, default_value_t = 768)]
+    pub(crate) dimensions: usize,
+    /// Maximum inference request/startup time in seconds.
+    #[arg(long, default_value_t = 120)]
+    pub(crate) timeout_seconds: u64,
+}
+impl Default for Inference {
+    fn default() -> Self {
+        Self {
+            background_remote: false,
+            endpoint: None,
+            model_name: None,
+            api_key_file: None,
+            rerank_endpoint: None,
+            rerank_model_name: None,
+            rerank_api_key_file: None,
+            dimensions: 768,
+            timeout_seconds: 120,
+        }
+    }
+}
+#[derive(Subcommand)]
+pub(crate) enum Raw {
+    /// Check the selected archive against its stored record boundaries.
+    Verify {
+        #[command(flatten)]
+        selection: RawSelection,
+        /// Compare the archived byte prefix with the live source.
+        #[arg(long)]
+        against_live: bool,
+        #[arg(long, short)]
+        verbose: bool,
+    },
+    /// List retained source generations.
+    Sources(RawSelection),
+    /// Show raw source counts, sizes and compression.
+    Stats(RawSelection),
+    /// Reconstruct original source bytes from the archive.
+    Export {
+        #[command(flatten)]
+        selection: RawSelection,
+        #[arg(
+            long,
+            short,
+            required_unless_present = "stdout",
+            conflicts_with = "stdout"
+        )]
+        output: Option<PathBuf>,
+        /// Write the reconstructed source bytes to stdout.
+        #[arg(long)]
+        stdout: bool,
+        /// Replace an existing output, or rebuild an index when requested.
+        #[arg(long)]
+        force: bool,
+    },
+}
+#[derive(Args)]
+pub(crate) struct RawSelection {
+    /// Source ID, native thread ID, or exact source path.
+    pub(crate) selector: Option<String>,
+    /// Select a history profile; repeat to select several.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    /// Select codex, claude, cursor, or all history sources.
+    #[arg(long, value_parser = SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+    /// Select one retained source generation.
+    #[arg(long,value_parser=clap::value_parser!(i64).range(1..))]
+    pub(crate) generation: Option<i64>,
+}
+impl RawSelection {
+    pub(crate) fn filter(self, latest: bool) -> llm_history_types::archive::RawFilter {
+        llm_history_types::archive::RawFilter {
+            profiles: self.profile,
+            source: self.source,
+            selector: self.selector,
+            generation: self.generation,
+            latest,
+        }
+    }
+}
+#[derive(Subcommand)]
+pub(crate) enum Archive {
+    /// Save a checkpointed database snapshot.
+    Create {
+        output: Option<PathBuf>,
+        /// Optional label included in the generated archive filename.
+        #[arg(long, conflicts_with = "output")]
+        label: Option<String>,
+    },
+    /// Restore a saved database snapshot.
+    Restore {
+        archive: PathBuf,
+        /// Confirm replacing the active database; retain its previous checkpoint.
+        #[arg(long)]
+        yes: bool,
+    },
+    /// Check the selected archive against its stored record boundaries.
+    Verify { archive: PathBuf },
+    /// List saved database snapshots.
+    List {
+        /// Directory containing database archives.
+        #[arg(long)]
+        directory: Option<PathBuf>,
+    },
+}
+#[derive(Subcommand)]
+pub(crate) enum Models {
+    /// List the configured entries.
+    List,
+    /// Download both local models and their tokenizer into the Hugging Face cache.
+    Fetch {
+        /// Explicitly allow downloading the pinned models into the Hugging Face cache.
+        #[arg(long)]
+        download_model: bool,
+    },
+    /// Recheck the cached model files on request.
+    Verify,
+}
+#[derive(Subcommand)]
+pub(crate) enum Semantic {
+    /// Build or refresh the lexical index.
+    Index {
+        /// Rebuild an existing lexical index.
+        #[arg(long)]
+        force: bool,
+    },
+    /// Search through the shared pipeline; defaults to hybrid retrieval.
+    #[command(mut_arg("mode", |arg| arg.default_value("hybrid")))]
+    Search(Box<Search>),
+    /// Show embedding coverage for the selected profiles.
+    Status {
+        #[command(flatten)]
+        inference: Inference,
+        /// Select a history profile; repeat to select several.
+        #[arg(long)]
+        profile: Vec<String>,
+    },
+    /// Start a bounded detached embedding worker, or wait with --foreground.
+    Backfill(Backfill),
+    /// Show the last worker state and pending embedding coverage.
+    BackfillStatus {
+        #[command(flatten)]
+        inference: Inference,
+    },
+}
+#[derive(Args, Clone)]
+pub(crate) struct Backfill {
+    /// Wait for the embedding worker in this process.
+    #[arg(long)]
+    pub(crate) foreground: bool,
+    /// Total worker time budget, including database waits.
+    #[arg(long, default_value_t = 300.0)]
+    pub(crate) seconds: f64,
+    /// Maximum documents processed in this worker run.
+    #[arg(long, default_value_t = 10000)]
+    pub(crate) max_documents: usize,
+    /// Maximum input tokens processed in this worker run.
+    #[arg(long, default_value_t = 2000000)]
+    pub(crate) max_tokens: usize,
+    /// Maximum queued inference data in MiB.
+    #[arg(long, default_value_t = 64)]
+    pub(crate) queue_mib: u64,
+    /// Maximum queued inference items.
+    #[arg(long, default_value_t = 1024)]
+    pub(crate) queue_items: usize,
+    /// Skip documents exceeding this character count.
+    #[arg(long, default_value_t = 1_000_000)]
+    pub(crate) max_document_chars: usize,
+    /// Maximum pending documents read at once.
+    #[arg(long, default_value_t = 64)]
+    pub(crate) read_batch: usize,
+    /// Select codex, claude, cursor, or all history sources.
+    #[arg(long, value_parser = SOURCE_KEYS)]
+    pub(crate) source: Option<String>,
+    /// Retry documents previously marked as embedding failures.
+    #[arg(long)]
+    pub(crate) retry_failures: bool,
+    /// Select a history profile; repeat to select several.
+    #[arg(long)]
+    pub(crate) profile: Vec<String>,
+    #[command(flatten)]
+    pub(crate) inference: Inference,
+}
+
+#[derive(Debug, clap::Args)]
+pub(crate) struct SqlArgs {
+    /// DuckDB query; discover available surfaces through history_help.
+    pub(crate) query: String,
+    /// Maximum rows to display. Use SQL LIMIT to limit the query itself.
+    #[arg(long, alias = "max-rows", default_value_t = 50)]
+    pub(crate) limit: usize,
+    /// Maximum UTF-8 bytes per SQL header or text cell.
+    #[arg(long, alias = "max-cell-chars", default_value_t = 2000)]
+    pub(crate) max_cell_bytes: usize,
+    /// Maximum serialized SQL output bytes.
+    #[arg(long, default_value_t = 8000)]
+    pub(crate) max_output_bytes: usize,
+    /// Interrupt DuckDB execution after this many seconds, including with --full.
+    #[arg(long, default_value_t = llm_history_types::storage::DEFAULT_SQL_TIMEOUT_SECONDS, value_parser = clap::value_parser!(u64).range(1..))]
+    pub(crate) timeout_seconds: u64,
+    /// Print complete selected text without output limits.
+    #[arg(long)]
+    pub(crate) full: bool,
+    /// Show matching text without credential redaction.
+    #[arg(long, overrides_with = "_redact")]
+    pub(crate) no_redact: bool,
+    /// Python's explicit default; overrides an earlier --no-redact.
+    #[arg(long = "redact", hide = true, overrides_with = "no_redact")]
+    _redact: bool,
+}
+
+#[cfg(test)]
+mod python_flag_tests {
+    use super::*;
+    #[test]
+    fn every_mode_is_chosen_with_the_mode_flag_on_either_search_command() {
+        let mode = |command: &[&str], flags: &[&str]| {
+            let line = [&["llm-history"], command, &["q"], flags].concat();
+            match App::try_parse_from(line).map(|app| app.command) {
+                Ok(Commands::Search(args) | Commands::Semantic(Semantic::Search(args))) => {
+                    Some(args.mode)
+                }
+                _ => None,
+            }
+        };
+        let (plain, semantic): (&[&str], &[&str]) = (&["search"], &["semantic", "search"]);
+        assert_eq!(mode(plain, &[]), Some(Mode::Lexical));
+        assert_eq!(mode(semantic, &[]), Some(Mode::Hybrid));
+        for command in [plain, semantic] {
+            for (name, expected) in [
+                ("lexical", Mode::Lexical),
+                ("exact", Mode::Exact),
+                ("semantic", Mode::Semantic),
+                ("hybrid", Mode::Hybrid),
+                ("auto", Mode::Auto),
+            ] {
+                assert_eq!(mode(command, &["--mode", name]), Some(expected));
+            }
+            assert_eq!(mode(command, &["--mode", "exakt"]), None);
+            assert_eq!(mode(command, &["--exact"]), None);
+        }
+    }
+    #[test]
+    fn kind_is_validated_and_cannot_exclude_what_it_names() {
+        let parse = |flags: &[&str]| {
+            App::try_parse_from(["llm-history", "search", "q"].iter().chain(flags)).is_ok()
+        };
+        assert!(parse(&["--kind", "guardian"]));
+        assert!(!parse(&["--kind", "reviewer"]));
+        assert!(!parse(&["--kind", "guardian", "--no-subagents"]));
+    }
+    #[test]
+    fn explicit_python_defaults_override_earlier_negations() {
+        let app = App::try_parse_from([
+            "llm-history",
+            "search",
+            "q",
+            "--no-subagents",
+            "--include-subagents",
+            "--no-refresh",
+            "--refresh",
+            "--no-background",
+            "--background",
+        ])
+        .unwrap();
+        let Commands::Search(args) = app.command else {
+            panic!("search")
+        };
+        assert!(!args.no_subagents && !args.no_refresh && !args.no_background);
+        let app = App::try_parse_from([
+            "llm-history",
+            "search",
+            "q",
+            "--include-subagents",
+            "--no-subagents",
+        ])
+        .unwrap();
+        let Commands::Search(args) = app.command else {
+            panic!("search")
+        };
+        assert!(args.no_subagents);
+        let app =
+            App::try_parse_from(["llm-history", "sql", "select 1", "--no-redact", "--redact"])
+                .unwrap();
+        assert!(matches!(
+            app.command,
+            Commands::Sql(SqlArgs {
+                no_redact: false,
+                ..
+            })
+        ));
+        let app = App::try_parse_from(["llm-history", "update", "--no-background", "--background"])
+            .unwrap();
+        assert!(matches!(
+            app.command,
+            Commands::Update {
+                no_background: false,
+                ..
+            }
+        ));
+    }
+}

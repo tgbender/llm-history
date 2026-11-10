@@ -1,0 +1,20 @@
+[package]
+name = "llm-history-store-engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+description = "Configured DuckDB connections, locks and transactions"
+
+[dependencies]
+llm-history-types.workspace = true
+anyhow.workspace = true
+blake3.workspace = true
+duckdb = { workspace = true, features = ["vscalar"] }
+libduckdb-sys.workspace = true
+fs2.workspace = true
+xxhash-rust.workspace = true
+
+[build-dependencies]
+cc.workspace = true

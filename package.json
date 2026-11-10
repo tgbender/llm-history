@@ -1,0 +1,11 @@
+{
+  "name": "llm-history-tooling",
+  "private": true,
+  "devDependencies": {
+    "prettier": "3.6.2"
+  },
+  "scripts": {
+    "format": "prettier --write README.md AGENTS.md \"crates/**/*.md\" \"docs/*.md\" \"docs/schema/*.md\" package.json advisory-policy.json .pre-commit-config.yaml",
+    "format:check": "prettier --check README.md AGENTS.md \"crates/**/*.md\" \"docs/*.md\" \"docs/schema/*.md\" package.json advisory-policy.json .pre-commit-config.yaml"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "title": "Synthetic Cursor shell checks",
+  "cwd": "/fixture/cursor",
+  "createdAtMs": 1783555200000,
+  "updatedAtMs": 1783555202000,
+  "hasConversation": true,
+  "isSubagent": false
+}

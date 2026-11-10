@@ -1,0 +1,33 @@
+[package]
+name = "llm-history-store"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[features]
+native-tests = ["duckdb/appender-arrow"]
+
+[dependencies]
+llm-history-store-engine.workspace = true
+llm-history-store-harnesses.workspace = true
+llm-history-core.workspace = true
+llm-history-types.workspace = true
+anyhow.workspace = true
+serde_json.workspace = true
+duckdb.workspace = true
+zstd.workspace = true
+blake3.workspace = true
+sha2.workspace = true
+hex.workspace = true
+xxhash-rust.workspace = true
+chrono.workspace = true
+chrono-tz.workspace = true
+iana-time-zone.workspace = true
+uuid.workspace = true
+tempfile.workspace = true
+
+[dev-dependencies]
+llm-history-ingest.workspace = true
+tempfile.workspace = true
+rusqlite.workspace = true

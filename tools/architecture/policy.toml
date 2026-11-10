@@ -1,0 +1,62 @@
+# Selected executable guardrails. docs/architecture.md is the dated descriptive map.
+# Changes to these rules/exceptions should explain the ownership decision in review.
+version = 1
+
+[workspace_dependencies]
+llm-history-types = []
+llm-history-core = ["llm-history-types"]
+llm-history-models = []
+llm-history-ingest = ["llm-history-types", "llm-history-core"]
+llm-history-store-engine = ["llm-history-types"]
+llm-history-store-harnesses = ["llm-history-types", "llm-history-store-engine"]
+llm-history-store = [
+  "llm-history-types",
+  "llm-history-core",
+  "llm-history-store-engine",
+  "llm-history-store-harnesses",
+]
+llm-history-search = [
+  "llm-history-types",
+  "llm-history-core",
+  "llm-history-store",
+  "llm-history-models",
+]
+llm-history-app = [
+  "llm-history-types",
+  "llm-history-core",
+  "llm-history-ingest",
+  "llm-history-store",
+  "llm-history-search",
+  "llm-history-models",
+]
+# CLI may call only the three public archive-file functions in store::archives.
+# Source checks still reject Store/database workflow access from production CLI.
+llm-history-cli = ["llm-history-app", "llm-history-types", "llm-history-store"]
+
+[[legacy_dependency]]
+source = "llm-history-cli"
+target = "llm-history-core"
+reason = "CLI still uses shared time, path and output helpers; reassess as their owners are extracted."
+
+[[legacy_dependency]]
+source = "llm-history-cli"
+target = "llm-history-search"
+reason = "CLI still writes worker progress through search utilities; remove with worker ownership extraction."
+
+[[legacy_dependency]]
+source = "llm-history-cli"
+target = "llm-history-models"
+reason = "CLI currently assembles inference engines; remove when app runtime configuration owns assembly."
+
+[external_dependency_owners]
+duckdb = [
+  "llm-history-store-engine",
+  "llm-history-store",
+  "llm-history-store-harnesses",
+]
+libduckdb-sys = ["llm-history-store-engine"]
+rusqlite = ["llm-history-ingest"]
+reqwest = ["llm-history-models"]
+hf-hub = ["llm-history-models"]
+clap = ["llm-history-cli"]
+comfy-table = ["llm-history-cli"]

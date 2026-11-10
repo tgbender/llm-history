@@ -1,0 +1,5 @@
+{"type":"future_fixture","payload":{"precise":1.000000000000000000001,"big":99999999999999999999999999999999,"present":null}}
+{"type":"message","body":"first","body":"second"}
+{"type":"message","body":"invalid ÿ UTF-8"}
+{"type":"message","body":}
+{"type":"partial","body":"live writer

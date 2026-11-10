@@ -1,0 +1,57 @@
+{
+  "fixture_version": 1,
+  "name": "profiles-tools-append-replay",
+  "profiles": [
+    {
+      "name": "personal",
+      "harness": "codex",
+      "root": "personal",
+      "file": "sessions/demo.jsonl",
+      "input": "personal.jsonl"
+    },
+    {
+      "name": "work",
+      "harness": "codex",
+      "root": "work",
+      "file": "sessions/demo.jsonl",
+      "input": "work.jsonl"
+    },
+    {
+      "name": "claude",
+      "harness": "claude",
+      "root": "claude",
+      "file": "projects/demo/session.jsonl",
+      "input": "claude.jsonl"
+    }
+  ],
+  "steps": [
+    {
+      "operation": "update",
+      "expect": "initial"
+    },
+    {
+      "operation": "append",
+      "profile": "claude",
+      "input": "claude-append.jsonl"
+    },
+    {
+      "operation": "update",
+      "expect": "appended"
+    },
+    {
+      "operation": "reopen"
+    },
+    {
+      "operation": "remove_sources"
+    },
+    {
+      "operation": "update",
+      "expect": "missing"
+    },
+    {
+      "operation": "reprocess",
+      "expect": "replayed"
+    }
+  ],
+  "expected": "expected.json"
+}

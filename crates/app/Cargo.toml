@@ -1,0 +1,22 @@
+[package]
+name = "llm-history-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+llm-history-core.workspace = true
+llm-history-types.workspace = true
+llm-history-store.workspace = true
+llm-history-ingest.workspace = true
+llm-history-search.workspace = true
+llm-history-models.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+tempfile.workspace = true
+
+[dev-dependencies]
+rusqlite.workspace = true

@@ -1,0 +1,969 @@
+{
+  "format_version": 2,
+  "artifacts": [
+    {
+      "name": "llama-b11869-bin-macos-arm64.tar.gz",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11869/llama-b11869-bin-macos-arm64.tar.gz",
+      "sha256": "0a24eb567528ee3265f0fcf11d9ef5d83f9d8f5bd18be760895b853eae82508f",
+      "license": "MIT",
+      "revision": "d327bf1f0780f87b8c01b367b61853b0c291d7c4"
+    }
+  ],
+  "llama_files": [
+    {
+      "name": "libggml-rpc.0.dylib",
+      "sha256": "0721927b159bb86b6be6c88bffdac6ee566d31fee6d15f89d31996e4d25ef558",
+      "member": "llama-b11869/libggml-rpc.0.dylib"
+    },
+    {
+      "name": "libllama.0.7.0.dylib",
+      "sha256": "c23fc466d7b0ebc89c7b243bc8435cf3b16e1c9b13f5a72af39e781b6f225f22",
+      "member": "llama-b11869/libllama.0.7.0.dylib"
+    },
+    {
+      "name": "libmtmd.0.7.0.dylib",
+      "sha256": "e3465f6e632b8dc596fc7d1d6edd5b6fefdcac60b4d8b25fe5f881f35bffbd15",
+      "member": "llama-b11869/libmtmd.0.7.0.dylib"
+    },
+    {
+      "name": "libllama-common.0.7.0.dylib",
+      "sha256": "7f856d385a07d1f502595afd4fe1a46fcebf86e31068261089cbdcf7e6425c90",
+      "member": "llama-b11869/libllama-common.0.7.0.dylib"
+    },
+    {
+      "name": "libllama.0.dylib",
+      "sha256": "c23fc466d7b0ebc89c7b243bc8435cf3b16e1c9b13f5a72af39e781b6f225f22",
+      "member": "llama-b11869/libllama.0.dylib"
+    },
+    {
+      "name": "libmtmd.0.dylib",
+      "sha256": "e3465f6e632b8dc596fc7d1d6edd5b6fefdcac60b4d8b25fe5f881f35bffbd15",
+      "member": "llama-b11869/libmtmd.0.dylib"
+    },
+    {
+      "name": "libggml.dylib",
+      "sha256": "a97bc40525aea78834fdf28197b5b21f149b6d5ac2d3b615b95b86f775a69477",
+      "member": "llama-b11869/libggml.dylib"
+    },
+    {
+      "name": "libggml.0.dylib",
+      "sha256": "a97bc40525aea78834fdf28197b5b21f149b6d5ac2d3b615b95b86f775a69477",
+      "member": "llama-b11869/libggml.0.dylib"
+    },
+    {
+      "name": "libggml-cpu.0.27.0.dylib",
+      "sha256": "ea0701395e397233239b22246fcf77d2b746e61c867f6f3b584f2dda5e8cdaa0",
+      "member": "llama-b11869/libggml-cpu.0.27.0.dylib"
+    },
+    {
+      "name": "libggml.0.27.0.dylib",
+      "sha256": "a97bc40525aea78834fdf28197b5b21f149b6d5ac2d3b615b95b86f775a69477",
+      "member": "llama-b11869/libggml.0.27.0.dylib"
+    },
+    {
+      "name": "libmtmd.dylib",
+      "sha256": "e3465f6e632b8dc596fc7d1d6edd5b6fefdcac60b4d8b25fe5f881f35bffbd15",
+      "member": "llama-b11869/libmtmd.dylib"
+    },
+    {
+      "name": "libllama-server-impl.dylib",
+      "sha256": "3cb3e9ef14d7a5bb631b77b42e0ecab7efe42c84643e53c214d74ebfe863b254",
+      "member": "llama-b11869/libllama-server-impl.dylib"
+    },
+    {
+      "name": "libggml-metal.0.27.0.dylib",
+      "sha256": "538d8bde211aafd5e00dc177c5f3b7e1e4acbf43136dbe7e65f9c6fdd0c01c09",
+      "member": "llama-b11869/libggml-metal.0.27.0.dylib"
+    },
+    {
+      "name": "libggml-base.dylib",
+      "sha256": "39d6605e739a23e75e16fb513cc15d359062fa41cb3a623e617675ed6002f758",
+      "member": "llama-b11869/libggml-base.dylib"
+    },
+    {
+      "name": "libggml-rpc.0.27.0.dylib",
+      "sha256": "0721927b159bb86b6be6c88bffdac6ee566d31fee6d15f89d31996e4d25ef558",
+      "member": "llama-b11869/libggml-rpc.0.27.0.dylib"
+    },
+    {
+      "name": "libggml-blas.0.27.0.dylib",
+      "sha256": "12aefdc8dd4873d69554dc85a0dd09fffef9828e1fc9ecf6b48913ef2106b33a",
+      "member": "llama-b11869/libggml-blas.0.27.0.dylib"
+    },
+    {
+      "name": "libggml-blas.dylib",
+      "sha256": "12aefdc8dd4873d69554dc85a0dd09fffef9828e1fc9ecf6b48913ef2106b33a",
+      "member": "llama-b11869/libggml-blas.dylib"
+    },
+    {
+      "name": "libggml-metal.0.dylib",
+      "sha256": "538d8bde211aafd5e00dc177c5f3b7e1e4acbf43136dbe7e65f9c6fdd0c01c09",
+      "member": "llama-b11869/libggml-metal.0.dylib"
+    },
+    {
+      "name": "libllama-completion-impl.dylib",
+      "sha256": "4612a28f5ad5bc41167f8f5a877aff25963d4c1aba471b12d0261b369d351066",
+      "member": "llama-b11869/libllama-completion-impl.dylib"
+    },
+    {
+      "name": "libllama-bench-impl.dylib",
+      "sha256": "29d28dec19ac4cadff020c8f29d545fa51fcb538226ba92173b350b2254c8cce",
+      "member": "llama-b11869/libllama-bench-impl.dylib"
+    },
+    {
+      "name": "libllama-common.0.dylib",
+      "sha256": "7f856d385a07d1f502595afd4fe1a46fcebf86e31068261089cbdcf7e6425c90",
+      "member": "llama-b11869/libllama-common.0.dylib"
+    },
+    {
+      "name": "libllama.dylib",
+      "sha256": "c23fc466d7b0ebc89c7b243bc8435cf3b16e1c9b13f5a72af39e781b6f225f22",
+      "member": "llama-b11869/libllama.dylib"
+    },
+    {
+      "name": "libllama-perplexity-impl.dylib",
+      "sha256": "208ef689572ac925d4b83a9f8cf9482da29ee7f213517fb9712f713ee49e5596",
+      "member": "llama-b11869/libllama-perplexity-impl.dylib"
+    },
+    {
+      "name": "libggml-cpu.dylib",
+      "sha256": "ea0701395e397233239b22246fcf77d2b746e61c867f6f3b584f2dda5e8cdaa0",
+      "member": "llama-b11869/libggml-cpu.dylib"
+    },
+    {
+      "name": "libggml-base.0.27.0.dylib",
+      "sha256": "39d6605e739a23e75e16fb513cc15d359062fa41cb3a623e617675ed6002f758",
+      "member": "llama-b11869/libggml-base.0.27.0.dylib"
+    },
+    {
+      "name": "libggml-metal.dylib",
+      "sha256": "538d8bde211aafd5e00dc177c5f3b7e1e4acbf43136dbe7e65f9c6fdd0c01c09",
+      "member": "llama-b11869/libggml-metal.dylib"
+    },
+    {
+      "name": "libllama-quantize-impl.dylib",
+      "sha256": "582dadbf515289d7a5dd5aa27be5fdcbe58cad0a2eb4eaa72a15087ad9d26864",
+      "member": "llama-b11869/libllama-quantize-impl.dylib"
+    },
+    {
+      "name": "libllama-cli-impl.dylib",
+      "sha256": "f4e4a1582ab4f418a59235bb5e338babca9287fdc04dcdf06db0756674137db6",
+      "member": "llama-b11869/libllama-cli-impl.dylib"
+    },
+    {
+      "name": "llama-server",
+      "sha256": "981b460a278e9a0c880cef32d6fab42785a119084456b16845304cf38c32cf69",
+      "member": "llama-b11869/llama-server"
+    },
+    {
+      "name": "libllama-batched-bench-impl.dylib",
+      "sha256": "c744b854dc54b7309e691330729346aedcf5158c8d7e72204958cf2991ccc733",
+      "member": "llama-b11869/libllama-batched-bench-impl.dylib"
+    },
+    {
+      "name": "libllama-common.dylib",
+      "sha256": "7f856d385a07d1f502595afd4fe1a46fcebf86e31068261089cbdcf7e6425c90",
+      "member": "llama-b11869/libllama-common.dylib"
+    },
+    {
+      "name": "libggml-base.0.dylib",
+      "sha256": "39d6605e739a23e75e16fb513cc15d359062fa41cb3a623e617675ed6002f758",
+      "member": "llama-b11869/libggml-base.0.dylib"
+    },
+    {
+      "name": "libllama-fit-params-impl.dylib",
+      "sha256": "0414b02a71930f61e93ed78ceacdb3b76b6b2403e464adea927d4655bd2751df",
+      "member": "llama-b11869/libllama-fit-params-impl.dylib"
+    },
+    {
+      "name": "libggml-blas.0.dylib",
+      "sha256": "12aefdc8dd4873d69554dc85a0dd09fffef9828e1fc9ecf6b48913ef2106b33a",
+      "member": "llama-b11869/libggml-blas.0.dylib"
+    },
+    {
+      "name": "libggml-rpc.dylib",
+      "sha256": "0721927b159bb86b6be6c88bffdac6ee566d31fee6d15f89d31996e4d25ef558",
+      "member": "llama-b11869/libggml-rpc.dylib"
+    },
+    {
+      "name": "libggml-cpu.0.dylib",
+      "sha256": "ea0701395e397233239b22246fcf77d2b746e61c867f6f3b584f2dda5e8cdaa0",
+      "member": "llama-b11869/libggml-cpu.0.dylib"
+    }
+  ],
+  "duckdb": {
+    "version": "2.0.0",
+    "crate": "1.20000.0",
+    "release_commit": "d54cbbe3df17e8e5ce68312f483b4155836112aa",
+    "tag_url": "https://github.com/duckdb/duckdb/releases/tag/v2.0.0",
+    "build_metadata_override": "published bundled sources have stale generated dev version defaults"
+  },
+  "models": [
+    {
+      "name": "embeddinggemma-2-BF16.gguf",
+      "repository": "ggml-org/embeddinggemma-2-GGUF",
+      "revision": "58faf90940886df2d62be555c8765d00dac362c5",
+      "sha256": "68bae29d62fb8c7d23e98d21fd4662753ddd636e6b62b8a70dfe059a9844f216",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "qwen3-reranker-0.6b-q8_0.gguf",
+      "repository": "ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF",
+      "revision": "a02f48bb4f057028298c21fa033da2b30d7742d5",
+      "sha256": "22c9979ce4fbcdc5acdc310c6641c32797eff1aa980b8f7a2db8a8ea23429a48",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "embeddinggemma-2-tokenizer.json",
+      "filename": "tokenizer.json",
+      "repository": "google/embeddinggemma-2",
+      "revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "sha256": "4d777ef5bdc1aa36227abdfb77c3e49e7b9c892d16e1b6bda41c393504828be4",
+      "license": "Apache-2.0"
+    }
+  ],
+  "platforms": {
+    "macos-arm64": {
+      "artifacts": [
+        {
+          "name": "llama-b11869-bin-macos-arm64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11869/llama-b11869-bin-macos-arm64.tar.gz",
+          "sha256": "0a24eb567528ee3265f0fcf11d9ef5d83f9d8f5bd18be760895b853eae82508f",
+          "license": "MIT",
+          "revision": "d327bf1f0780f87b8c01b367b61853b0c291d7c4"
+        }
+      ],
+      "llama_files": [
+        {
+          "name": "libggml-rpc.0.dylib",
+          "sha256": "0721927b159bb86b6be6c88bffdac6ee566d31fee6d15f89d31996e4d25ef558",
+          "member": "llama-b11869/libggml-rpc.0.dylib"
+        },
+        {
+          "name": "libllama.0.7.0.dylib",
+          "sha256": "c23fc466d7b0ebc89c7b243bc8435cf3b16e1c9b13f5a72af39e781b6f225f22",
+          "member": "llama-b11869/libllama.0.7.0.dylib"
+        },
+        {
+          "name": "libmtmd.0.7.0.dylib",
+          "sha256": "e3465f6e632b8dc596fc7d1d6edd5b6fefdcac60b4d8b25fe5f881f35bffbd15",
+          "member": "llama-b11869/libmtmd.0.7.0.dylib"
+        },
+        {
+          "name": "libllama-common.0.7.0.dylib",
+          "sha256": "7f856d385a07d1f502595afd4fe1a46fcebf86e31068261089cbdcf7e6425c90",
+          "member": "llama-b11869/libllama-common.0.7.0.dylib"
+        },
+        {
+          "name": "libllama.0.dylib",
+          "sha256": "c23fc466d7b0ebc89c7b243bc8435cf3b16e1c9b13f5a72af39e781b6f225f22",
+          "member": "llama-b11869/libllama.0.dylib"
+        },
+        {
+          "name": "libmtmd.0.dylib",
+          "sha256": "e3465f6e632b8dc596fc7d1d6edd5b6fefdcac60b4d8b25fe5f881f35bffbd15",
+          "member": "llama-b11869/libmtmd.0.dylib"
+        },
+        {
+          "name": "libggml.dylib",
+          "sha256": "a97bc40525aea78834fdf28197b5b21f149b6d5ac2d3b615b95b86f775a69477",
+          "member": "llama-b11869/libggml.dylib"
+        },
+        {
+          "name": "libggml.0.dylib",
+          "sha256": "a97bc40525aea78834fdf28197b5b21f149b6d5ac2d3b615b95b86f775a69477",
+          "member": "llama-b11869/libggml.0.dylib"
+        },
+        {
+          "name": "libggml-cpu.0.27.0.dylib",
+          "sha256": "ea0701395e397233239b22246fcf77d2b746e61c867f6f3b584f2dda5e8cdaa0",
+          "member": "llama-b11869/libggml-cpu.0.27.0.dylib"
+        },
+        {
+          "name": "libggml.0.27.0.dylib",
+          "sha256": "a97bc40525aea78834fdf28197b5b21f149b6d5ac2d3b615b95b86f775a69477",
+          "member": "llama-b11869/libggml.0.27.0.dylib"
+        },
+        {
+          "name": "libmtmd.dylib",
+          "sha256": "e3465f6e632b8dc596fc7d1d6edd5b6fefdcac60b4d8b25fe5f881f35bffbd15",
+          "member": "llama-b11869/libmtmd.dylib"
+        },
+        {
+          "name": "libllama-server-impl.dylib",
+          "sha256": "3cb3e9ef14d7a5bb631b77b42e0ecab7efe42c84643e53c214d74ebfe863b254",
+          "member": "llama-b11869/libllama-server-impl.dylib"
+        },
+        {
+          "name": "libggml-metal.0.27.0.dylib",
+          "sha256": "538d8bde211aafd5e00dc177c5f3b7e1e4acbf43136dbe7e65f9c6fdd0c01c09",
+          "member": "llama-b11869/libggml-metal.0.27.0.dylib"
+        },
+        {
+          "name": "libggml-base.dylib",
+          "sha256": "39d6605e739a23e75e16fb513cc15d359062fa41cb3a623e617675ed6002f758",
+          "member": "llama-b11869/libggml-base.dylib"
+        },
+        {
+          "name": "libggml-rpc.0.27.0.dylib",
+          "sha256": "0721927b159bb86b6be6c88bffdac6ee566d31fee6d15f89d31996e4d25ef558",
+          "member": "llama-b11869/libggml-rpc.0.27.0.dylib"
+        },
+        {
+          "name": "libggml-blas.0.27.0.dylib",
+          "sha256": "12aefdc8dd4873d69554dc85a0dd09fffef9828e1fc9ecf6b48913ef2106b33a",
+          "member": "llama-b11869/libggml-blas.0.27.0.dylib"
+        },
+        {
+          "name": "libggml-blas.dylib",
+          "sha256": "12aefdc8dd4873d69554dc85a0dd09fffef9828e1fc9ecf6b48913ef2106b33a",
+          "member": "llama-b11869/libggml-blas.dylib"
+        },
+        {
+          "name": "libggml-metal.0.dylib",
+          "sha256": "538d8bde211aafd5e00dc177c5f3b7e1e4acbf43136dbe7e65f9c6fdd0c01c09",
+          "member": "llama-b11869/libggml-metal.0.dylib"
+        },
+        {
+          "name": "libllama-completion-impl.dylib",
+          "sha256": "4612a28f5ad5bc41167f8f5a877aff25963d4c1aba471b12d0261b369d351066",
+          "member": "llama-b11869/libllama-completion-impl.dylib"
+        },
+        {
+          "name": "libllama-bench-impl.dylib",
+          "sha256": "29d28dec19ac4cadff020c8f29d545fa51fcb538226ba92173b350b2254c8cce",
+          "member": "llama-b11869/libllama-bench-impl.dylib"
+        },
+        {
+          "name": "libllama-common.0.dylib",
+          "sha256": "7f856d385a07d1f502595afd4fe1a46fcebf86e31068261089cbdcf7e6425c90",
+          "member": "llama-b11869/libllama-common.0.dylib"
+        },
+        {
+          "name": "libllama.dylib",
+          "sha256": "c23fc466d7b0ebc89c7b243bc8435cf3b16e1c9b13f5a72af39e781b6f225f22",
+          "member": "llama-b11869/libllama.dylib"
+        },
+        {
+          "name": "libllama-perplexity-impl.dylib",
+          "sha256": "208ef689572ac925d4b83a9f8cf9482da29ee7f213517fb9712f713ee49e5596",
+          "member": "llama-b11869/libllama-perplexity-impl.dylib"
+        },
+        {
+          "name": "libggml-cpu.dylib",
+          "sha256": "ea0701395e397233239b22246fcf77d2b746e61c867f6f3b584f2dda5e8cdaa0",
+          "member": "llama-b11869/libggml-cpu.dylib"
+        },
+        {
+          "name": "libggml-base.0.27.0.dylib",
+          "sha256": "39d6605e739a23e75e16fb513cc15d359062fa41cb3a623e617675ed6002f758",
+          "member": "llama-b11869/libggml-base.0.27.0.dylib"
+        },
+        {
+          "name": "libggml-metal.dylib",
+          "sha256": "538d8bde211aafd5e00dc177c5f3b7e1e4acbf43136dbe7e65f9c6fdd0c01c09",
+          "member": "llama-b11869/libggml-metal.dylib"
+        },
+        {
+          "name": "libllama-quantize-impl.dylib",
+          "sha256": "582dadbf515289d7a5dd5aa27be5fdcbe58cad0a2eb4eaa72a15087ad9d26864",
+          "member": "llama-b11869/libllama-quantize-impl.dylib"
+        },
+        {
+          "name": "libllama-cli-impl.dylib",
+          "sha256": "f4e4a1582ab4f418a59235bb5e338babca9287fdc04dcdf06db0756674137db6",
+          "member": "llama-b11869/libllama-cli-impl.dylib"
+        },
+        {
+          "name": "llama-server",
+          "sha256": "981b460a278e9a0c880cef32d6fab42785a119084456b16845304cf38c32cf69",
+          "member": "llama-b11869/llama-server"
+        },
+        {
+          "name": "libllama-batched-bench-impl.dylib",
+          "sha256": "c744b854dc54b7309e691330729346aedcf5158c8d7e72204958cf2991ccc733",
+          "member": "llama-b11869/libllama-batched-bench-impl.dylib"
+        },
+        {
+          "name": "libllama-common.dylib",
+          "sha256": "7f856d385a07d1f502595afd4fe1a46fcebf86e31068261089cbdcf7e6425c90",
+          "member": "llama-b11869/libllama-common.dylib"
+        },
+        {
+          "name": "libggml-base.0.dylib",
+          "sha256": "39d6605e739a23e75e16fb513cc15d359062fa41cb3a623e617675ed6002f758",
+          "member": "llama-b11869/libggml-base.0.dylib"
+        },
+        {
+          "name": "libllama-fit-params-impl.dylib",
+          "sha256": "0414b02a71930f61e93ed78ceacdb3b76b6b2403e464adea927d4655bd2751df",
+          "member": "llama-b11869/libllama-fit-params-impl.dylib"
+        },
+        {
+          "name": "libggml-blas.0.dylib",
+          "sha256": "12aefdc8dd4873d69554dc85a0dd09fffef9828e1fc9ecf6b48913ef2106b33a",
+          "member": "llama-b11869/libggml-blas.0.dylib"
+        },
+        {
+          "name": "libggml-rpc.dylib",
+          "sha256": "0721927b159bb86b6be6c88bffdac6ee566d31fee6d15f89d31996e4d25ef558",
+          "member": "llama-b11869/libggml-rpc.dylib"
+        },
+        {
+          "name": "libggml-cpu.0.dylib",
+          "sha256": "ea0701395e397233239b22246fcf77d2b746e61c867f6f3b584f2dda5e8cdaa0",
+          "member": "llama-b11869/libggml-cpu.0.dylib"
+        }
+      ]
+    },
+    "macos-x64": {
+      "artifacts": [
+        {
+          "name": "llama-b11869-bin-macos-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11869/llama-b11869-bin-macos-x64.tar.gz",
+          "sha256": "9edc538331e7216c0dce7fa95251c5b2b075eff341e0d14e60a8f544aaf8160e",
+          "license": "MIT",
+          "revision": "d327bf1f0780f87b8c01b367b61853b0c291d7c4"
+        }
+      ],
+      "llama_files": [
+        {
+          "name": "libggml-rpc.0.dylib",
+          "member": "llama-b11869/libggml-rpc.0.dylib",
+          "sha256": "97467b60fa91c7086617e0fd313f83203236aac4c5153d98bdc9bddbc1d73bc9"
+        },
+        {
+          "name": "libllama.0.7.0.dylib",
+          "member": "llama-b11869/libllama.0.7.0.dylib",
+          "sha256": "01be3701b89e1f3ff3e615486c268def7d088011f0a51dc2c5197df7861a94d9"
+        },
+        {
+          "name": "libmtmd.0.7.0.dylib",
+          "member": "llama-b11869/libmtmd.0.7.0.dylib",
+          "sha256": "08bf0f419f408b10ec61318750271af6dc6bcfd02842da8305552a9b9ec5e1e7"
+        },
+        {
+          "name": "libllama-common.0.7.0.dylib",
+          "member": "llama-b11869/libllama-common.0.7.0.dylib",
+          "sha256": "08d15fc6170df2a1c21fcc2a8654646b96c607badd045e0b4c58ffafd616643b"
+        },
+        {
+          "name": "libllama.0.dylib",
+          "member": "llama-b11869/libllama.0.dylib",
+          "sha256": "01be3701b89e1f3ff3e615486c268def7d088011f0a51dc2c5197df7861a94d9"
+        },
+        {
+          "name": "libmtmd.0.dylib",
+          "member": "llama-b11869/libmtmd.0.dylib",
+          "sha256": "08bf0f419f408b10ec61318750271af6dc6bcfd02842da8305552a9b9ec5e1e7"
+        },
+        {
+          "name": "libggml.dylib",
+          "member": "llama-b11869/libggml.dylib",
+          "sha256": "34616f7086aeae55ff96abf48c01d696334066e0f2fcb7df4b3794ec942f0092"
+        },
+        {
+          "name": "libggml.0.dylib",
+          "member": "llama-b11869/libggml.0.dylib",
+          "sha256": "34616f7086aeae55ff96abf48c01d696334066e0f2fcb7df4b3794ec942f0092"
+        },
+        {
+          "name": "libggml-cpu.0.27.0.dylib",
+          "member": "llama-b11869/libggml-cpu.0.27.0.dylib",
+          "sha256": "409b60307fe80ca22b82238492b462ba7d7f4510511dd6b025d6a048a23dc78d"
+        },
+        {
+          "name": "libggml.0.27.0.dylib",
+          "member": "llama-b11869/libggml.0.27.0.dylib",
+          "sha256": "34616f7086aeae55ff96abf48c01d696334066e0f2fcb7df4b3794ec942f0092"
+        },
+        {
+          "name": "libmtmd.dylib",
+          "member": "llama-b11869/libmtmd.dylib",
+          "sha256": "08bf0f419f408b10ec61318750271af6dc6bcfd02842da8305552a9b9ec5e1e7"
+        },
+        {
+          "name": "libllama-server-impl.dylib",
+          "member": "llama-b11869/libllama-server-impl.dylib",
+          "sha256": "8a9be556742b4d8b100eb5fdd5428e74894e6d80e2bee4d3aad03e0c1405bbf5"
+        },
+        {
+          "name": "libggml-base.dylib",
+          "member": "llama-b11869/libggml-base.dylib",
+          "sha256": "4251ced4abb1766c887be42720e0d246701bee3a8fa28efbcd5576c586924533"
+        },
+        {
+          "name": "libggml-rpc.0.27.0.dylib",
+          "member": "llama-b11869/libggml-rpc.0.27.0.dylib",
+          "sha256": "97467b60fa91c7086617e0fd313f83203236aac4c5153d98bdc9bddbc1d73bc9"
+        },
+        {
+          "name": "libggml-blas.0.27.0.dylib",
+          "member": "llama-b11869/libggml-blas.0.27.0.dylib",
+          "sha256": "921ecedc49456589898ea38c56a15e317201c3733975ca00441c89b0008339da"
+        },
+        {
+          "name": "libggml-blas.dylib",
+          "member": "llama-b11869/libggml-blas.dylib",
+          "sha256": "921ecedc49456589898ea38c56a15e317201c3733975ca00441c89b0008339da"
+        },
+        {
+          "name": "libllama-completion-impl.dylib",
+          "member": "llama-b11869/libllama-completion-impl.dylib",
+          "sha256": "9391b8a4336e47f27bd02cf7b2530295007bf8abde50ba2a3e6dee2f5890e3f1"
+        },
+        {
+          "name": "libllama-bench-impl.dylib",
+          "member": "llama-b11869/libllama-bench-impl.dylib",
+          "sha256": "62358ac7a86fb3448de9d03ee35ebd6ddbe17e620118dbb80c1dd3e7558bda8e"
+        },
+        {
+          "name": "libllama-common.0.dylib",
+          "member": "llama-b11869/libllama-common.0.dylib",
+          "sha256": "08d15fc6170df2a1c21fcc2a8654646b96c607badd045e0b4c58ffafd616643b"
+        },
+        {
+          "name": "libllama.dylib",
+          "member": "llama-b11869/libllama.dylib",
+          "sha256": "01be3701b89e1f3ff3e615486c268def7d088011f0a51dc2c5197df7861a94d9"
+        },
+        {
+          "name": "libllama-perplexity-impl.dylib",
+          "member": "llama-b11869/libllama-perplexity-impl.dylib",
+          "sha256": "fb644c00abbe34fde4712ce25864f0a9b008e196a572f2d14cea04f4fbd754ba"
+        },
+        {
+          "name": "libggml-cpu.dylib",
+          "member": "llama-b11869/libggml-cpu.dylib",
+          "sha256": "409b60307fe80ca22b82238492b462ba7d7f4510511dd6b025d6a048a23dc78d"
+        },
+        {
+          "name": "libggml-base.0.27.0.dylib",
+          "member": "llama-b11869/libggml-base.0.27.0.dylib",
+          "sha256": "4251ced4abb1766c887be42720e0d246701bee3a8fa28efbcd5576c586924533"
+        },
+        {
+          "name": "libllama-quantize-impl.dylib",
+          "member": "llama-b11869/libllama-quantize-impl.dylib",
+          "sha256": "9da99bd684a9205232b987cc306c5e093401b333c9d8e2c9e5c0838f168b1636"
+        },
+        {
+          "name": "libllama-cli-impl.dylib",
+          "member": "llama-b11869/libllama-cli-impl.dylib",
+          "sha256": "2dd569f12326bb406ed65b5de1c50e310c831665b0fb2111159b98442ca9db2b"
+        },
+        {
+          "name": "llama-server",
+          "member": "llama-b11869/llama-server",
+          "sha256": "bdb7b995d15d8cff860afb577f0fedd06cd8a23a685eac4c7e284a7cebe4b603"
+        },
+        {
+          "name": "libllama-batched-bench-impl.dylib",
+          "member": "llama-b11869/libllama-batched-bench-impl.dylib",
+          "sha256": "6adaa934dedca4cf1902d3c5d811755624b6c97ed9232651ed550eade08be883"
+        },
+        {
+          "name": "libllama-common.dylib",
+          "member": "llama-b11869/libllama-common.dylib",
+          "sha256": "08d15fc6170df2a1c21fcc2a8654646b96c607badd045e0b4c58ffafd616643b"
+        },
+        {
+          "name": "libggml-base.0.dylib",
+          "member": "llama-b11869/libggml-base.0.dylib",
+          "sha256": "4251ced4abb1766c887be42720e0d246701bee3a8fa28efbcd5576c586924533"
+        },
+        {
+          "name": "libllama-fit-params-impl.dylib",
+          "member": "llama-b11869/libllama-fit-params-impl.dylib",
+          "sha256": "35b71eb064afeb28e190cfaf93532e6fd1878e500e6aa0bdf05db3469291be1d"
+        },
+        {
+          "name": "libggml-blas.0.dylib",
+          "member": "llama-b11869/libggml-blas.0.dylib",
+          "sha256": "921ecedc49456589898ea38c56a15e317201c3733975ca00441c89b0008339da"
+        },
+        {
+          "name": "libggml-rpc.dylib",
+          "member": "llama-b11869/libggml-rpc.dylib",
+          "sha256": "97467b60fa91c7086617e0fd313f83203236aac4c5153d98bdc9bddbc1d73bc9"
+        },
+        {
+          "name": "libggml-cpu.0.dylib",
+          "member": "llama-b11869/libggml-cpu.0.dylib",
+          "sha256": "409b60307fe80ca22b82238492b462ba7d7f4510511dd6b025d6a048a23dc78d"
+        }
+      ]
+    },
+    "linux-x64": {
+      "artifacts": [
+        {
+          "name": "llama-b11869-bin-ubuntu-x64.tar.gz",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11869/llama-b11869-bin-ubuntu-x64.tar.gz",
+          "sha256": "529ebb30c8aafcfd7d2ae0606aef346a3f3209d0a49addf382070c0c78fa2a6e",
+          "license": "MIT",
+          "revision": "d327bf1f0780f87b8c01b367b61853b0c291d7c4"
+        }
+      ],
+      "llama_files": [
+        {
+          "name": "libggml-cpu-cooperlake.so",
+          "member": "llama-b11869/libggml-cpu-cooperlake.so",
+          "sha256": "4b8833deb1a44247d831c90c6c7543559f55dc92f7952d5c179ce5e68979a61d"
+        },
+        {
+          "name": "libllama-quantize-impl.so",
+          "member": "llama-b11869/libllama-quantize-impl.so",
+          "sha256": "8dd43c1fb15f2e6096237a5cc3aa52694b04978c176f10db28c27d15d6c1adcc"
+        },
+        {
+          "name": "libllama-fit-params-impl.so",
+          "member": "llama-b11869/libllama-fit-params-impl.so",
+          "sha256": "397ce456786d0c161b14dd0ee225378d1f1ff875cbc428d32fda7dcaf15e306b"
+        },
+        {
+          "name": "libllama-server-impl.so",
+          "member": "llama-b11869/libllama-server-impl.so",
+          "sha256": "acc685ba97262ddfa38c146a03f2e30026cf70c635937cf5abd14a42aeec8598"
+        },
+        {
+          "name": "libmtmd.so",
+          "member": "llama-b11869/libmtmd.so",
+          "sha256": "a5d8bedef26c2acbfcf460aa71c8235f6afd1cafd9027c94cd3d2912bff880f2"
+        },
+        {
+          "name": "libggml-cpu-piledriver.so",
+          "member": "llama-b11869/libggml-cpu-piledriver.so",
+          "sha256": "e4d20da8bc4ce8e9fb72bcba4eb443463f1b1638951afcf76d7fdd4d2d407a2d"
+        },
+        {
+          "name": "libggml-cpu-zen4.so",
+          "member": "llama-b11869/libggml-cpu-zen4.so",
+          "sha256": "342071aed7c5a19fa5b5c310214a3e80c30054be2bd41c52ef8091efd8bfa648"
+        },
+        {
+          "name": "libllama.so.0.7.0",
+          "member": "llama-b11869/libllama.so.0.7.0",
+          "sha256": "866060d615d8049ef9d049fb1568873417cb1e9f8935fd8aebd303689b096378"
+        },
+        {
+          "name": "libllama-completion-impl.so",
+          "member": "llama-b11869/libllama-completion-impl.so",
+          "sha256": "0d3d7ae4cdeafbce5d765f9027371506f5205eeb3203553e463035bc4babae23"
+        },
+        {
+          "name": "libllama-common.so.0",
+          "member": "llama-b11869/libllama-common.so.0",
+          "sha256": "6465f13fdc2fa63dfba56edadda62428f826bf0a896f8e581971c5b55938b279"
+        },
+        {
+          "name": "llama-server",
+          "member": "llama-b11869/llama-server",
+          "sha256": "11827bc3c3fc06ab2900359987984dcdb29847e157c7150b21d33e1f6b77b2f2"
+        },
+        {
+          "name": "libggml-rpc.so",
+          "member": "llama-b11869/libggml-rpc.so",
+          "sha256": "4b6be3e1f065e93a1641ab8d80c6b01cc4e614a273141144b0271442199f338d"
+        },
+        {
+          "name": "libllama.so",
+          "member": "llama-b11869/libllama.so",
+          "sha256": "866060d615d8049ef9d049fb1568873417cb1e9f8935fd8aebd303689b096378"
+        },
+        {
+          "name": "libggml-base.so.0.27.0",
+          "member": "llama-b11869/libggml-base.so.0.27.0",
+          "sha256": "d65a0a4cd0cbcc26705cfa87199881af4ce4e4d5eefc2169912d36c4c77d5bb4"
+        },
+        {
+          "name": "libggml-cpu-alderlake.so",
+          "member": "llama-b11869/libggml-cpu-alderlake.so",
+          "sha256": "67b190e99d7a5d5b0ac412d70bc50eeace3b2bc173a3441f28d78e964e545ca0"
+        },
+        {
+          "name": "libggml-cpu-sse42.so",
+          "member": "llama-b11869/libggml-cpu-sse42.so",
+          "sha256": "bb645da8ceee53b16ca3f24b43c57ba7c2dd3d79b4af742d8b12420d05454d86"
+        },
+        {
+          "name": "libggml-cpu-haswell.so",
+          "member": "llama-b11869/libggml-cpu-haswell.so",
+          "sha256": "bfbde10c933699375c17fa1753e520babbac1d898c3464eb19b0cfe7625b32cd"
+        },
+        {
+          "name": "libllama-perplexity-impl.so",
+          "member": "llama-b11869/libllama-perplexity-impl.so",
+          "sha256": "357dc3ef0ebe6fe69b35c965db701452f44cc08a01f77a22c609b4aa96afbca9"
+        },
+        {
+          "name": "libmtmd.so.0.7.0",
+          "member": "llama-b11869/libmtmd.so.0.7.0",
+          "sha256": "a5d8bedef26c2acbfcf460aa71c8235f6afd1cafd9027c94cd3d2912bff880f2"
+        },
+        {
+          "name": "libllama-cli-impl.so",
+          "member": "llama-b11869/libllama-cli-impl.so",
+          "sha256": "085ffb43408aac8202d35dcd24e0fb3800e1d952925f862c0de3d6fd2f13bb82"
+        },
+        {
+          "name": "libggml-cpu-cannonlake.so",
+          "member": "llama-b11869/libggml-cpu-cannonlake.so",
+          "sha256": "6c618095bb31a3833f971f0fdb6bb29db81784f102bcd210a112e83966dd878b"
+        },
+        {
+          "name": "libggml.so.0",
+          "member": "llama-b11869/libggml.so.0",
+          "sha256": "8643a58bb37af6fb153e2ea98b48efa227855725ee51c05f4ca76b9867956463"
+        },
+        {
+          "name": "libggml-cpu-sapphirerapids.so",
+          "member": "llama-b11869/libggml-cpu-sapphirerapids.so",
+          "sha256": "a1c55578834db7cd57286c75d5f8b8cbc551478aaafc7d848b4506376d3ee233"
+        },
+        {
+          "name": "libggml.so",
+          "member": "llama-b11869/libggml.so",
+          "sha256": "8643a58bb37af6fb153e2ea98b48efa227855725ee51c05f4ca76b9867956463"
+        },
+        {
+          "name": "libllama-common.so.0.7.0",
+          "member": "llama-b11869/libllama-common.so.0.7.0",
+          "sha256": "6465f13fdc2fa63dfba56edadda62428f826bf0a896f8e581971c5b55938b279"
+        },
+        {
+          "name": "libmtmd.so.0",
+          "member": "llama-b11869/libmtmd.so.0",
+          "sha256": "a5d8bedef26c2acbfcf460aa71c8235f6afd1cafd9027c94cd3d2912bff880f2"
+        },
+        {
+          "name": "libllama-common.so",
+          "member": "llama-b11869/libllama-common.so",
+          "sha256": "6465f13fdc2fa63dfba56edadda62428f826bf0a896f8e581971c5b55938b279"
+        },
+        {
+          "name": "libggml-base.so",
+          "member": "llama-b11869/libggml-base.so",
+          "sha256": "d65a0a4cd0cbcc26705cfa87199881af4ce4e4d5eefc2169912d36c4c77d5bb4"
+        },
+        {
+          "name": "libggml-cpu-cascadelake.so",
+          "member": "llama-b11869/libggml-cpu-cascadelake.so",
+          "sha256": "d3b6d7f888998d0a822b87b1f688da43ee25fcd6e7fa4f33e334fa42d8d5d0ee"
+        },
+        {
+          "name": "libggml-cpu-sandybridge.so",
+          "member": "llama-b11869/libggml-cpu-sandybridge.so",
+          "sha256": "3be9051a7245535ea8deb61b137334a9651f85c6a20e869b8a29d87fa61d4522"
+        },
+        {
+          "name": "libllama-bench-impl.so",
+          "member": "llama-b11869/libllama-bench-impl.so",
+          "sha256": "e4ca59722bb4c5567fde2d5e07deb2116211e88d6d1afc43deabc5278a575ddb"
+        },
+        {
+          "name": "libggml-cpu-ivybridge.so",
+          "member": "llama-b11869/libggml-cpu-ivybridge.so",
+          "sha256": "b4733da4a7bd6d34da1ce98a544214764879e0e98ab5f7f0883e1d6c374cc67c"
+        },
+        {
+          "name": "libllama.so.0",
+          "member": "llama-b11869/libllama.so.0",
+          "sha256": "866060d615d8049ef9d049fb1568873417cb1e9f8935fd8aebd303689b096378"
+        },
+        {
+          "name": "libllama-batched-bench-impl.so",
+          "member": "llama-b11869/libllama-batched-bench-impl.so",
+          "sha256": "a69a1abbca090c7ab3fa286adcb9fa51b710730c7950c02796a9a84197ef00c7"
+        },
+        {
+          "name": "libggml.so.0.27.0",
+          "member": "llama-b11869/libggml.so.0.27.0",
+          "sha256": "8643a58bb37af6fb153e2ea98b48efa227855725ee51c05f4ca76b9867956463"
+        },
+        {
+          "name": "libggml-cpu-skylakex.so",
+          "member": "llama-b11869/libggml-cpu-skylakex.so",
+          "sha256": "99dfff608a71f0aeb27ca9cc13e5a658daa4dd10848854fed32aed949c5f58a1"
+        },
+        {
+          "name": "libggml-base.so.0",
+          "member": "llama-b11869/libggml-base.so.0",
+          "sha256": "d65a0a4cd0cbcc26705cfa87199881af4ce4e4d5eefc2169912d36c4c77d5bb4"
+        },
+        {
+          "name": "libggml-cpu-icelake.so",
+          "member": "llama-b11869/libggml-cpu-icelake.so",
+          "sha256": "f0abd7ae33c731281c88114a4ca9d7694a1e4ae17b752375219bca04368e62c9"
+        },
+        {
+          "name": "libggml-cpu-x64.so",
+          "member": "llama-b11869/libggml-cpu-x64.so",
+          "sha256": "bbdf01b75a90d0648e32c1a30b0fdf7db1e2b43170257c1ac84f19efd383bc1f"
+        }
+      ]
+    },
+    "windows-x64": {
+      "artifacts": [
+        {
+          "name": "llama-b11869-bin-win-cpu-x64.zip",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11869/llama-b11869-bin-win-cpu-x64.zip",
+          "sha256": "68bbb8f833d6b623386d50f958af8cf5d9f4b39897ba8ab79b9b294093304891",
+          "license": "MIT",
+          "revision": "d327bf1f0780f87b8c01b367b61853b0c291d7c4"
+        }
+      ],
+      "llama_files": [
+        {
+          "name": "ggml-base.dll",
+          "member": "ggml-base.dll",
+          "sha256": "89ac12af7677be036978e7cbf951b0b3e44fd8d0e6f473286ff5bb6a4cbd83d9"
+        },
+        {
+          "name": "ggml-cpu-alderlake.dll",
+          "member": "ggml-cpu-alderlake.dll",
+          "sha256": "df09dddaaa6c583e527f1d0207a30c5d5d0cd731bbe2db96334ce6c1713b1775"
+        },
+        {
+          "name": "ggml-cpu-cannonlake.dll",
+          "member": "ggml-cpu-cannonlake.dll",
+          "sha256": "f42bf3d252a3c59f2560abfe156609199d8ef49806591360b1ae8003c514090b"
+        },
+        {
+          "name": "ggml-cpu-cascadelake.dll",
+          "member": "ggml-cpu-cascadelake.dll",
+          "sha256": "261c8ad01e401c189d4095d11974e1abd9903872811217c83e06eaed326f513d"
+        },
+        {
+          "name": "ggml-cpu-cooperlake.dll",
+          "member": "ggml-cpu-cooperlake.dll",
+          "sha256": "af0b11225a7b436a037146c881a24e2d1bb221eeecfa88dac134299920110b34"
+        },
+        {
+          "name": "ggml-cpu-haswell.dll",
+          "member": "ggml-cpu-haswell.dll",
+          "sha256": "10431c8def3f58c47a176cebb3b42e3e5e67c084072b1269d801e03406a97991"
+        },
+        {
+          "name": "ggml-cpu-icelake.dll",
+          "member": "ggml-cpu-icelake.dll",
+          "sha256": "42ff572f3d12df16587b70320075857c135ac738db1b265d3e9903dcc6099de0"
+        },
+        {
+          "name": "ggml-cpu-ivybridge.dll",
+          "member": "ggml-cpu-ivybridge.dll",
+          "sha256": "47b6fda6bf111906f21d598594210baac73cb5b2c516163acbd4c6fc47bc1c31"
+        },
+        {
+          "name": "ggml-cpu-piledriver.dll",
+          "member": "ggml-cpu-piledriver.dll",
+          "sha256": "a894f8f8ed8ecef5e801eb2bf29096d40f14490353f7e9f4c70a11feed0dfb44"
+        },
+        {
+          "name": "ggml-cpu-sandybridge.dll",
+          "member": "ggml-cpu-sandybridge.dll",
+          "sha256": "1a7715d5aecbbb014631c6766d80ef6932dfa727c7ac783257120ccf6585ea2e"
+        },
+        {
+          "name": "ggml-cpu-sapphirerapids.dll",
+          "member": "ggml-cpu-sapphirerapids.dll",
+          "sha256": "70c0b2e6789badd0e4253bfce2e912a65a83080d3882140105288a9d3d3e965f"
+        },
+        {
+          "name": "ggml-cpu-skylakex.dll",
+          "member": "ggml-cpu-skylakex.dll",
+          "sha256": "d12f497ffc61d8a7226d2a86849973b7c29cbca6cf55e54e52dedc3b129a4e2d"
+        },
+        {
+          "name": "ggml-cpu-sse42.dll",
+          "member": "ggml-cpu-sse42.dll",
+          "sha256": "d02d99e316aebc475fc14bf1ede3c77f23b6dad934a7c74db0a9c170de40715e"
+        },
+        {
+          "name": "ggml-cpu-x64.dll",
+          "member": "ggml-cpu-x64.dll",
+          "sha256": "24097163ff0e5ac637e4bcf2cdad6ed4f06c03a23d1c027a2915aa138e647060"
+        },
+        {
+          "name": "ggml-cpu-zen4.dll",
+          "member": "ggml-cpu-zen4.dll",
+          "sha256": "fdf64a904c6bf3f61dd609f30def48a8d48098fa891d15f8f12a897ed7e4017b"
+        },
+        {
+          "name": "ggml-rpc.dll",
+          "member": "ggml-rpc.dll",
+          "sha256": "6909f1e7ace7cdb58221375cc258ba83476635c572d74453b163b9096ed550f3"
+        },
+        {
+          "name": "ggml.dll",
+          "member": "ggml.dll",
+          "sha256": "ed963b4d46846cee3e7ef1aa785f777a4a729260b76954cd8dd30142f43c9d72"
+        },
+        {
+          "name": "libomp.dll",
+          "member": "libomp.dll",
+          "sha256": "a12116ba72d1d6820407cf30be23da04ce79d6bb8a71a5ee71759c5a1faa6f1c"
+        },
+        {
+          "name": "llama-batched-bench-impl.dll",
+          "member": "llama-batched-bench-impl.dll",
+          "sha256": "fdfdf70edb5befd5d482f6c4a5912218e794f9f5a0207bc9433863f155aaea58"
+        },
+        {
+          "name": "llama-bench-impl.dll",
+          "member": "llama-bench-impl.dll",
+          "sha256": "3ec299830064a0741beb336b385ca9f04f38a0fae9cee56a38348802fb42d315"
+        },
+        {
+          "name": "llama-cli-impl.dll",
+          "member": "llama-cli-impl.dll",
+          "sha256": "a57142e7bb910e8c80fd61f54e114837cf1905ca04ca896628fa6931cb541afb"
+        },
+        {
+          "name": "llama-common.dll",
+          "member": "llama-common.dll",
+          "sha256": "1b8c3a1107ec6173f82d8e7f18e5bd709c6fbc601026ff0a084c954cc9734ee4"
+        },
+        {
+          "name": "llama-completion-impl.dll",
+          "member": "llama-completion-impl.dll",
+          "sha256": "493266decac243ca11fd9ebe1a14f1788ab134cb1ac879998f3072971e9302bc"
+        },
+        {
+          "name": "llama-fit-params-impl.dll",
+          "member": "llama-fit-params-impl.dll",
+          "sha256": "b34f1cad78c0357b766f451a4e7931f326384e511933e5b907b219a26b7a2ba2"
+        },
+        {
+          "name": "llama-perplexity-impl.dll",
+          "member": "llama-perplexity-impl.dll",
+          "sha256": "23cc37365ea7c715417493a216c1a95e2c15d3bd8fdbc1b5dc176cb38a9ddd26"
+        },
+        {
+          "name": "llama-quantize-impl.dll",
+          "member": "llama-quantize-impl.dll",
+          "sha256": "dcd2ca3ebe1e8711e690ad4926206ea0d0e51ce76a5a3a7de1ed213f9571cc65"
+        },
+        {
+          "name": "llama-server-impl.dll",
+          "member": "llama-server-impl.dll",
+          "sha256": "ed93ccb52e3df52828e7d39c28b0e9e634b328377529f242ea339a70caf4dee8"
+        },
+        {
+          "name": "llama-server.exe",
+          "member": "llama-server.exe",
+          "sha256": "9c52f637c1a0ebc22cffbefb047a37b0a2344feb6a55581612badcb395a63aa9"
+        },
+        {
+          "name": "llama.dll",
+          "member": "llama.dll",
+          "sha256": "6dbdea91e468c3381513523b3b9d441a6b3347b48d7d0a022c800ad9ffc15884"
+        },
+        {
+          "name": "mtmd.dll",
+          "member": "mtmd.dll",
+          "sha256": "cadc3d78c058beee898e68cb5991986c051d467157db543accad092ecefad305"
+        }
+      ]
+    }
+  }
+}
