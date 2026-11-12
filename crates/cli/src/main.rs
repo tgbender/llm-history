@@ -16,6 +16,7 @@ mod presentation;
 mod raw;
 mod search;
 mod semantic;
+mod show;
 use args::*;
 use background::*;
 use engine::*;
@@ -97,6 +98,7 @@ fn expand_home(path: String) -> String {
     }
 }
 fn time_bound(value: &Option<String>, zone: &str) -> Result<Option<String>> {
+    llm_history_core::validate_timezone(zone)?;
     value
         .as_ref()
         .map(|v| llm_history_core::timestamp(v, zone))
@@ -131,7 +133,7 @@ fn execute(app: App) -> Result<()> {
         Commands::Search(args) | Commands::Semantic(Semantic::Search(args)) => {
             search::search(&ctx, *args)
         }
-        Commands::Show(args) => search::show(&ctx, args),
+        Commands::Show(args) => show::show(&ctx, args),
         Commands::Status(selection) => commands::status(&ctx, selection),
         Commands::Sessions(args) => commands::sessions(&ctx, args),
         Commands::Projects(args) => commands::projects(&ctx, args),

@@ -27,7 +27,7 @@ impl Store {
             })?
             .collect::<std::result::Result<Vec<_>, _>>()?)
     }
-    fn retrieval_conditions(&self, f: &Filter) -> Result<queries::Conditions> {
+    pub(crate) fn retrieval_conditions(&self, f: &Filter) -> Result<queries::Conditions> {
         let mut q = self.message_conditions(f)?;
         q.sql.push(
             "NOT e.excluded AND history_message_kind(e.kind,e.excluded,\
@@ -67,22 +67,25 @@ impl Store {
                 Ok((r.get(0)?, r.get(1)?))
             })?)
     }
-    /// Literal matches in the text search covers, newest first. They tie on score, so each
-    /// session is capped here; otherwise one busy session would fill the candidate limit.
+    /// Messages containing every needle as a literal, case-insensitive string, in the text
+    /// search covers, newest first. They tie on score, so each session is capped here;
+    /// otherwise one busy session would fill the candidate limit.
     /// Capped candidates, plus how many messages matched before the caps.
-    pub fn exact_candidates(
+    pub fn literal_candidates(
         &self,
-        query: &str,
+        needles: &[String],
         f: &Filter,
         per_session: usize,
         limit: usize,
     ) -> Result<(HashMap<String, f64>, usize)> {
+        anyhow::ensure!(!needles.is_empty(), "literal search needs text to match");
         let q = self.retrieval_conditions(f)?;
+        let contains = " AND contains(lower(searched.body),lower(?))".repeat(needles.len());
         let sql = format!(
             "SELECT e.id,count(*) OVER () \
              FROM {} \
              JOIN lexical_documents searched ON searched.id=e.id \
-             WHERE {} AND contains(lower(searched.body),lower(?)) \
+             WHERE {}{contains} \
              QUALIFY row_number() OVER (\
              PARTITION BY e.session_id \
              ORDER BY e.timestamp_utc DESC NULLS LAST,e.id)<=? \
@@ -92,7 +95,7 @@ impl Store {
             q.clause()
         );
         let mut args = q.args;
-        args.push(SqlValue::Text(query.into()));
+        args.extend(needles.iter().cloned().map(SqlValue::Text));
         args.push(SqlValue::BigInt(per_session as i64));
         args.push(SqlValue::BigInt(limit as i64));
         let rows = self

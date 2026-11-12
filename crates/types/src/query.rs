@@ -52,6 +52,14 @@ pub struct Message {
     pub timestamp_basis: Option<String>,
 }
 
+/// One session read as its user turns in conversation order.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SessionTurns {
+    pub turns: Vec<Message>,
+    /// The session's last final answer, which says where the work stopped.
+    pub last_answer: Option<Message>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SessionSummary {
     pub id: String,
@@ -133,21 +141,29 @@ pub struct Filter {
 #[serde(rename_all = "lowercase")]
 pub enum Mode {
     Auto,
+    Words,
     Lexical,
     Exact,
     Semantic,
     Hybrid,
+}
+impl Mode {
+    /// Literal modes match the text as written and order hits by date, not relevance.
+    pub fn is_literal(self) -> bool {
+        matches!(self, Self::Words | Self::Exact)
+    }
 }
 impl std::str::FromStr for Mode {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self> {
         match s {
             "auto" => Ok(Self::Auto),
+            "words" => Ok(Self::Words),
             "lexical" => Ok(Self::Lexical),
             "exact" => Ok(Self::Exact),
             "semantic" => Ok(Self::Semantic),
             "hybrid" => Ok(Self::Hybrid),
-            _ => bail!("expected auto, lexical, exact, semantic, or hybrid"),
+            _ => bail!("expected auto, words, lexical, exact, semantic, or hybrid"),
         }
     }
 }

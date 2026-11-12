@@ -96,6 +96,9 @@ pub(crate) fn sessions(ctx: &Ctx, args: SessionArgs) -> Result<()> {
             until: time_bound(&selected.until, &selected.timezone)?,
             include_subagents: args.include_subagents,
             kind: args.kind,
+            cwd: args.cwd.map(expand_home),
+            under: args.under.map(expand_home),
+            project: args.project,
             ..Default::default()
         },
         selected.limit.unwrap_or(30),

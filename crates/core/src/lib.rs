@@ -297,6 +297,13 @@ pub fn hash_range(path: &Path, offset: u64, size: u64) -> Result<String> {
     }
     Ok(hasher.finalize().to_hex().to_string())
 }
+/// Accepts `local` or an IANA zone name, so a bad zone fails even when no date uses it.
+pub fn validate_timezone(zone: &str) -> Result<()> {
+    if !zone.eq_ignore_ascii_case("local") && zone.parse::<chrono_tz::Tz>().is_err() {
+        anyhow::bail!("invalid IANA timezone: {zone}");
+    }
+    Ok(())
+}
 pub fn timestamp(value: &str, zone: &str) -> Result<String> {
     if zone.eq_ignore_ascii_case("local") {
         if let Ok(time) = DateTime::parse_from_rfc3339(value.trim()) {
@@ -592,5 +599,11 @@ mod tests {
             "2026-11-01T07:30:00+00:00"
         );
         assert!(timestamp("2026-10-27 09:30:00", "local").is_ok());
+        assert!(validate_timezone("local").is_ok());
+        assert!(validate_timezone("America/Denver").is_ok());
+        assert_eq!(
+            validate_timezone("Mars/Olympus").unwrap_err().to_string(),
+            "invalid IANA timezone: Mars/Olympus"
+        );
     }
 }

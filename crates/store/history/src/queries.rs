@@ -1,6 +1,6 @@
 use super::*;
 use duckdb::types::Value as SqlValue;
-use llm_history_types::query::SessionSummary;
+use llm_history_types::query::{SessionSummary, SessionTurns};
 
 pub(crate) struct Conditions {
     pub sql: Vec<String>,
@@ -44,6 +44,36 @@ impl Conditions {
             self.add("list_contains(?::VARCHAR[],p.id)", SqlValue::List(ids));
         }
         Ok(())
+    }
+    /// Working-directory and project conditions on the session aliased `s`.
+    pub fn location(&mut self, f: &Filter) {
+        if let Some(cwd) = &f.cwd {
+            self.add("s.cwd=?", cwd.clone());
+        }
+        if let Some(root) = &f.under {
+            let root = root.replace('\\', "/");
+            let root = root.trim_end_matches('/');
+            self.sql.push(
+                "(replace(s.cwd,chr(92),'/')=? OR starts_with(replace(s.cwd,chr(92),'/'),?))"
+                    .into(),
+            );
+            self.args.push(root.to_owned().into());
+            self.args.push(format!("{root}/").into());
+        }
+        if let Some(project) = &f.project {
+            self.sql.push(
+                "EXISTS(\
+                 SELECT 1 \
+                 FROM canonical_session_projects a \
+                 JOIN canonical_projects pr ON pr.id=a.project_id \
+                 WHERE a.session_id=s.id AND pr.store_id=s.profile_id \
+                 AND a.active AND pr.active AND (lower(pr.display_name)=lower(?) \
+                 OR pr.native_project_id=?))"
+                    .into(),
+            );
+            self.args
+                .extend([project.clone().into(), project.clone().into()]);
+        }
     }
 }
 
@@ -96,33 +126,7 @@ impl Store {
                     .into(),
             );
         }
-        if let Some(cwd) = &f.cwd {
-            q.add("s.cwd=?", cwd.clone());
-        }
-        if let Some(root) = &f.under {
-            let root = root.replace('\\', "/");
-            let root = root.trim_end_matches('/');
-            q.sql.push(
-                "(replace(s.cwd,chr(92),'/')=? OR starts_with(replace(s.cwd,chr(92),'/'),?))"
-                    .into(),
-            );
-            q.args.push(root.to_owned().into());
-            q.args.push(format!("{root}/").into());
-        }
-        if let Some(project) = &f.project {
-            q.sql.push(
-                "EXISTS(\
-                 SELECT 1 \
-                 FROM canonical_session_projects a \
-                 JOIN canonical_projects pr ON pr.id=a.project_id \
-                 WHERE a.session_id=s.id AND pr.store_id=s.profile_id \
-                 AND a.active AND pr.active AND (lower(pr.display_name)=lower(?) \
-                 OR pr.native_project_id=?))"
-                    .into(),
-            );
-            q.args
-                .extend([project.clone().into(), project.clone().into()]);
-        }
+        q.location(f);
         for (bound, op) in [(&f.since, ">="), (&f.until, "<=")] {
             if let Some(bound) = bound {
                 chrono::DateTime::parse_from_rfc3339(bound)?;
@@ -219,6 +223,53 @@ impl Store {
         }
         Ok(result)
     }
+    /// A session's user turns in conversation order, and its last final answer.
+    pub fn session_turns(&self, session_no: i64, profiles: &[String]) -> Result<SessionTurns> {
+        let mut known = Conditions::new();
+        known.add("sn.session_no=?", session_no);
+        known.profiles(self, profiles, None)?;
+        let found: bool = self.database.connection().query_row(
+            &format!(
+                "SELECT EXISTS(\
+                 SELECT 1 \
+                 FROM session_numbers sn \
+                 JOIN sessions s ON s.id=sn.session_id \
+                 JOIN profiles p ON p.id=s.profile_id \
+                 WHERE {})",
+                known.clause()
+            ),
+            duckdb::params_from_iter(known.args),
+            |r| r.get(0),
+        )?;
+        if !found {
+            bail!("session not found in selected profiles");
+        }
+        let message_query = message_query(&self.harness_sql()?);
+        let messages = |role: &str, order: &str| -> Result<Vec<Message>> {
+            // A named session shows its turns whoever wrote them, subagent prompts included.
+            let mut q = self.retrieval_conditions(&Filter {
+                profiles: profiles.to_vec(),
+                role: Some(role.into()),
+                include_subagents: true,
+                include_agent_protocol: true,
+                ..Filter::default()
+            })?;
+            q.add("sn.session_no=?", session_no);
+            Ok(self
+                .database
+                .connection()
+                .prepare(&format!(
+                    "{message_query} WHERE {} ORDER BY {order}",
+                    q.clause()
+                ))?
+                .query_map(duckdb::params_from_iter(q.args), message_row)?
+                .collect::<duckdb::Result<Vec<_>>>()?)
+        };
+        Ok(SessionTurns {
+            turns: messages("user", "e.session_seq,e.id")?,
+            last_answer: messages("assistant", "e.session_seq DESC,e.id DESC LIMIT 1")?.pop(),
+        })
+    }
     pub fn list_sessions(
         &self,
         f: &Filter,
@@ -234,6 +285,8 @@ impl Store {
         if let Some(kind) = &f.kind {
             q.add("cs.session_kind=?", kind.clone());
         }
+        self.validate_project_filter(f)?;
+        q.location(f);
         let mut outer = Vec::new();
         for (bound, op) in [(&f.since, ">="), (&f.until, "<=")] {
             if let Some(bound) = bound {

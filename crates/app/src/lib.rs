@@ -26,7 +26,9 @@ use llm_history_types::{
     archive::{ArchiveInfo, RawFilter, RawSource},
     ingestion::{CatalogReceipt, ReprocessReceipt},
     jobs::WorkReceipt,
-    query::{Filter, Message, ProjectSummary, Selection, SessionSummary, UsagePeriod},
+    query::{
+        Filter, Message, ProjectSummary, Selection, SessionSummary, SessionTurns, UsagePeriod,
+    },
     storage::StoreOptions,
 };
 
@@ -226,6 +228,10 @@ impl History {
     ) -> Result<Vec<Message>> {
         self.open(true)?
             .context(message_no, before, after, profiles)
+    }
+    /// One session's user turns in conversation order, with its last final answer.
+    pub fn session_turns(&self, session_no: i64, profiles: &[String]) -> Result<SessionTurns> {
+        self.open(true)?.session_turns(session_no, profiles)
     }
     pub fn usage(
         &self,

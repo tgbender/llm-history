@@ -4,7 +4,7 @@ use llm_history_core::bounded;
 use llm_history_models::{Embedder, Reranker};
 use llm_history_store::Store;
 use llm_history_types::query::Message;
-use llm_history_types::query::{Mode, SearchRequest};
+use llm_history_types::query::{Filter, Mode, SearchRequest};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::borrow::Borrow;
@@ -51,11 +51,14 @@ pub fn eligible(m: &Message) -> bool {
         && (m.role == "user" || (m.role == "assistant" && m.phase == "final_answer"))
 }
 
-/// Exact hits are ordered by date, so a model has no relevance to rerank. Front ends
+/// Literal hits are ordered by date, so a model has no relevance to rerank. Front ends
 /// call this before starting one.
 pub fn check_rerank(mode: Mode, rerank: bool) -> Result<()> {
-    if mode == Mode::Exact && rerank {
-        bail!("--mode exact orders hits by date, so it can't be combined with --rerank");
+    if mode.is_literal() && rerank {
+        bail!(
+            "--rerank needs relevance-ranked hits; add --mode lexical, semantic or hybrid \
+             (words and exact order hits by date)"
+        );
     }
     Ok(())
 }
@@ -131,15 +134,16 @@ pub fn search<S: Borrow<Store>>(
     let mut matched = None;
     let (lexical, engine) = if mode == Mode::Semantic {
         (HashMap::new(), "unused".into())
-    } else if mode == Mode::Exact {
-        let (found, total) = store.exact_candidates(
-            &request.query,
-            &request.filter,
-            request.per_session,
-            pool_limit,
-        )?;
+    } else if mode.is_literal() {
+        let (needles, engine) = if mode == Mode::Exact {
+            (vec![request.query.clone()], "exact")
+        } else {
+            (words(&request.query), "words")
+        };
+        let (found, total) =
+            store.literal_candidates(&needles, &request.filter, request.per_session, pool_limit)?;
         matched = Some(total);
-        (found, "exact".into())
+        (found, engine.into())
     } else {
         store.lexical_candidates(&request.query, &request.filter, pool_limit)?
     };
@@ -191,7 +195,7 @@ pub fn search<S: Borrow<Store>>(
             let l = lexical.get(&m.id).copied().unwrap_or(0.);
             let s = semantic.get(&m.id).copied().unwrap_or(0.);
             let score = match mode {
-                Mode::Auto | Mode::Lexical | Mode::Exact => l,
+                Mode::Auto | Mode::Words | Mode::Lexical | Mode::Exact => l,
                 Mode::Semantic => *semantic.get(&m.id)?,
                 Mode::Hybrid => {
                     lexical_rank
@@ -228,16 +232,24 @@ pub fn search<S: Borrow<Store>>(
             .then(a.message.id.cmp(&b.message.id))
     });
     hits.truncate(candidate_limit);
-    if request.filter.role.is_none() {
+    // A ranked search over both roles shows the answer to a matching question. A literal
+    // hit has to show the matched text, which the answer may lack.
+    let answer_questions = request.filter.role.is_none() && !mode.is_literal();
+    if request.filter.role.as_deref() != Some("assistant") {
         let users = hits
             .iter()
             .filter(|h| {
                 h.message.role == "user"
-                    && (mode != Mode::Exact || h.message.session_kind == "guardian")
+                    && (answer_questions || h.message.session_kind == "guardian")
             })
             .map(|h| h.message.id.parse::<i64>())
             .collect::<std::result::Result<Vec<_>, _>>()?;
-        let answers = store.answer_messages(&users, &request.filter)?;
+        // The answers are assistant messages, whatever role the search was limited to.
+        let either_role = Filter {
+            role: None,
+            ..request.filter.clone()
+        };
+        let answers = store.answer_messages(&users, &either_role)?;
         let mut seen = HashSet::new();
         hits = hits
             .into_iter()
@@ -245,8 +257,7 @@ pub fn search<S: Borrow<Store>>(
                 if let Some(answer) = answers.get(&hit.message.id) {
                     if hit.message.session_kind == "guardian" {
                         hit.verdict = Some(answer.text.clone());
-                    } else if mode != Mode::Exact {
-                        // An exact hit has to show the string, which the answer may lack.
+                    } else if answer_questions {
                         hit.message = answer.clone();
                     }
                 }
@@ -309,10 +320,10 @@ pub fn search<S: Borrow<Store>>(
         reordered.extend_from_slice(&hits[depth..]);
         hits = reordered;
     }
-    let focus = if mode == Mode::Exact {
-        vec![phrase(&request.query)]
-    } else {
-        terms(&request.query)
+    let focus = match mode {
+        Mode::Exact => vec![phrase(&request.query)],
+        Mode::Words => words(&request.query),
+        _ => terms(&request.query),
     };
     let mut sessions = HashMap::new();
     let mut result = Vec::new();
@@ -376,6 +387,15 @@ fn searched_text(message: &Message) -> &str {
         .then(|| llm_history_core::guardian_action(&message.text))
         .flatten()
         .unwrap_or(&message.text)
+}
+/// The distinct words of a query, lowercase: each one has to appear in a `words` hit.
+fn words(query: &str) -> Vec<String> {
+    let mut seen = HashSet::new();
+    query
+        .split_whitespace()
+        .map(str::to_lowercase)
+        .filter(|word| seen.insert(word.clone()))
+        .collect()
 }
 /// An exact query in the form passages search: lowercase, with single spaces.
 fn phrase(query: &str) -> String {
@@ -823,8 +843,57 @@ mod tests {
         assert_eq!(hits.len(), 1, "{hits:?}");
         assert!(hits[0].message.text.contains("git push --force"));
         assert!(hits[0].verdict.as_deref().unwrap().contains("allow"));
+        // Limiting the search to user messages still reports the verdict.
+        let mut prompts = request("FORCE git");
+        prompts.mode = Mode::Words;
+        prompts.filter.role = Some("user".into());
+        let hits = search(|| Ok(&store), &prompts, None, None)?.results;
+        assert_eq!(hits.len(), 1, "{hits:?}");
+        assert!(hits[0].verdict.as_deref().unwrap().contains("allow"));
         // The default swap would have replaced this hit with an answer lacking the string.
         assert!(exact(&store, "git push --force")?.is_empty());
+        Ok(())
+    }
+
+    #[test]
+    fn words_search_needs_every_word_in_any_order() -> anyhow::Result<()> {
+        let dir = tempfile::tempdir()?;
+        let user = |text: &str| ("user", text.to_owned());
+        let store = exact_store(
+            dir.path(),
+            &[(
+                "s",
+                json!("cli"),
+                vec![
+                    user("please run git push --force now"),
+                    user("git force push"),
+                    user("uv tool install --force"),
+                ],
+            )],
+        )?;
+        let texts = |query: &str| -> anyhow::Result<Vec<String>> {
+            let request = SearchRequest {
+                query: query.into(),
+                mode: Mode::Words,
+                limit: 20,
+                per_session: 20,
+                ..SearchRequest::default()
+            };
+            Ok(search(|| Ok(&store), &request, None, None)?
+                .results
+                .into_iter()
+                .map(|hit| hit.message.text)
+                .collect())
+        };
+        // Newest first, whatever order the words were typed in.
+        let both = ["git force push", "please run git push --force now"];
+        assert_eq!(texts("FORCE git")?, both);
+        assert_eq!(texts("git git")?, both);
+        // Each word is a literal string, so a stem finds its longer forms.
+        assert_eq!(texts("forc pus")?, both);
+        assert_eq!(texts("--force")?.len(), 2);
+        assert!(texts("git install")?.is_empty());
+        assert!(super::check_rerank(Mode::Words, true).is_err());
         Ok(())
     }
 

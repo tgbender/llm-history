@@ -14,6 +14,8 @@ const SESSION_KINDS: [&str; 5] = [
 ];
 fn search_modes() -> impl TypedValueParser<Value = Mode> {
     PossibleValuesParser::new([
+        PossibleValue::new("words")
+            .help("Every word, as a case-insensitive string anywhere in the message, newest first"),
         PossibleValue::new("lexical").help("Any of the words, best match first"),
         PossibleValue::new("exact").help(
             "The whole query as one literal, case-insensitive string, newest first, \
@@ -33,7 +35,7 @@ const SOURCE_KEYS: [&str; 4] = ["all", "codex", "claude", "cursor"];
     name = "llm-history",
     version,
     about = "Local coding-agent history with lossless archives and profile-scoped search",
-    after_help = "Read history:\n  llm-history search --mode semantic --role user --limit 5 'what went wrong?'\n  llm-history show ID --before 2 --after 2\n  llm-history similar ID --role user --other-sessions --per-session 1\n\nUse --no-refresh --no-background to search a fixed archive. Use plain text for reading and --json for parsing. Open context before counting related hits as separate incidents."
+    after_help = "Read history:\n  llm-history search 'words you remember typing'\n  llm-history search --mode semantic 'what went wrong?'\n  llm-history show ID ID\n  llm-history show --session SESSION_ID\n  llm-history similar ID --role user --other-sessions --per-session 1\n\nUse --no-refresh --no-background to search a fixed archive. Use plain text for reading and --json for parsing. Open context before counting related hits as separate incidents."
 )]
 pub(crate) struct App {
     /// DuckDB memory ceiling in MiB.
@@ -88,7 +90,7 @@ pub(crate) enum Commands {
     Search(Box<Search>),
     /// Find messages similar to an indexed message using its stored embeddings.
     Similar(SimilarArgs),
-    /// Show a message by ID, with optional surrounding conversation.
+    /// Show messages by ID with their surrounding conversation, or read a session's turns.
     Show(ShowArgs),
     /// List recent sessions, including titles, models and project metadata.
     #[command(mut_arg("limit", |arg| arg.default_value("30")))]
@@ -122,26 +124,42 @@ pub(crate) enum Commands {
 }
 #[derive(Args)]
 pub(crate) struct ShowArgs {
-    /// Short message ID from search or similar.
-    #[arg(value_parser = clap::value_parser!(i64).range(1..))]
-    pub(crate) id: i64,
+    /// Short message IDs from search or similar; up to 10 share the output budget.
+    #[arg(
+        value_parser = clap::value_parser!(i64).range(1..),
+        num_args = 1..=10,
+        required_unless_present = "session",
+        conflicts_with = "session"
+    )]
+    pub(crate) id: Vec<i64>,
+    /// Read one session's user turns in order, then its last answer. Takes the short
+    /// session ID from sessions or a search hit. A turn over 1,000 characters keeps its
+    /// start and end, and a session over the budget keeps its opening and latest turns.
+    #[arg(long, value_parser = clap::value_parser!(i64).range(1..))]
+    pub(crate) session: Option<i64>,
+    /// With --session: print the opening turn and only the most recent N turns.
+    #[arg(long, requires = "session", value_parser = clap::value_parser!(u16).range(1..=100))]
+    pub(crate) recent: Option<u16>,
+    /// With --session: start at the user turn with this message ID.
+    #[arg(long, requires = "session", value_parser = clap::value_parser!(i64).range(1..))]
+    pub(crate) from: Option<i64>,
     /// Number of preceding conversation messages to include.
-    #[arg(long, default_value_t = 0)]
+    #[arg(long, default_value_t = 2, conflicts_with = "session")]
     pub(crate) before: usize,
     /// Number of following conversation messages to include.
-    #[arg(long, default_value_t = 0)]
+    #[arg(long, default_value_t = 2, conflicts_with = "session")]
     pub(crate) after: usize,
     /// Select a history profile; repeat to select several.
     #[arg(long)]
     pub(crate) profile: Vec<String>,
     /// Total character budget for displayed message text.
-    #[arg(long, default_value_t = 6000)]
+    #[arg(long, default_value_t = 12000)]
     pub(crate) max_output_chars: usize,
     /// Show matching text without credential redaction.
     #[arg(long)]
     pub(crate) no_redact: bool,
     /// Print complete selected text without output limits.
-    #[arg(long)]
+    #[arg(long, conflicts_with = "session")]
     pub(crate) full: bool,
 }
 
@@ -255,6 +273,15 @@ pub(crate) struct SessionArgs {
     /// Only sessions of this kind, including hidden subagent and guardian sessions.
     #[arg(long, value_parser = SESSION_KINDS)]
     pub(crate) kind: Option<String>,
+    /// Filter to an exact session working directory.
+    #[arg(long)]
+    pub(crate) cwd: Option<String>,
+    /// Filter to working directories at or below this path.
+    #[arg(long)]
+    pub(crate) under: Option<String>,
+    /// Filter by native project name or ID.
+    #[arg(long)]
+    pub(crate) project: Option<String>,
     /// List the oldest sessions first.
     #[arg(long)]
     pub(crate) oldest_first: bool,
@@ -313,9 +340,9 @@ pub(crate) struct Search {
     #[arg(allow_hyphen_values = true)]
     pub(crate) query: String,
     /// How the query is matched.
-    #[arg(long, default_value = "lexical", value_parser = search_modes())]
+    #[arg(long, default_value = "words", value_parser = search_modes())]
     pub(crate) mode: Mode,
-    /// Rerank candidates using the configured local Qwen model or endpoint; not available with --mode exact.
+    /// Rerank candidates using the configured local Qwen model or endpoint; needs --mode lexical, semantic or hybrid.
     #[arg(long)]
     pub(crate) rerank: bool,
     /// Disable model reranking.
@@ -339,9 +366,10 @@ pub(crate) struct Search {
     /// IANA timezone for date filters and usage periods; local detects this system.
     #[arg(long, default_value = "local")]
     pub(crate) timezone: String,
-    /// Filter by user or assistant role.
-    #[arg(long, value_parser = ["user", "assistant"])]
-    pub(crate) role: Option<String>,
+    /// Whose messages to search: the user's, the assistant's final answers, or all.
+    /// With all, a ranked mode shows the answer to a matching question.
+    #[arg(long, default_value = "user", value_parser = ["user", "assistant", "all"])]
+    pub(crate) role: String,
     /// Include this native thread ID; repeat to select several.
     #[arg(long)]
     pub(crate) thread: Vec<String>,
@@ -371,7 +399,7 @@ pub(crate) struct Search {
     #[arg(long, value_parser = SESSION_KINDS, conflicts_with = "no_subagents")]
     pub(crate) kind: Option<String>,
     /// Maximum results to return.
-    #[arg(long,alias="top",default_value_t=5,value_parser=clap::value_parser!(u16).range(1..=100))]
+    #[arg(long,alias="top",default_value_t=8,value_parser=clap::value_parser!(u16).range(1..=100))]
     pub(crate) limit: u16,
     /// Maximum search results from one session.
     #[arg(long,default_value_t=2,value_parser=clap::value_parser!(u16).range(1..=100))]
@@ -380,7 +408,7 @@ pub(crate) struct Search {
     #[arg(long, default_value_t = 1000)]
     pub(crate) snippet_chars: usize,
     /// Total character budget for displayed message text.
-    #[arg(long, default_value_t = 5000)]
+    #[arg(long, default_value_t = 8000)]
     pub(crate) max_output_chars: usize,
     /// Print complete selected text without output limits.
     #[arg(long)]
@@ -629,7 +657,7 @@ pub(crate) struct SqlArgs {
     #[arg(long, alias = "max-cell-chars", default_value_t = 2000)]
     pub(crate) max_cell_bytes: usize,
     /// Maximum serialized SQL output bytes.
-    #[arg(long, default_value_t = 8000)]
+    #[arg(long, default_value_t = 16000)]
     pub(crate) max_output_bytes: usize,
     /// Interrupt DuckDB execution after this many seconds, including with --full.
     #[arg(long, default_value_t = llm_history_types::storage::DEFAULT_SQL_TIMEOUT_SECONDS, value_parser = clap::value_parser!(u64).range(1..))]
@@ -660,10 +688,11 @@ mod python_flag_tests {
             }
         };
         let (plain, semantic): (&[&str], &[&str]) = (&["search"], &["semantic", "search"]);
-        assert_eq!(mode(plain, &[]), Some(Mode::Lexical));
+        assert_eq!(mode(plain, &[]), Some(Mode::Words));
         assert_eq!(mode(semantic, &[]), Some(Mode::Hybrid));
         for command in [plain, semantic] {
             for (name, expected) in [
+                ("words", Mode::Words),
                 ("lexical", Mode::Lexical),
                 ("exact", Mode::Exact),
                 ("semantic", Mode::Semantic),

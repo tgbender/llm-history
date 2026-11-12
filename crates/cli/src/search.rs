@@ -1,10 +1,13 @@
-//! Searching history and showing a message in its conversation.
+//! Searching history and finding similar messages.
 use super::*;
 use llm_history_types::query::Mode;
 use llm_history_types::query::SearchRequest;
 
 pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
     llm_history_search::check_rerank(args.mode, args.rerank && !args.no_rerank)?;
+    // Reject a bad date or zone before refreshing or starting a model.
+    let since = time_bound(&args.since, &args.timezone)?;
+    let until = time_bound(&args.until, &args.timezone)?;
     let refresh = if args.no_refresh {
         Value::Null
     } else {
@@ -35,9 +38,9 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
         filter: Filter {
             profiles: args.profile.clone(),
             source: args.source.clone(),
-            since: time_bound(&args.since, &args.timezone)?,
-            until: time_bound(&args.until, &args.timezone)?,
-            role: args.role,
+            since,
+            until,
+            role: (args.role != "all").then_some(args.role),
             threads: args.thread,
             cwd: args.cwd.map(expand_home),
             under: args.under.map(expand_home),
@@ -72,7 +75,7 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
     } else {
         for (i, h) in response.results.iter().enumerate() {
             println!(
-                "{}  {}  {}  {}  {}  id={}\n  {}",
+                "{}  {}  {}  {}  {}  id={}  session={}\n  {}",
                 i + 1,
                 h.message.ts,
                 h.message.profile,
@@ -83,6 +86,7 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
                 },
                 h.message.role,
                 h.message.message_no,
+                h.message.session_no,
                 h.message.text
             );
             if let Some(verdict) = &h.verdict {
@@ -107,86 +111,6 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
             args.source.as_deref(),
             &args.inference,
         );
-    }
-    Ok(())
-}
-
-pub(crate) fn show(ctx: &Ctx, args: ShowArgs) -> Result<()> {
-    let ShowArgs {
-        id,
-        before,
-        after,
-        profile,
-        max_output_chars,
-        no_redact,
-        full,
-    } = args;
-    let store = ctx.history();
-    let messages = store.context(id, before, after, &profile)?;
-    let target = messages
-        .iter()
-        .position(|m| m.message_no == id)
-        .context("message not found")?;
-    let header = &messages[target];
-    let scope =
-        json!({"profile":header.profile,"session_id":header.session_no,"source":header.source});
-    let neighbors = messages.len() - 1;
-    let target_budget = if neighbors == 0 {
-        max_output_chars
-    } else {
-        max_output_chars.saturating_mul(2) / 3
-    };
-    let neighbor_budget = max_output_chars.saturating_sub(target_budget) / neighbors.max(1);
-    let mut output = Vec::new();
-    for (at, mut message) in messages.into_iter().enumerate() {
-        let budget = if full {
-            usize::MAX
-        } else if at == target {
-            target_budget
-        } else {
-            neighbor_budget
-        };
-        // A guardian prompt ends with the reviewed action, so cutting its end would lose it.
-        let action = (message.session_kind == "guardian" && message.text.chars().count() > budget)
-            .then(|| llm_history_core::guardian_action(&message.text))
-            .flatten()
-            .map(|action| format!("[Quoted transcript omitted; --full shows it]\n{action}"));
-        message.text = bounded(
-            action.as_deref().unwrap_or(&message.text),
-            budget,
-            !no_redact,
-        );
-        let ts = message.timestamp_utc.unwrap_or(message.ts);
-        if !ctx.json {
-            println!(
-                "{}  {}  {}  {}  {}/{}  id={}\n  {}",
-                if at == target {
-                    "*".into()
-                } else {
-                    format!("{:+}", at as i64 - target as i64)
-                },
-                ts,
-                message.profile,
-                message.project,
-                message.role,
-                message.authorship,
-                message.message_no,
-                message.text,
-            );
-        } else {
-            output.push(crate::output::ContextRow {
-                id: message.message_no,
-                role: message.role,
-                ts,
-                text: message.text,
-                target: (at == target).then_some(true),
-            });
-        }
-    }
-    if ctx.json {
-        let mut result = scope;
-        result["messages"] = serde_json::to_value(output)?;
-        emit(&result, true)?;
     }
     Ok(())
 }

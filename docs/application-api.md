@@ -71,11 +71,15 @@ and Claude environment/home defaults. Library callers can leave the list empty.
   within its session and remains available for explicitly addressed protocol messages.
   Message queries page in opaque-ID order with an exclusive `after` cursor and a
   limit of 1–1000. Context takes a short message number and retains the existing
-  maximum of 100 messages on each side.
+  maximum of 100 messages on each side. `session_turns` takes a short session number
+  and returns that session's user turns in conversation order with its last final
+  answer; the caller bounds what it prints.
 - Search returns `MessageExcerpt`, a separate type whose text may be redacted,
-  shortened or selected from an answer. Existing ranked answer selection, exact hit
-  selection, ordering, guardian handling and limits are preserved. Retrieve complete
-  text through `context`. Exact search alone reports a total match count. Set
+  shortened or selected from an answer. Ranked modes over both roles show the answer
+  to a matching question; the literal modes, `Words` and `Exact`, keep the matched
+  message and order hits newest first. A guardian prompt carries its verdict in every
+  case. Retrieve complete text through `context`. Only the literal modes report a total
+  match count. Set
   `SearchRequest::explain` to count eligible documents and embedding coverage.
 - IDs are opaque, scoped to their database. Native IDs additionally require profile
   and harness scope. Retained occurrence IDs survive append, reopen and replay.

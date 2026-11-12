@@ -96,6 +96,20 @@ pub(crate) struct ContextRow {
     pub target: Option<bool>,
 }
 
+/// One row of a session read: a numbered user turn, or the last answer without a number.
+#[derive(Serialize)]
+pub(crate) struct TurnRow {
+    pub id: i64,
+    pub role: String,
+    pub ts: String,
+    pub text: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub turn: Option<usize>,
+    /// Characters removed from the middle of a long message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cut: Option<usize>,
+}
+
 #[derive(Serialize)]
 pub(crate) struct SessionRow<'a> {
     id: i64,
