@@ -64,10 +64,11 @@ and process DuckDB chunks. They hash exactly the supplied bytes. Normal
 capture, replay and archive verification retain their current hash paths.
 
 The history schema runner applies the shared SQL assets and the harness schema
-components before derived views. The pre-alpha database uses schema 1: native
-observations, capture ranges and shared body storage are part of the initial DDL.
-Earlier development databases are converted offline. Decoder revision is tracked
-separately so the app can rebuild projections from retained records. See the [retained capture model](../../docs/schema/README.md)
+components before derived views. Native observations, capture ranges and shared
+body storage are part of the initial tables. A build upgrades an older database
+when it opens it: table-layout steps run in order, and views and macros are
+replaced with the build's own (`history/src/schema/mod.rs`). Decoder revision is
+tracked separately so the app can rebuild projections from retained records. See the [retained capture model](../../docs/schema/README.md)
 for archive encoding and replay behavior.
 
 Compaction closes the engine connection while retaining its stable lock across

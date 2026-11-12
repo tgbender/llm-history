@@ -13,8 +13,8 @@ pattern for large ones. Reuse the selected set across statements. Push scope
 and limits before joins that hydrate wide rows, and use semi and anti joins
 for membership and absence. Keep ordered decoding, byte-exact native history,
 stable existing IDs, profile isolation, source cutoffs and atomic checkpoint
-advancement. Leave schema at 1; any development database conversion remains
-offline.
+advancement. A change to a durable table needs a migration step; see
+`crates/store/history/src/schema/mod.rs`.
 
 ## 0. Record the baseline and add regression checks
 

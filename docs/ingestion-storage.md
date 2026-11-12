@@ -304,7 +304,7 @@ The [application ingestion workflow](ingestion-extraction-plan.md) plans and
 prepares Codex and Claude input before publication. Shared values carry expected
 checkpoints, capture bounds, records and decoder state. Storage validates the
 checkpoint and commits the prepared batch atomically. The JSONL capture uses
-the implemented [schema 1 archive](schema/current.dbml). Mutable row snapshots,
+the implemented [archive tables](schema/current.dbml). Mutable row snapshots,
 prefix binding and graph projections are candidate extensions.
 
 ## Behavior fixtures that should shape the implementation

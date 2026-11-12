@@ -7,18 +7,18 @@ for ways to read or render the files.
 
 | Diagram                                                   | Scope                                                                                                                                                                                                  |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [Implemented schema 1](current.dbml)                      | Application tables for source checkpoints, native retention, CAS, harness metadata, query projections and vectors. Views, macros, generated FTS tables and staging are omitted.                        |
+| [Implemented tables](current.dbml)                        | Application tables for source checkpoints, native retention, CAS, harness metadata, query projections and vectors. Views, macros, generated FTS tables and staging are omitted.                        |
 | [Native content candidate](native-content-candidate.dbml) | Source tracking, retained native evidence, body CAS, graph, and two example Codex projections. Public query, FTS and vector tables are outside this comparison; they remain purpose-built projections. |
 
 The [ingestion workflow](../ingestion-extraction-plan.md) prepares source data
-before opening the write transaction and preserves byte-exact exports. Earlier
-development databases are converted offline. The candidate diagram addresses
+before opening the write transaction and preserves byte-exact exports. A newer
+build upgrades a database from 0.1.0 or later when it opens it. The candidate diagram addresses
 future storage needs. Its keys and references describe logical
 invariants; physical DuckDB types, constraints and indexes still need review.
 
 ## Implemented retention
 
-Schema 1 factors known UTF-8 strings out of a native JSONL document when the
+The archive factors known UTF-8 strings out of a native JSONL document when the
 archive codec can reproduce the original string token exactly. The compressed
 layout retains every other byte. A `content_parts` row identifies the JSON path
 and the byte position of a `null` placeholder in that layout. Reassembly restores

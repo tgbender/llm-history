@@ -39,9 +39,8 @@ carry their own revision and can publish independently of transcript changes.
 Replay uses the retained native documents and saved content identities. The app
 runs the decoder while reading retained records with a shared connection, then
 opens a writer for the replacement facts and continuation. The receipt identifies
-failed sources, the stage and a bounded cause. The decoder revision is independent of the database schema: this pre-alpha
-application uses schema 1 and earlier development databases are converted
-offline. One-off Python conversions are local SQL outside the runtime.
+failed sources, the stage and a bounded cause. The decoder revision is independent of the database schema version. One-off
+conversions of Python archives are local SQL outside the runtime.
 
 Public behavior is exercised through `History` and the CLI. Storage tests cover
 atomicity, stale checkpoints and byte-exact reconstruction; capture and decoder

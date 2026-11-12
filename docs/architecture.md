@@ -157,7 +157,7 @@ assets live beside the history schema runner; native DDL belongs to harness stor
 ingestion records native observations and capture ranges and shares selected text
 through content CAS. Harness decoders select leaves; storage owns body hashes,
 atomic publication and archive reconstruction used by replay and export. See the
-[implemented schema 1 tables](schema/current.dbml). `app/src/ingestion` coordinates
+[implemented tables](schema/current.dbml). `app/src/ingestion` coordinates
 update, catalog refresh and retained replay. Storage accepts prepared values and
 has no production dependency on ingestion. Graph projections remain a candidate.
 Ingest owns transcript directory selection, source keys and resume requirements.
