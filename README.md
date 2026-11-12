@@ -24,7 +24,9 @@ llm-history usage --by-model
 llm-history sql 'select * from history_help'
 ```
 
-The database defaults to `~/.local/share/llm-history-rs/history.duckdb`. Change it with `--db` or `LLM_HISTORY_RS_DB`. `--json` prints machine-readable output.
+The database defaults to `~/.local/share/llm-history-rs/history.duckdb`. Change it with `--db` or `LLM_HISTORY_RS_DB`. `--json` prints machine-readable output. `--help` lists a command's common options with examples first, and `--help-all` lists every option.
+
+[`skills/history-recall`](skills/history-recall/SKILL.md) is a skill that teaches a coding agent these commands. Copy the folder into `~/.codex/skills` or `~/.claude/skills`, and replace it when you upgrade the executable.
 
 #### Search
 
@@ -38,7 +40,9 @@ Other modes and roles:
 - `--rerank` reorders hits with the local reranking model, or the server at `--rerank-endpoint`. It needs `--mode lexical`, `semantic` or `hybrid`.
 - `--role assistant` searches final answers, and `--role all` searches both roles. With `--role all`, a ranked mode shows the answer to a matching question.
 
-When a limit cuts off `words` or `exact` matches, JSON includes the total as `matched`. The length of the result array is the number shown.
+When a limit cuts off `words` or `exact` matches, JSON includes the total as `matched`. The length of the result array is the number shown. A search with no hits prints one line with the number of messages it covered and the time of the newest archived message. JSON carries the same two values as `searched`.
+
+`--since` and `--until` take an ISO date or timestamp. `--after` and `--before` mean the same, as in `git log`.
 
 `--kind interactive|subagent|automation|guardian|unknown` limits `search` and `sessions` to one kind of session. Naming `subagent` or `guardian` includes those sessions even where they are otherwise hidden. Each guardian hit carries the review's `verdict`. Guardian reviews have no embeddings, so `--mode semantic` rejects them.
 
@@ -46,11 +50,11 @@ Search checks the metadata of the source files first and imports changes when it
 
 #### Message and session IDs
 
-`search`, `show`, `similar` and `sessions` use short integer IDs that are local to the database. Pass the `id` from a search hit to `show` or `similar`. A search hit also prints its `session`, which `show --session` takes. JSON from `search` and `similar` gives each hit's ID, session, profile, project, role, timestamp and text. To trace a message to its source records, select `message_no`, `session_no` and the native metadata columns through SQL.
+`search`, `show`, `similar` and `sessions` use short integer IDs that are local to the database. Pass the `id` from a search hit to `show` or `similar`. A search hit also prints its `session`, which `show --session` takes. The SQL views use the same IDs: `message_id` and `session_id` in every `history_*` view are these short numbers. The long archive keys are `event_id` and `session_key`. JSON from `search` and `similar` gives each hit's ID, session, profile, project, role, timestamp and text. To trace a message to its source records, select `event_id`, `session_key` and the native metadata columns through SQL.
 
 #### Show
 
-`show` takes up to 10 message IDs and prints each with two messages before and after it. Change that with `--before` and `--after`. All the IDs share one budget of 12,000 characters, set by `--max-output-chars`. A short message leaves its share to the long ones, and each requested message gets up to two thirds of its block. Messages whose context overlaps print once, in one block. `--full` removes the budget. With one ID, JSON is a single context object. With several, the objects are in a `contexts` array.
+`show` takes up to 10 message IDs and prints each with two messages before and after it. Change that with `-B`, `-A` or `-C`, as in `grep`. All the IDs share one budget of 12,000 characters, set by `--max-output-chars`. A short message leaves its share to the long ones, and each requested message gets up to two thirds of its block. Messages whose context overlaps print once, in one block. `--full` removes the budget. With one ID, JSON is a single context object. With several, the objects are in a `contexts` array.
 
 `show --session SESSION_ID` reads one session. It prints the user turns in conversation order, numbered, and then the session's last final answer. Three limits apply:
 
@@ -155,7 +159,8 @@ Models go in the shared Hugging Face cache. The llama.cpp runtime goes in `~/.ca
 - Each parsed fact is one row of `events`. The Python-compatible `canonical_*`, `provider_event_details` and `history_*` names are views. Turn contexts, token counts, epochs, relations, conversation groups and projects have their own tables.
 - `update` skips files whose size and mtime are unchanged and captures the changed files together in batched transactions. `reprocess` rebuilds the parsed facts from the archive and keeps IDs stable. New databases use schema 1. Before release, convert earlier development databases offline or use a new `--db`.
 - Two versions describe a database, and both are constants in this repository. `SCHEMA_VERSION` in `crates/store/history/src/lib.rs` is the table layout, which a database records once. `PARSER_VERSION` in `crates/ingest/src/lib.rs` is the decoder revision, which a database records for every source. `status` prints them as `schema_version` and `parser_version`.
-- A new decoder revision needs no manual step. The next `update` or refreshing `search` rebuilds the parsed facts of every source from the archive, and `status` counts the sources still waiting as `pending_parser_upgrades`. Message IDs, message text and embeddings stay as they were. On a 3.9 GiB archive of 786,000 records, the rebuild from revision 6 to 7 took 41 seconds. This version refuses a database whose `schema_version` differs from its own.
+- A new build upgrades a database the first time it opens it, and no command is needed. It applies any table-layout steps the database is missing, in order, and replaces the views and macros with its own. Schema 2 changed no table. It marks the point where `message_id` and `session_id` in the views became the short numbers, so a 0.1.0 executable refuses a schema 2 database where it would otherwise misread those columns. A build also refuses a database with a newer schema than its own.
+- A new decoder revision needs no manual step either. The next `update` or refreshing `search` rebuilds the parsed facts of every source from the archive, and `status` counts the sources still waiting as `pending_parser_upgrades`. Message IDs, message text and embeddings stay as they were. On a 3.9 GiB archive of 786,000 records, the rebuild from revision 6 to 7 took 41 seconds.
 - `db compact` rewrites the file to reclaim space. `raw verify` checks the archive when you run it. Nothing re-verifies the archive during normal work.
 - The store assigns each short message and session number once, separately from archive keys. A restored snapshot carries the numbers recorded in that snapshot. An earlier schema 1 archive needs an offline backfill on a copy before this version can use it.
 
