@@ -101,6 +101,9 @@ pub struct SearchResponse {
     pub results: Vec<SearchHit>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub matched: Option<usize>,
+    /// What an empty search covered.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub searched: Option<llm_history_types::query::Searched>,
     pub details: Value,
 }
 

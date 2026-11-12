@@ -52,6 +52,8 @@ pub(crate) struct SearchOutput<'a> {
     #[serde(skip_serializing_if = "Option::is_none")]
     matched: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    searched: Option<&'a llm_history_types::query::Searched>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     details: Option<&'a Value>,
 }
 
@@ -65,6 +67,7 @@ impl<'a> SearchOutput<'a> {
                     "semantic":hit.semantic_score,"lexical":hit.lexical_score,"rerank":hit.rerank_score})),
             }).collect(),
             matched: response.matched.filter(|matched| *matched > response.results.len()),
+            searched: response.searched.as_ref(),
             details: explain.then_some(&response.details),
         }
     }

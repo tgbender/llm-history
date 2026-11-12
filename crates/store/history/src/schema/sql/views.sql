@@ -81,16 +81,20 @@ select
     relations.evidence_kind,
     relations.metadata_json,
     relations.active,
-    children.id as child_session_id,
+    child_numbers.session_no as child_session_id,
+    children.id as child_session_key,
     children.native_session_id as child_native_session_id,
     children.harness_key,
-    relations.target_session_id as parent_session_id,
+    parent_numbers.session_no as parent_session_id,
+    relations.target_session_id as parent_session_key,
     coalesce(parents.native_session_id, relations.target_native_session_id)
         as parent_native_session_id,
     relations.target_session_id is not null as is_resolved
 from canonical_session_relations relations
 join canonical_sessions children on children.id = relations.source_session_id
-left join canonical_sessions parents on parents.id = relations.target_session_id;
+left join canonical_sessions parents on parents.id = relations.target_session_id
+left join session_numbers child_numbers on child_numbers.session_id = children.id
+left join session_numbers parent_numbers on parent_numbers.session_id = relations.target_session_id;
 
 create or replace view history_projects as
 with roots_aggregated as (
@@ -128,7 +132,7 @@ with primary_relations as (
         select
             relations.*,
             row_number() over (
-                partition by relations.child_session_id
+                partition by relations.child_session_key
                 order by
                     case relations.relation_kind
                         when 'spawned' then 0
@@ -194,13 +198,14 @@ with primary_relations as (
     from canonical_compactions
     group by session_id
 ), child_counts as (
-    select parent_session_id, count(*) as child_session_count
+    select parent_session_key, count(*) as child_session_count
     from history_session_relations
     where active and is_resolved
-    group by parent_session_id
+    group by parent_session_key
 )
 select
-    sessions.id as session_id,
+    numbers.session_no as session_id,
+    sessions.id as session_key,
     memberships.conversation_group_id,
     sessions.harness_key,
     sessions.native_session_id,
@@ -228,25 +233,25 @@ select
     coalesce(message_counts.message_count, 0) as message_count,
     coalesce(tool_counts.tool_call_count, 0) as tool_call_count,
     coalesce(compaction_counts.compaction_count, 0) as compaction_count,
-    coalesce(child_counts.child_session_count, 0) as child_session_count,
-    numbers.session_no
+    coalesce(child_counts.child_session_count, 0) as child_session_count
 from canonical_sessions sessions
 left join session_numbers numbers on numbers.session_id = sessions.id
 left join canonical_conversation_memberships memberships
   on memberships.session_id = sessions.id and memberships.is_primary
-left join primary_relations on primary_relations.child_session_id = sessions.id
+left join primary_relations on primary_relations.child_session_key = sessions.id
 left join primary_projects on primary_projects.session_id = sessions.id
 left join message_counts on message_counts.session_id = sessions.id
 left join tool_counts on tool_counts.session_id = sessions.id
 left join compaction_counts on compaction_counts.session_id = sessions.id
-left join child_counts on child_counts.parent_session_id = sessions.id
+left join child_counts on child_counts.parent_session_key = sessions.id
 where sessions.active;
 
 create or replace view history_messages as
 select
-    messages.event_id as message_id,
+    numbers.message_no as message_id,
     messages.event_id,
-    messages.session_id,
+    sessions.session_id,
+    messages.session_id as session_key,
     memberships.conversation_group_id,
     sessions.harness_key,
     sessions.native_session_id,
@@ -285,11 +290,9 @@ select
         and messages.protocol_role in ('user', 'assistant') as is_searchable,
     messages.text,
     messages.chars,
-    hex(messages.content_blake3) as content_blake3_hex,
-    numbers.message_no,
-    sessions.session_no
+    hex(messages.content_blake3) as content_blake3_hex
 from canonical_messages messages
-join history_sessions sessions on sessions.session_id = messages.session_id
+join history_sessions sessions on sessions.session_key = messages.session_id
 left join message_numbers numbers on numbers.event_id = messages.event_id
 left join canonical_context_epochs epochs on epochs.id = messages.context_epoch_id
 left join canonical_conversation_memberships memberships
@@ -325,14 +328,17 @@ with ordered_messages as (
       and answers.turn_ordinal > 0
 )
 select
-    questions.session_id,
+    session_number.session_no as session_id,
+    questions.session_id as session_key,
     memberships.conversation_group_id,
     sessions.harness_key,
     sessions.native_session_id,
     sessions.session_kind,
     questions.turn_ordinal,
-    questions.event_id as question_message_id,
-    answers.event_id as answer_message_id,
+    question_numbers.message_no as question_message_id,
+    answer_numbers.message_no as answer_message_id,
+    questions.event_id as question_event_id,
+    answers.event_id as answer_event_id,
     questions.session_seq as question_session_seq,
     answers.session_seq as answer_session_seq,
     questions.context_epoch_id as question_context_epoch_id,
@@ -350,13 +356,17 @@ left join ranked_answers answers
   on answers.session_id = questions.session_id
  and answers.turn_ordinal = questions.turn_ordinal
  and answers.answer_rank = 1
+left join session_numbers session_number on session_number.session_id = questions.session_id
+left join message_numbers question_numbers on question_numbers.event_id = questions.event_id
+left join message_numbers answer_numbers on answer_numbers.event_id = answers.event_id
 left join canonical_conversation_memberships memberships
   on memberships.session_id = questions.session_id and memberships.is_primary;
 
 create or replace view history_timeline as
 select
     timeline.event_id,
-    timeline.session_id,
+    sessions.session_id,
+    timeline.session_id as session_key,
     memberships.conversation_group_id,
     sessions.harness_key,
     sessions.native_session_id,
@@ -391,7 +401,7 @@ select
         end
     ) as display_text
 from canonical_timeline timeline
-join history_sessions sessions on sessions.session_id = timeline.session_id
+join history_sessions sessions on sessions.session_key = timeline.session_id
 left join canonical_context_epochs epochs on epochs.id = timeline.context_epoch_id
 left join canonical_compactions compactions on compactions.event_id = timeline.event_id
 left join canonical_conversation_memberships memberships
@@ -400,7 +410,8 @@ left join canonical_conversation_memberships memberships
 create or replace view history_event_relations as
 select
     relations.id as event_relation_id,
-    relations.session_id,
+    children.session_id,
+    relations.session_id as session_key,
     children.conversation_group_id,
     children.harness_key,
     relations.relation_kind,
@@ -455,7 +466,8 @@ select
     paired.call_event_id,
     paired.call_ordinal,
     paired.result_event_id,
-    paired.session_id,
+    numbers.session_no as session_id,
+    paired.session_id as session_key,
     memberships.conversation_group_id,
     sessions.harness_key,
     sessions.native_session_id,
@@ -475,6 +487,7 @@ select
     paired.result_event_id is not null as has_result
 from paired
 join canonical_sessions sessions on sessions.id = paired.session_id and sessions.active
+left join session_numbers numbers on numbers.session_id = paired.session_id
 left join canonical_conversation_memberships memberships
   on memberships.session_id = paired.session_id and memberships.is_primary
 where paired.result_rank = 1;
@@ -482,7 +495,8 @@ where paired.result_rank = 1;
 create or replace view history_compactions as
 select
     compactions.event_id,
-    compactions.session_id,
+    numbers.session_no as session_id,
+    compactions.session_id as session_key,
     memberships.conversation_group_id,
     sessions.harness_key,
     sessions.native_session_id,
@@ -495,6 +509,7 @@ select
 from canonical_compactions compactions
 join canonical_events events on events.id = compactions.event_id
 join canonical_sessions sessions on sessions.id = compactions.session_id and sessions.active
+left join session_numbers numbers on numbers.session_id = compactions.session_id
 left join canonical_context_epochs epochs on epochs.id = compactions.context_epoch_id
 left join canonical_conversation_memberships memberships
   on memberships.session_id = compactions.session_id and memberships.is_primary;
@@ -502,7 +517,8 @@ left join canonical_conversation_memberships memberships
 create or replace view history_context_epochs as
 select
     epochs.id as context_epoch_id,
-    epochs.session_id,
+    numbers.session_no as session_id,
+    epochs.session_id as session_key,
     memberships.conversation_group_id,
     sessions.harness_key,
     sessions.native_session_id,
@@ -516,6 +532,7 @@ select
     end_events.timestamp_utc as ends_at_utc
 from canonical_context_epochs epochs
 join canonical_sessions sessions on sessions.id = epochs.session_id and sessions.active
+left join session_numbers numbers on numbers.session_id = epochs.session_id
 left join canonical_events start_events on start_events.id = epochs.starts_at_event_id
 left join canonical_events end_events on end_events.id = epochs.ends_at_event_id
 left join canonical_conversation_memberships memberships
@@ -537,14 +554,17 @@ create or replace macro history_messages_for_conversation(p_conversation_group_i
 create or replace macro history_descendant_sessions(p_root_session_id) as table (
     select sessions.*, ancestry.depth as lineage_depth
     from canonical_session_ancestry ancestry
-    join history_sessions sessions on sessions.session_id = ancestry.session_id
-    where ancestry.ancestor_session_id = p_root_session_id
+    join history_sessions sessions on sessions.session_key = ancestry.session_id
+    where ancestry.ancestor_session_id = (
+        select numbers.session_id from session_numbers numbers
+        where numbers.session_no = p_root_session_id
+    )
     order by ancestry.depth, sessions.started_at_utc nulls last, sessions.session_id
 );
 
 create or replace macro history_message_context(p_message_id, p_before, p_after) as table (
     with target as (
-        select session_id, message_ordinal
+        select session_key, message_ordinal
         from history_messages
         where message_id = p_message_id
     )
@@ -553,7 +573,7 @@ create or replace macro history_message_context(p_message_id, p_before, p_after)
         messages.message_id = p_message_id as is_target,
         messages.message_ordinal - target.message_ordinal as relative_message_offset
     from history_messages messages
-    join target using(session_id)
+    join target using(session_key)
     where messages.message_ordinal between
             greatest(target.message_ordinal - greatest(p_before, 0), 1)
         and target.message_ordinal + greatest(p_after, 0)
@@ -562,20 +582,20 @@ create or replace macro history_message_context(p_message_id, p_before, p_after)
 
 create or replace macro history_event_context(p_event_id, p_before, p_after) as table (
     with target_session as (
-        select session_id
+        select session_key
         from history_timeline
         where event_id = p_event_id
     ), ordered as (
         select
             timeline.*,
             row_number() over (
-                partition by timeline.session_id
+                partition by timeline.session_key
                 order by timeline.session_seq, timeline.event_id
             ) as event_ordinal
         from history_timeline timeline
-        join target_session using(session_id)
+        join target_session using(session_key)
     ), target as (
-        select session_id, event_ordinal
+        select session_key, event_ordinal
         from ordered
         where event_id = p_event_id
     )
@@ -584,7 +604,7 @@ create or replace macro history_event_context(p_event_id, p_before, p_after) as 
         events.event_id = p_event_id as is_target,
         events.event_ordinal - target.event_ordinal as relative_event_offset
     from ordered events
-    join target using(session_id)
+    join target using(session_key)
     where events.event_ordinal between
             greatest(target.event_ordinal - greatest(p_before, 0), 1)
         and target.event_ordinal + greatest(p_after, 0)
@@ -622,11 +642,14 @@ select
     columns.column_name,
     columns.data_type,
     case
-        when columns.column_name in ('session_id', 'message_id', 'event_id', 'relation_id',
-                                     'conversation_group_id', 'context_epoch_id')
-            then 'Stable BIGINT join key generated by llm-history.'
-        when columns.column_name in ('question_message_id', 'answer_message_id')
-            then 'Stable BIGINT key joining to history_messages.message_id; answer may be null.'
+        when columns.column_name in ('session_id', 'parent_session_id', 'child_session_id')
+            then 'Short session number: the ID sessions prints and show --session takes.'
+        when columns.column_name in ('message_id', 'question_message_id', 'answer_message_id')
+            then 'Short message number: the ID search prints and show takes; an answer may be null.'
+        when columns.column_name in ('session_key', 'parent_session_key', 'child_session_key',
+                                     'event_id', 'question_event_id', 'answer_event_id',
+                                     'relation_id', 'conversation_group_id', 'context_epoch_id')
+            then 'Stable BIGINT join key generated by llm-history; long, so prefer the short IDs.'
         when columns.column_name in ('native_session_id', 'native_runtime_id', 'native_call_id')
             then 'Provider-native identifier for session and tool correlation.'
         when columns.column_name = 'source_ordinal'

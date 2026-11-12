@@ -67,6 +67,25 @@ impl Store {
                 Ok((r.get(0)?, r.get(1)?))
             })?)
     }
+    /// When the newest archived message in the filter's profiles was written.
+    pub fn newest_message_at(&self, f: &Filter) -> Result<Option<String>> {
+        let q = self.message_conditions(&Filter {
+            profiles: f.profiles.clone(),
+            source: f.source.clone(),
+            include_subagents: true,
+            include_agent_protocol: true,
+            ..Filter::default()
+        })?;
+        Ok(self.database.connection().query_row(
+            &format!(
+                "SELECT strftime(max(e.timestamp_utc),'%Y-%m-%dT%H:%M:%SZ') \
+                 FROM {MESSAGE_FROM} WHERE {}",
+                q.clause()
+            ),
+            duckdb::params_from_iter(q.args),
+            |r| r.get(0),
+        )?)
+    }
     /// Messages containing every needle as a literal, case-insensitive string, in the text
     /// search covers, newest first. They tie on score, so each session is capped here;
     /// otherwise one busy session would fill the candidate limit.

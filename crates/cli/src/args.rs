@@ -1,6 +1,6 @@
 //! Command-line arguments.
 use clap::builder::{PossibleValue, PossibleValuesParser, TypedValueParser};
-use clap::{Args, Parser, Subcommand};
+use clap::{ArgAction, Args, Parser, Subcommand};
 use llm_history_types::Harness;
 use llm_history_types::query::Mode;
 use std::path::PathBuf;
@@ -30,28 +30,50 @@ fn search_modes() -> impl TypedValueParser<Value = Mode> {
 }
 const SOURCE_KEYS: [&str; 4] = ["all", "codex", "claude", "cursor"];
 
+/// Flags that mean nothing to a command that only reads, accepted so a habit from
+/// `search` doesn't fail it.
+#[derive(Args, Debug, Default)]
+pub(crate) struct ReadOnlyHabits {
+    #[arg(long = "no-refresh", hide = true)]
+    _no_refresh: bool,
+    #[arg(long = "no-background", hide = true)]
+    _no_background: bool,
+}
+
 #[derive(Parser)]
 #[command(
     name = "llm-history",
     version,
+    disable_help_flag = true,
     about = "Local coding-agent history with lossless archives and profile-scoped search",
     after_help = "Read history:\n  llm-history search 'words you remember typing'\n  llm-history search --mode semantic 'what went wrong?'\n  llm-history show ID ID\n  llm-history show --session SESSION_ID\n  llm-history similar ID --role user --other-sessions --per-session 1\n\nUse --no-refresh --no-background to search a fixed archive. Use plain text for reading and --json for parsing. Open context before counting related hits as separate incidents."
 )]
 pub(crate) struct App {
+    /// Print help with the common options; --help-all lists every option.
+    #[arg(short = 'h', long = "help", global = true, action = ArgAction::HelpShort)]
+    help: Option<bool>,
+    /// Print help with every option.
+    #[arg(long = "help-all", global = true, action = ArgAction::HelpLong)]
+    help_all: Option<bool>,
     /// DuckDB memory ceiling in MiB.
-    #[arg(long, global = true, default_value_t = 1024)]
+    #[arg(long, global = true, default_value_t = 1024, hide_short_help = true)]
     pub(crate) memory_mib: u64,
     /// Maximum uncompressed data per ingestion batch, in MiB.
-    #[arg(long, global = true, default_value_t = 64)]
+    #[arg(long, global = true, default_value_t = 64, hide_short_help = true)]
     pub(crate) batch_mib: usize,
     /// Maximum records per ingestion write batch.
-    #[arg(long, global = true, default_value_t = 20000)]
+    #[arg(long, global = true, default_value_t = 20000, hide_short_help = true)]
     pub(crate) batch_records: usize,
     /// Database path; defaults to ~/.local/share/llm-history-rs/history.duckdb.
     #[arg(long, global = true, env = "LLM_HISTORY_RS_DB")]
     pub(crate) db: Option<PathBuf>,
     /// Directory for the llama.cpp runtime; models use the Hugging Face cache.
-    #[arg(long, global = true, env = "LLM_HISTORY_RS_CACHE")]
+    #[arg(
+        long,
+        global = true,
+        env = "LLM_HISTORY_RS_CACHE",
+        hide_short_help = true
+    )]
     pub(crate) cache: Option<PathBuf>,
     /// Print JSON for programmatic use.
     #[arg(long, global = true)]
@@ -87,10 +109,16 @@ pub(crate) enum Commands {
         inference: Inference,
     },
     /// Search conversation messages using lexical, semantic, hybrid or exact matching.
+    #[command(
+        before_help = "Examples:\n  llm-history search 'words you typed'\n  llm-history search --mode exact 'git push --force' --since 2026-10-01\n  llm-history search --mode semantic --role all 'why did the import slow down'"
+    )]
     Search(Box<Search>),
     /// Find messages similar to an indexed message using its stored embeddings.
     Similar(SimilarArgs),
     /// Show messages by ID with their surrounding conversation, or read a session's turns.
+    #[command(
+        before_help = "Examples:\n  llm-history show 31305 31470\n  llm-history show 31305 -C 4\n  llm-history show --session 601 --recent 5"
+    )]
     Show(ShowArgs),
     /// List recent sessions, including titles, models and project metadata.
     #[command(mut_arg("limit", |arg| arg.default_value("30")))]
@@ -105,6 +133,9 @@ pub(crate) enum Commands {
     /// Show source coverage, entity counts and timestamp ranges.
     Status(ProfileSelection),
     /// Query history SQL views with bounded, read-only results.
+    #[command(
+        before_help = "Examples:\n  llm-history sql 'select * from history_help'\n  llm-history sql \"select column_name, description from history_dictionary where surface = 'history_messages'\"\n  llm-history sql 'select session_id, project_name, last_event_at_utc from history_sessions order by last_event_at_utc desc limit 10'"
+    )]
     Sql(SqlArgs),
     #[command(subcommand)]
     /// Inspect or export the original captured transcript bytes.
@@ -144,19 +175,24 @@ pub(crate) struct ShowArgs {
     #[arg(long, requires = "session", value_parser = clap::value_parser!(i64).range(1..))]
     pub(crate) from: Option<i64>,
     /// Number of preceding conversation messages to include.
-    #[arg(long, default_value_t = 2, conflicts_with = "session")]
+    #[arg(short = 'B', long, default_value_t = 2, conflicts_with = "session")]
     pub(crate) before: usize,
     /// Number of following conversation messages to include.
-    #[arg(long, default_value_t = 2, conflicts_with = "session")]
+    #[arg(short = 'A', long, default_value_t = 2, conflicts_with = "session")]
     pub(crate) after: usize,
+    /// Number of messages to include on each side.
+    #[arg(short = 'C', long, conflicts_with_all = ["before", "after", "session"])]
+    pub(crate) context: Option<usize>,
+    #[command(flatten)]
+    pub(crate) habits: ReadOnlyHabits,
     /// Select a history profile; repeat to select several.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) profile: Vec<String>,
     /// Total character budget for displayed message text.
     #[arg(long, default_value_t = 12000)]
     pub(crate) max_output_chars: usize,
     /// Show matching text without credential redaction.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) no_redact: bool,
     /// Print complete selected text without output limits.
     #[arg(long, conflicts_with = "session")]
@@ -192,6 +228,8 @@ pub(crate) struct SimilarArgs {
     /// Select the existing 768- or 256-dimensional Gemma 2 index.
     #[arg(long, default_value_t = 768)]
     pub(crate) dimensions: usize,
+    #[command(flatten)]
+    pub(crate) habits: ReadOnlyHabits,
 }
 #[derive(Subcommand)]
 pub(crate) enum Profiles {
@@ -228,6 +266,8 @@ pub(crate) struct ProfileSelection {
     /// Select codex, claude, cursor, or all history sources.
     #[arg(long, value_parser = SOURCE_KEYS)]
     pub(crate) source: Option<String>,
+    #[command(flatten)]
+    pub(crate) habits: ReadOnlyHabits,
 }
 #[derive(Args, Default)]
 pub(crate) struct ProjectSelection {
@@ -250,14 +290,14 @@ pub(crate) struct Selection {
     /// Select codex, claude, cursor, or all history sources.
     #[arg(long, value_parser = SOURCE_KEYS)]
     pub(crate) source: Option<String>,
-    /// Include records at or after this ISO date or timestamp.
-    #[arg(long)]
+    /// Include records at or after this ISO date or timestamp; --after means the same.
+    #[arg(long, alias = "after")]
     pub(crate) since: Option<String>,
-    /// Include records at or before this ISO date or timestamp.
-    #[arg(long)]
+    /// Include records at or before this ISO date or timestamp; --before means the same.
+    #[arg(long, alias = "before")]
     pub(crate) until: Option<String>,
     /// IANA timezone for date filters and usage periods; local detects this system.
-    #[arg(long, default_value = "local")]
+    #[arg(hide_short_help = true, long, default_value = "local")]
     pub(crate) timezone: String,
     /// Maximum results to return.
     #[arg(long, default_value = "100")]
@@ -285,6 +325,8 @@ pub(crate) struct SessionArgs {
     /// List the oldest sessions first.
     #[arg(long)]
     pub(crate) oldest_first: bool,
+    #[command(flatten)]
+    pub(crate) habits: ReadOnlyHabits,
 }
 #[derive(Subcommand)]
 pub(crate) enum Database {
@@ -333,6 +375,8 @@ pub(crate) struct UsageArgs {
     /// Split usage periods by model and reasoning effort.
     #[arg(long)]
     pub(crate) by_model: bool,
+    #[command(flatten)]
+    pub(crate) habits: ReadOnlyHabits,
 }
 #[derive(Args)]
 pub(crate) struct Search {
@@ -343,13 +387,13 @@ pub(crate) struct Search {
     #[arg(long, default_value = "words", value_parser = search_modes())]
     pub(crate) mode: Mode,
     /// Rerank candidates using the configured local Qwen model or endpoint; needs --mode lexical, semantic or hybrid.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) rerank: bool,
     /// Disable model reranking.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) no_rerank: bool,
     /// Maximum candidates passed to the reranker.
-    #[arg(long,default_value_t=25,value_parser=clap::value_parser!(u16).range(1..=100))]
+    #[arg(hide_short_help = true, long,default_value_t=25,value_parser=clap::value_parser!(u16).range(1..=100))]
     pub(crate) rerank_depth: u16,
     /// Select a history profile; repeat to select several.
     #[arg(long)]
@@ -357,24 +401,24 @@ pub(crate) struct Search {
     /// Select codex, claude, cursor, or all history sources.
     #[arg(long, value_parser = SOURCE_KEYS)]
     pub(crate) source: Option<String>,
-    /// Include records at or after this ISO date or timestamp.
-    #[arg(long)]
+    /// Include records at or after this ISO date or timestamp; --after means the same.
+    #[arg(long, alias = "after")]
     pub(crate) since: Option<String>,
-    /// Include records at or before this ISO date or timestamp.
-    #[arg(long)]
+    /// Include records at or before this ISO date or timestamp; --before means the same.
+    #[arg(long, alias = "before")]
     pub(crate) until: Option<String>,
     /// IANA timezone for date filters and usage periods; local detects this system.
-    #[arg(long, default_value = "local")]
+    #[arg(hide_short_help = true, long, default_value = "local")]
     pub(crate) timezone: String,
     /// Whose messages to search: the user's, the assistant's final answers, or all.
     /// With all, a ranked mode shows the answer to a matching question.
     #[arg(long, default_value = "user", value_parser = ["user", "assistant", "all"])]
     pub(crate) role: String,
     /// Include this native thread ID; repeat to select several.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) thread: Vec<String>,
     /// Filter to an exact session working directory.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) cwd: Option<String>,
     /// Filter to working directories at or below this path.
     #[arg(long)]
@@ -383,7 +427,7 @@ pub(crate) struct Search {
     #[arg(long)]
     pub(crate) project: Option<String>,
     /// Exclude subagent sessions.
-    #[arg(long, overrides_with = "_include_subagents")]
+    #[arg(hide_short_help = true, long, overrides_with = "_include_subagents")]
     pub(crate) no_subagents: bool,
     /// Python's explicit default; overrides an earlier --no-subagents.
     #[arg(
@@ -393,7 +437,7 @@ pub(crate) struct Search {
     )]
     pub(crate) _include_subagents: bool,
     /// Include agent coordination and protocol messages.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) include_agent_protocol: bool,
     /// Only sessions of this kind; subagent and guardian include their protocol messages. Guardian prompts are searched by their reviewed action, not the quoted transcript.
     #[arg(long, value_parser = SESSION_KINDS, conflicts_with = "no_subagents")]
@@ -405,7 +449,7 @@ pub(crate) struct Search {
     #[arg(long,default_value_t=2,value_parser=clap::value_parser!(u16).range(1..=100))]
     pub(crate) per_session: u16,
     /// Maximum characters in a result passage.
-    #[arg(long, default_value_t = 1000)]
+    #[arg(hide_short_help = true, long, default_value_t = 1000)]
     pub(crate) snippet_chars: usize,
     /// Total character budget for displayed message text.
     #[arg(long, default_value_t = 8000)]
@@ -414,10 +458,10 @@ pub(crate) struct Search {
     #[arg(long)]
     pub(crate) full: bool,
     /// Show matching text without credential redaction.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) no_redact: bool,
     /// Include retrieval scores, model coverage and timing details.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) explain: bool,
     /// Search the existing archive without importing live changes.
     #[arg(long, conflicts_with = "force_refresh", overrides_with = "_refresh")]
@@ -426,7 +470,7 @@ pub(crate) struct Search {
     #[arg(long = "refresh", hide = true, overrides_with = "no_refresh")]
     pub(crate) _refresh: bool,
     /// Refresh now, bypassing the change check and failure backoff.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) force_refresh: bool,
     /// Skip automatic background embedding work.
     #[arg(long, overrides_with = "_background")]
@@ -440,31 +484,35 @@ pub(crate) struct Search {
 #[derive(Args, Clone)]
 pub(crate) struct Inference {
     /// Allow automatic background work to use the configured remote endpoint.
-    #[arg(long, env = "LLM_HISTORY_RS_BACKGROUND_REMOTE")]
+    #[arg(hide_short_help = true, long, env = "LLM_HISTORY_RS_BACKGROUND_REMOTE")]
     pub(crate) background_remote: bool,
     /// Compatible embedding server URL; otherwise use cached local Gemma.
-    #[arg(long, env = "LLM_HISTORY_RS_EMBEDDING_ENDPOINT")]
+    #[arg(
+        hide_short_help = true,
+        long,
+        env = "LLM_HISTORY_RS_EMBEDDING_ENDPOINT"
+    )]
     pub(crate) endpoint: Option<String>,
     /// Model alias served by the embedding endpoint.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) model_name: Option<String>,
     /// Read the embedding endpoint API key from this file.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) api_key_file: Option<PathBuf>,
     /// Compatible reranking server URL; otherwise use cached local Qwen.
-    #[arg(long, env = "LLM_HISTORY_RS_RERANKER_ENDPOINT")]
+    #[arg(hide_short_help = true, long, env = "LLM_HISTORY_RS_RERANKER_ENDPOINT")]
     pub(crate) rerank_endpoint: Option<String>,
     /// Model alias served by the reranking endpoint.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) rerank_model_name: Option<String>,
     /// Read the reranking endpoint API key from this file.
-    #[arg(long)]
+    #[arg(hide_short_help = true, long)]
     pub(crate) rerank_api_key_file: Option<PathBuf>,
     /// Gemma embedding dimensions: 768 or 256.
-    #[arg(long, default_value_t = 768)]
+    #[arg(hide_short_help = true, long, default_value_t = 768)]
     pub(crate) dimensions: usize,
     /// Maximum inference request/startup time in seconds.
-    #[arg(long, default_value_t = 120)]
+    #[arg(hide_short_help = true, long, default_value_t = 120)]
     pub(crate) timeout_seconds: u64,
 }
 impl Default for Inference {
@@ -654,7 +702,12 @@ pub(crate) struct SqlArgs {
     #[arg(long, alias = "max-rows", default_value_t = 50)]
     pub(crate) limit: usize,
     /// Maximum UTF-8 bytes per SQL header or text cell.
-    #[arg(long, alias = "max-cell-chars", default_value_t = 2000)]
+    #[arg(
+        hide_short_help = true,
+        long,
+        alias = "max-cell-chars",
+        default_value_t = 2000
+    )]
     pub(crate) max_cell_bytes: usize,
     /// Maximum serialized SQL output bytes.
     #[arg(long, default_value_t = 16000)]
@@ -666,11 +719,13 @@ pub(crate) struct SqlArgs {
     #[arg(long)]
     pub(crate) full: bool,
     /// Show matching text without credential redaction.
-    #[arg(long, overrides_with = "_redact")]
+    #[arg(hide_short_help = true, long, overrides_with = "_redact")]
     pub(crate) no_redact: bool,
     /// Python's explicit default; overrides an earlier --no-redact.
     #[arg(long = "redact", hide = true, overrides_with = "no_redact")]
     _redact: bool,
+    #[command(flatten)]
+    pub(crate) habits: ReadOnlyHabits,
 }
 
 #[cfg(test)]

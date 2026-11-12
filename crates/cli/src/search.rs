@@ -31,6 +31,11 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
     } else {
         None
     };
+    let scope = match args.role.as_str() {
+        "user" => "user messages",
+        "assistant" => "assistant answers",
+        _ => "messages",
+    };
     let s = ctx.history();
     let request = SearchRequest {
         query: args.query,
@@ -93,6 +98,17 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
                 println!("  verdict: {verdict}");
             }
         }
+        // Says what was covered, so an empty result isn't mistaken for a stale archive.
+        if let Some(searched) = &response.searched {
+            let through = searched
+                .through
+                .as_deref()
+                .map_or(String::new(), |at| format!("; archive through {at}"));
+            println!(
+                "No matches in {} {scope}{through}.",
+                thousands(searched.messages)
+            );
+        }
         if let Some(matched) = matched.filter(|&matched| matched > shown) {
             println!(
                 "{shown} of {matched} matches shown; \
@@ -113,6 +129,19 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
         );
     }
     Ok(())
+}
+
+/// A count with commas between thousands.
+fn thousands(count: usize) -> String {
+    let digits = count.to_string();
+    let mut out = String::new();
+    for (at, digit) in digits.chars().enumerate() {
+        if at > 0 && (digits.len() - at).is_multiple_of(3) {
+            out.push(',');
+        }
+        out.push(digit);
+    }
+    out
 }
 
 pub(crate) fn similar(ctx: &Ctx, args: SimilarArgs) -> Result<()> {

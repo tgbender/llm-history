@@ -317,7 +317,7 @@ impl Store {
              h.tool_call_count,h.compaction_count,h.child_session_count,\
              cs.metadata_json,sn.session_no
             FROM history_sessions h \
-             JOIN sessions s ON s.id=h.session_id \
+             JOIN sessions s ON s.id=h.session_key \
              JOIN canonical_sessions cs ON cs.id=s.id \
              JOIN profiles p ON p.id=s.profile_id
              JOIN session_numbers sn ON sn.session_id=s.id

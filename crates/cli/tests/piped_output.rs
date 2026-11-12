@@ -397,9 +397,29 @@ fn a_plain_search_finds_every_word_in_what_the_user_typed() -> Result<()> {
     let answers = json(&["CACHE lun", "--role", "assistant"])?;
     assert_eq!(roles(&answers), ["assistant"], "{answers}");
     assert_eq!(answers["results"][0]["text"], "the cache is lunar now");
-    // The same words as one literal string appear nowhere.
+    // The same words as one literal string appear nowhere, and the result says what it covered.
     let exact = json(&["--mode", "exact", "CACHE lun"])?;
     assert!(exact["results"].as_array().unwrap().is_empty(), "{exact}");
+    assert_eq!(exact["searched"]["messages"], 9);
+    assert_eq!(exact["searched"]["through"], "2026-10-01T00:00:02Z");
+    assert!(plain.get("searched").is_none());
+    let nothing = stdout(dir.path(), &["search", "--mode", "exact", "CACHE lun"])?;
+    assert_eq!(
+        nothing,
+        "No matches in 9 user messages; archive through 2026-10-01T00:00:02Z.\n"
+    );
+    // Dates read as in git log, and habits from search don't fail a command that only reads.
+    let dated = json(&["cache", "--after", "2026-09-30", "--before", "2026-10-02"])?;
+    assert_eq!(dated["matched"], 9);
+    let later = json(&["cache", "--after", "2026-10-02"])?;
+    assert!(later["results"].as_array().unwrap().is_empty(), "{later}");
+    for habit in [
+        &["status", "--no-refresh"][..],
+        &["sessions", "--no-refresh", "--no-background"],
+        &["sql", "select 1", "--no-refresh"],
+    ] {
+        assert!(run(dir.path(), habit)?.status.success(), "{habit:?}");
+    }
     Ok(())
 }
 
@@ -510,12 +530,7 @@ fn show_takes_several_ids_and_shares_one_budget() -> Result<()> {
     );
     // Nine long messages share the default budget, where each alone exceeds a ninth of it.
     assert!(shown.chars().count() < 13_500, "{}", shown.chars().count());
-    let json = stdout(
-        dir.path(),
-        &[
-            "--json", "show", &third, &other, "--before", "0", "--after", "0",
-        ],
-    )?;
+    let json = stdout(dir.path(), &["--json", "show", &third, &other, "-C", "0"])?;
     let json: serde_json::Value = serde_json::from_str(&json)?;
     let contexts = json["contexts"].as_array().unwrap();
     assert_eq!(contexts.len(), 2, "{json}");
@@ -523,6 +538,76 @@ fn show_takes_several_ids_and_shares_one_budget() -> Result<()> {
     let missing = run(dir.path(), &["show", &third, "999999"])?;
     assert!(!missing.status.success());
     assert!(String::from_utf8(missing.stderr)?.contains("message 999999"));
+    Ok(())
+}
+
+#[test]
+fn sql_ids_are_the_ids_the_commands_take() -> Result<()> {
+    let dir = tempfile::tempdir()?;
+    let turns = |name: &str| -> Vec<(&str, String)> {
+        vec![
+            ("user", format!("{name} question")),
+            ("assistant", format!("{name} answer")),
+        ]
+    };
+    write_sessions(
+        dir.path(),
+        &[
+            ("a", "/projects/a", turns("alpha")),
+            ("b", "/projects/b", turns("beta")),
+        ],
+    )?;
+    let rows = |query: &str| -> Result<Vec<serde_json::Value>> {
+        let out = stdout(dir.path(), &["--json", "sql", query])?;
+        let out: serde_json::Value = serde_json::from_str(&out)?;
+        Ok(out["rows"].as_array().unwrap().clone())
+    };
+    let found = stdout(dir.path(), &["--json", "search", "beta question"])?;
+    let found: serde_json::Value = serde_json::from_str(&found)?;
+    let hit = &found["results"][0];
+    let message = &rows(
+        "select message_id, session_id, event_id, session_key from history_messages \
+         where text = 'beta question'",
+    )?[0];
+    // The natural column names give the short IDs; the long keys have their own names.
+    assert_eq!(message["message_id"], hit["id"]);
+    assert_eq!(message["session_id"], hit["session_id"]);
+    assert!(message["event_id"].as_i64().unwrap() > 1_000_000);
+    assert!(message["session_key"].as_i64().unwrap() > 1_000_000);
+    let id = message["message_id"].as_i64().unwrap().to_string();
+    let session = message["session_id"].as_i64().unwrap().to_string();
+    assert!(stdout(dir.path(), &["show", &id])?.contains("beta question"));
+    assert!(stdout(dir.path(), &["show", "--session", &session])?.contains("beta answer"));
+    // Views join on the short ID, and the macros take it.
+    let count = |query: &str| -> Result<i64> { Ok(rows(query)?[0]["n"].as_i64().unwrap()) };
+    assert_eq!(
+        count("select count(*) n from history_messages join history_sessions using (session_id)")?,
+        4
+    );
+    assert_eq!(
+        count(&format!(
+            "select count(*) n from history_messages_for_session({session})"
+        ))?,
+        2
+    );
+    assert_eq!(
+        count(&format!(
+            "select count(*) n from history_message_context({id}, 1, 1)"
+        ))?,
+        2
+    );
+    assert_eq!(
+        count(&format!(
+            "select count(*) n from history_descendant_sessions({session})"
+        ))?,
+        1
+    );
+    let pair = &rows(&format!(
+        "select question_message_id, answer_message_id from history_turn_pairs \
+         where session_id = {session}"
+    ))?[0];
+    assert_eq!(pair["question_message_id"], hit["id"]);
+    assert!(pair["answer_message_id"].as_i64().unwrap() < 1_000_000);
     Ok(())
 }
 

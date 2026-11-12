@@ -58,6 +58,7 @@ impl History {
                 })
                 .collect(),
             matched: response.matched,
+            searched: response.searched,
             details: response.details,
         })
     }

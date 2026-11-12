@@ -4,7 +4,7 @@ use llm_history_core::bounded;
 use llm_history_models::{Embedder, Reranker};
 use llm_history_store::Store;
 use llm_history_types::query::Message;
-use llm_history_types::query::{Filter, Mode, SearchRequest};
+use llm_history_types::query::{Filter, Mode, SearchRequest, Searched};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::borrow::Borrow;
@@ -30,6 +30,9 @@ pub struct SearchResponse {
     /// Every match before the result caps, known only for exact search.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub matched: Option<usize>,
+    /// Set when nothing matched.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub searched: Option<Searched>,
     pub details: Value,
 }
 
@@ -269,6 +272,15 @@ pub fn search<S: Borrow<Store>>(
             })
             .collect();
     }
+    let searched = hits
+        .is_empty()
+        .then(|| -> Result<Searched> {
+            Ok(Searched {
+                messages: store.retrieval_counts(&request.filter, None)?.0,
+                through: store.newest_message_at(&request.filter)?,
+            })
+        })
+        .transpose()?;
     drop(connection);
     let reranked = reranker.is_some();
     let mut rerank_failures = 0;
@@ -378,6 +390,7 @@ pub fn search<S: Borrow<Store>>(
     Ok(SearchResponse {
         results: result,
         matched,
+        searched,
         details,
     })
 }

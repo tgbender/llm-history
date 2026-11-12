@@ -14,17 +14,8 @@ CREATE TABLE IF NOT EXISTS lexical_documents (id BIGINT PRIMARY KEY,source_id BI
 CREATE TABLE IF NOT EXISTS model_profiles (id VARCHAR PRIMARY KEY,data VARCHAR);
 CREATE TABLE IF NOT EXISTS embeddings (profile_id VARCHAR,message_id BIGINT,text_hash VARCHAR,chunk BIGINT,vector FLOAT[] NOT NULL,PRIMARY KEY(profile_id,message_id,chunk));
 CREATE TABLE IF NOT EXISTS embedding_failures (profile_id VARCHAR,message_id BIGINT,text_hash VARCHAR,reason VARCHAR,PRIMARY KEY(profile_id,message_id));
-CREATE OR REPLACE VIEW messages AS SELECT * FROM events WHERE active AND kind='message' AND text<>'';
-CREATE OR REPLACE VIEW session_relations AS SELECT child.id source_session_id,parent.id target_session_id,child.relation FROM sessions child JOIN sessions parent ON parent.profile_id=child.profile_id AND parent.native_id=child.parent_native;
-CREATE OR REPLACE VIEW history_dictionary AS SELECT table_name,column_name,data_type FROM information_schema.columns WHERE table_schema='main';
-CREATE OR REPLACE VIEW history_help AS SELECT * FROM (VALUES ('messages','Active normalized messages; IDs are stable, source events retain raw provenance'),('sessions','Profile-scoped native sessions and metadata'),('session_relations','Parent/fork relationships resolved within the same profile'),('sources','Physical transcript identity and committed capture state'),('generations','Retained byte-exact source generations'),('profiles','Durable store identity and user-facing configuration')) entries(surface,description);
 
 CREATE TABLE IF NOT EXISTS projects (id BIGINT PRIMARY KEY,profile_id VARCHAR,native_id VARCHAR,name VARCHAR,kind VARCHAR,metadata VARCHAR,active BOOLEAN,UNIQUE(profile_id,native_id));
 CREATE TABLE IF NOT EXISTS project_roots (project_id BIGINT,path VARCHAR,ordinal INTEGER,PRIMARY KEY(project_id,path));
 CREATE TABLE IF NOT EXISTS project_assignments (session_id BIGINT PRIMARY KEY,project_id BIGINT,evidence VARCHAR,snapshot_id BIGINT,basis_cwd VARCHAR DEFAULT '');
 
--- Message attributes derived from event columns, shared by views and queries.
-CREATE OR REPLACE MACRO history_message_kind(kind, excluded, text) AS CASE WHEN kind IN ('tool_call','tool_result') THEN kind WHEN excluded AND (lower(ltrim(text)) LIKE '<environment_context>%' OR lower(ltrim(text)) LIKE '# agents.md%' OR lower(text) LIKE '%<instructions>%') THEN 'context' WHEN excluded THEN 'harness_notice' ELSE 'conversation' END;
-CREATE OR REPLACE MACRO history_authorship(excluded, role, session_kind) AS CASE WHEN excluded THEN 'harness' WHEN role='assistant' OR (role='user' AND session_kind IN ('subagent','guardian')) THEN 'agent' WHEN role='user' THEN 'human' ELSE 'harness' END;
-CREATE OR REPLACE MACRO history_authorship_evidence(excluded, role) AS CASE WHEN excluded THEN 'native_marker' WHEN role='user' THEN 'adapter_inferred' ELSE 'protocol_role' END;
-CREATE OR REPLACE MACRO history_origin(excluded, role, session_kind) AS CASE WHEN excluded THEN 'harness_context' WHEN role='user' AND session_kind IN ('subagent','guardian') THEN 'delegation' WHEN role='user' THEN 'direct_input' WHEN role='assistant' THEN 'model_output' WHEN role='tool' THEN 'tool_payload' ELSE 'unknown' END;

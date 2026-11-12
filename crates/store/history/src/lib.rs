@@ -17,7 +17,8 @@ use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-pub const SCHEMA_VERSION: &str = "1";
+/// The table layout this build reads and writes. See `schema` for how it changes.
+pub const SCHEMA_VERSION: u32 = 2;
 mod archive_data;
 pub mod archives;
 mod batch;
@@ -150,7 +151,15 @@ impl Store {
             std::fs::create_dir_all(p)?;
         }
         let lock = DatabaseLock::acquire(&path, read_only, timeout)?;
-        Self::open_locked_options(&path, read_only, Some(lock), true, options)
+        match Self::open_locked_options(&path, read_only, Some(lock), true, options) {
+            // A reader can't upgrade the database it opened, so a writer does it first.
+            Err(error) if read_only && error.is::<schema::UpgradeNeeded>() => {
+                drop(Self::open_with_wait(&path, false, options, timeout)?);
+                let lock = DatabaseLock::acquire(&path, true, timeout)?;
+                Self::open_locked_options(&path, true, Some(lock), true, options)
+            }
+            opened => opened,
+        }
     }
     // Used by archive operations while their caller holds the stable destination lock.
     fn open_locked(
@@ -177,7 +186,7 @@ impl Store {
         };
         if initialize {
             if read_only {
-                store.require_schema()?;
+                store.require_current()?;
             } else {
                 store.initialize()?;
             }

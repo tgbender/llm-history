@@ -167,6 +167,14 @@ impl std::str::FromStr for Mode {
         }
     }
 }
+/// What a search with no hits covered, which tells "nothing said" from "not archived yet".
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Searched {
+    /// Messages the filters left to search.
+    pub messages: usize,
+    /// When the newest archived message in the selected profiles was written.
+    pub through: Option<String>,
+}
 #[derive(Debug, Clone)]
 pub struct SearchRequest {
     pub query: String,

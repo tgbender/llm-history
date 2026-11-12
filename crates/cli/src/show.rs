@@ -84,7 +84,12 @@ fn show_messages(ctx: &Ctx, args: &ShowArgs) -> Result<()> {
     let mut blocks: Vec<Vec<Message>> = Vec::new();
     for id in &requested {
         let mut window = history
-            .context(*id, args.before, args.after, &args.profile)
+            .context(
+                *id,
+                args.context.unwrap_or(args.before),
+                args.context.unwrap_or(args.after),
+                &args.profile,
+            )
             .with_context(|| format!("message {id}"))?;
         let mut first = None;
         let mut at = 0;

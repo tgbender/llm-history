@@ -165,7 +165,7 @@ fn scenario(executable: &Path) -> Result<Vec<Value>> {
                     &[
                         "--json",
                         "sql",
-                        "SELECT message_id,session_id,message_no,session_no,role,text FROM history_messages ORDER BY message_id",
+                        "SELECT message_id,session_id,event_id,session_key,role,text FROM history_messages ORDER BY event_id",
                         "--full",
                     ],
                     &ids,
@@ -210,7 +210,7 @@ fn scenario(executable: &Path) -> Result<Vec<Value>> {
                     &[
                         "--json",
                         "sql",
-                        "SELECT message_id,session_id,message_no,session_no,role,text FROM history_messages ORDER BY message_id",
+                        "SELECT message_id,session_id,event_id,session_key,role,text FROM history_messages ORDER BY event_id",
                         "--full",
                     ],
                     &ids,
