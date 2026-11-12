@@ -1,6 +1,118 @@
 # llm-history
 
-Captures, archives and searches local Codex, Claude Code, and Cursor history. This Rust implementation of `llm-history` keeps its own database, separate from the Python implementation (reference `a7aa830`). JSONL transcripts are archived byte for byte, so history survives after the agents delete their files.
+`llm-history` archives local Codex, Claude Code and Cursor history and searches it. It archives JSONL transcripts byte for byte, so the history survives after the agents delete their files. This Rust implementation keeps its own database, separate from the Python implementation's. Parity is measured against Python commit `a7aa830`.
+
+## Use
+
+Build the executable first with `mise run release`, as described under [Development](#development).
+
+### From the command line
+
+```sh
+llm-history init                      # default Codex and Claude profiles
+llm-history profile add work --harness codex --root ~/.codex-work
+llm-history update
+llm-history search 'stale repair' --profile work      # your messages with every word, newest first
+llm-history search --mode exact 'git push --force'   # the whole query as one literal string
+llm-history search --mode lexical --role all 'repair stale history'   # ranked, answers included
+llm-history show MESSAGE_ID MESSAGE_ID                # each with two messages either side
+llm-history show --session SESSION_ID                # your turns in order, then the last answer
+llm-history similar MESSAGE_ID --limit 10
+llm-history similar MESSAGE_ID --role user --other-sessions --per-session 1
+llm-history sessions --under ~/projects/demo
+llm-history usage --by-model
+llm-history sql 'select * from history_help'
+```
+
+The database defaults to `~/.local/share/llm-history-rs/history.duckdb`. Change it with `--db` or `LLM_HISTORY_RS_DB`. `--json` prints machine-readable output.
+
+#### Search
+
+By default, `search` covers the messages you typed and uses `--mode words`. Every word of the query must appear in the message as a case-insensitive string, in any order, and hits are newest first. Each word also matches inside longer words, so `orchestrat` finds `orchestrate` and `orchestration`. Search returns up to 8 hits and 8,000 characters of message text. Raise those limits with `--limit` and `--max-output-chars`.
+
+Other modes and roles:
+
+- `--mode exact` matches the whole query as one literal string.
+- `--mode lexical` ranks messages that contain any of the words.
+- `--mode semantic` and `--mode hybrid` use the local embedding model, or the server at `--endpoint`.
+- `--rerank` reorders hits with the local reranking model, or the server at `--rerank-endpoint`. It needs `--mode lexical`, `semantic` or `hybrid`.
+- `--role assistant` searches final answers, and `--role all` searches both roles. With `--role all`, a ranked mode shows the answer to a matching question.
+
+When a limit cuts off `words` or `exact` matches, JSON includes the total as `matched`. The length of the result array is the number shown.
+
+`--kind interactive|subagent|automation|guardian|unknown` limits `search` and `sessions` to one kind of session. Naming `subagent` or `guardian` includes those sessions even where they are otherwise hidden. Each guardian hit carries the review's `verdict`. Guardian reviews have no embeddings, so `--mode semantic` rejects them.
+
+Search checks the metadata of the source files first and imports changes when it finds any. When nothing changed, it only reads the database. Pass `--no-refresh --no-background` to search the archive as it is.
+
+#### Message and session IDs
+
+`search`, `show`, `similar` and `sessions` use short integer IDs that are local to the database. Pass the `id` from a search hit to `show` or `similar`. A search hit also prints its `session`, which `show --session` takes. JSON from `search` and `similar` gives each hit's ID, session, profile, project, role, timestamp and text. To trace a message to its source records, select `message_no`, `session_no` and the native metadata columns through SQL.
+
+#### Show
+
+`show` takes up to 10 message IDs and prints each with two messages before and after it. Change that with `--before` and `--after`. All the IDs share one budget of 12,000 characters, set by `--max-output-chars`. A short message leaves its share to the long ones, and each requested message gets up to two thirds of its block. Messages whose context overlaps print once, in one block. `--full` removes the budget. With one ID, JSON is a single context object. With several, the objects are in a `contexts` array.
+
+`show --session SESSION_ID` reads one session. It prints the user turns in conversation order, numbered, and then the session's last final answer. Three limits apply:
+
+- A turn over 1,000 characters keeps its first 700 and last 300, with the number of characters cut between them. The last answer has the same rule at 2,000 characters.
+- The turns share `--max-output-chars`, 12,000 by default. A session over that budget keeps its first three turns and as many of its latest turns as fit. One line states which turns it skipped and their IDs.
+- There is no `--full` for a session. Raise `--max-output-chars`, pass `--from ID` to start at a skipped turn, or open a single turn with `show ID --full`.
+
+`--recent N` prints the opening turn and the latest N turns whatever the session's size.
+
+`sessions` lists recent sessions and takes the same `--project`, `--cwd` and `--under` filters as `search`.
+
+#### Similar messages
+
+`similar` compares stored document embeddings. It searches the message's own profile unless you pass `--profile`. It uses the 768-dimensional Gemma 2 index by default, and `--dimensions 256` selects the separate 256-dimensional index. The command doesn't refresh sources or run inference, so a message without an embedding needs `semantic backfill` first.
+
+To find a complaint that recurs, pass `--role user` and `--other-sessions`, which excludes the session the message came from. Open each candidate with `show` before you count it as a separate incident.
+
+#### SQL
+
+`sql --limit` caps the rows displayed. Put a `LIMIT` in the SQL to cap the rows selected. `sql` interrupts DuckDB after 15 seconds by default, including with `--full`. Set `--timeout-seconds` for a different deadline.
+
+`--max-cell-bytes` bounds each header and text cell at 2,000 bytes by default. `--max-output-bytes` bounds the complete JSON result at 16,000 bytes by default. A shortened header has the same name in `columns` and in the row keys, and shortened headers that would collide get distinct suffixes. JSON reports `truncated`, `truncation_reasons` and `truncated_headers`. `sql --full` returns complete headers and values.
+
+SQL connections include `llm_history_blake3(BLOB)`, which returns a 32-byte digest, and `llm_history_xxh64(BLOB)`, which returns a seed-zero `UBIGINT` fingerprint. XXH64 values stay unsigned through storage and SQL, and JSON emits them as exact integer tokens. A client without native 64-bit JSON integers has to parse them losslessly. Use `encode(text)` to hash UTF-8 text and `lower(hex(digest))` to display a BLAKE3 digest.
+
+#### Profiles
+
+Each profile is an independent store, and native IDs are scoped to their profile. Codex profiles read `sessions/` and `archived_sessions/`, including `.jsonl.zst` files. Claude profiles read `projects/`.
+
+Cursor is opt-in. Register its data root, normally `~/.cursor`:
+
+```sh
+llm-history profile add cursor --harness cursor --root ~/.cursor
+llm-history update --source cursor
+llm-history search --source cursor 'a previous decision'
+```
+
+Cursor profiles read local agent JSONL transcripts and the CLI chat databases under `chats/`. When both describe the same session, the CLI database supplies the selected conversation and the tool results. A failed snapshot leaves the previous archive intact. The importer reads editor chats that have local JSONL. It does not read Cursor's desktop `state.vscdb` or cloud history.
+
+### As a library
+
+Library callers use the `History` handle from the `llm-history-app` crate. The handle takes an explicit database path and holds no connection between operations. It covers profile management, import and replay, typed queries, search, raw export and maintenance. The CLI in `crates/cli` does its database work through the same handle.
+
+- [The application contract](docs/application-api.md) describes the handle. [`fixtures/contracts/scenario.json`](fixtures/contracts/scenario.json) is the public synthetic acceptance scenario.
+- [The architecture assessment](docs/architecture.md) records the current crate layout, changes under consideration, the rules the architecture checks enforce and when to reassess the boundaries.
+- [The harness history reference](docs/harness-history/README.md) records the formats each tool saves to disk, their lifecycle behavior and pinned upstream sources for Codex, Claude Code, OpenCode, Pi and Hugging Face Tau.
+- [`llm-history-ingest`](crates/ingest/README.md) reads each harness's native records, with one module per harness. Its shared JSON and presence helpers are internal to the crate. It decodes Codex and Claude records and their checkpoints for both live import and archive replay.
+- [`llm-history-types`](crates/types/README.md) holds the shared fact, identity and metadata types. Callers import them from that crate directly.
+- `llm_history_app::api` holds the application request and result types.
+- `llm_history_store::archives` is the one API for archive files. Database workflows go through `History`.
+- [The storage crates](crates/store/README.md) are an engine crate that owns DuckDB and its native build, a history crate for the shared tables, and a harnesses crate for harness-specific tables.
+
+The architecture checks reject cross-crate forwarding exports and wildcard public exports.
+
+`mise run test` runs the application and CLI contract tests. To compare the CLI before and after a change, keep a copy of the earlier executable and run:
+
+```sh
+LLM_HISTORY_BASELINE=/path/to/preserved/llm-history mise exec -- \
+  cargo test -p llm-history-cli --test application_contract --locked -- --nocapture
+```
+
+Both executables run on isolated synthetic stores. The comparison covers structured and piped output, errors, profile scope, append and replay, usage, search and raw export.
 
 ## Development
 
@@ -14,148 +126,37 @@ mise run architecture # focused pytest checks for architectural boundaries
 mise run release      # optimized executable (use for timing)
 ```
 
-Install the pinned development tools with `mise install --locked`. The pre-push
-hook runs formatting checks; `mise run check` also runs Clippy, architecture
-checks and the workspace tests. `mise run hooks:check` runs the hook locally.
-The docs formatter covers maintained Markdown and selected config files.
-Native fixtures, generated catalogs and vendor sources stay outside its scope.
+Install the pinned development tools with `mise install --locked`. The pre-push hook checks formatting only. `mise run check` also runs Clippy, the architecture checks and the workspace tests. `mise run hooks:check` runs the hook without pushing. The docs formatter covers the maintained Markdown and a few config files. It skips native fixtures, generated catalogs and vendored sources.
 
-The toolchain is pinned in `rust-toolchain.toml`. Cargo enforces a three-day publish age for dependencies; `mise run lock` refreshes `Cargo.lock` and checks it against OSV. Use the release executable to measure end-to-end performance.
+`rust-toolchain.toml` pins the toolchain. Cargo only resolves dependency versions published at least three days ago. `mise run lock` refreshes `Cargo.lock` and checks it against OSV. Measure end-to-end performance with the release executable.
 
-On macOS and Linux, `mise run release` produces `target/release/llm-history`.
-Run that file directly or install it on your PATH. If you prefer a shorter
-interactive command, add `alias llmh=llm-history` to your shell configuration.
+On macOS and Linux, `mise run release` produces `target/release/llm-history`. Run that file directly or install it on your PATH. For a shorter interactive command, add `alias llmh=llm-history` to your shell configuration. On macOS, the Apple Command Line Tools are enough for ordinary builds.
 
-On native x64 Windows, install Rust with `rustup`, then run `mise install --locked`,
-`mise run setup:windows`, and `mise run release`. Setup prompts for the
-Microsoft license and installs the kit selected by `portablemsvc.lock` in
-PortableMSVC's per-user location. Builds, Clippy and tests activate that kit
-for the command only. The optimized executable is `target\release\llm-history.exe`.
-Use the native Windows build of mise for this path. On macOS, use the Apple
-Command Line Tools for ordinary builds.
+On native x64 Windows, use the native Windows build of mise. Install Rust with `rustup`, then run `mise install --locked`, `mise run setup:windows` and `mise run release`. Setup prompts for the Microsoft license and installs the kit selected by `portablemsvc.lock` in PortableMSVC's per-user location. Builds, Clippy and tests activate that kit for the duration of the command. The optimized executable is `target\release\llm-history.exe`.
 
-To update the Windows kit pin, first install and review the replacement kit
-with PortableMSVC. Pass its generated lockfile to
-`mise exec -- python scripts/export_portablemsvc_lock.py PATH_TO_INSTALLED_LOCK`.
-This keeps the Microsoft package pins and strips local paths before writing
-the repository lockfile. Review the diff and verify a Windows build.
+To update the Windows kit pin, first install and review the replacement kit with PortableMSVC. Pass its generated lockfile to `mise exec -- python scripts/export_portablemsvc_lock.py PATH_TO_INSTALLED_LOCK`. The script keeps the Microsoft package pins and strips local paths before it writes the repository lockfile. Review the diff and verify a Windows build.
 
-For a one-off build, set `CARGO_TARGET_DIR` to a temporary directory and copy
-the executable out of its `release/` directory before removing it. For regular
-development, `mise exec -- cargo clean --profile dev` reclaims debug and test
-build output while keeping the release build. Inference runtime and model
-downloads are separate, optional steps.
+For a one-off build, set `CARGO_TARGET_DIR` to a temporary directory and copy the executable out of its `release/` directory before you remove it. For regular development, `mise exec -- cargo clean --profile dev` deletes debug and test build output and keeps the release build. The inference runtime and the models are separate, optional downloads.
 
-The storage design calls for bounded sets of work in DuckDB so SQL executions
-scale with batches. See the [DuckDB batching plan](docs/duckdb-batching-plan.md)
-for the current findings, fixes and verification criteria.
+Storage code passes work to DuckDB in bounded batches, so the number of SQL statements grows with the number of batches and not with the number of records. The [DuckDB batching plan](docs/duckdb-batching-plan.md) lists the current findings, fixes and verification criteria.
 
-Local inference (optional) uses pinned llama.cpp binaries and models from `artifacts.json`:
+Local inference is optional. It uses the pinned llama.cpp binaries and models listed in `artifacts.json`:
 
 ```sh
 mise run setup-native
 llm-history models fetch --download-model
 ```
 
-Models live in the shared Hugging Face cache; the llama.cpp runtime lives in `~/.cache/llm-history-rs` (`--cache`, `LLM_HISTORY_RS_CACHE`). `scripts/evaluate_models.py` runs the retrieval evaluation over `fixtures/retrieval.json`.
-
-## Use
-
-Library callers use the `llm-history-app` crate's `History` handle. The handle takes
-an explicit database path, holds no connection between operations, and exposes
-profile management, import/replay, typed queries, search, raw export and maintenance.
-The CLI lives in `crates/cli`; its database operations use this application interface.
-See [the application contract](docs/application-api.md) and
-[public synthetic acceptance fixtures](fixtures/contracts/scenario.json).
-The [architecture assessment](docs/architecture.md) records the current shape,
-candidate evolution, executable guardrails and when to reassess the boundaries.
-The [harness history reference](docs/harness-history/README.md) records native
-durable formats, lifecycle behavior and pinned upstream sources for Codex,
-Claude Code, OpenCode, Pi and Hugging Face Tau.
-Native envelope readers now live in [the ingestion adapter crate](crates/ingest/README.md),
-`llm-history-ingest`, with a module per harness and internal shared JSON/presence
-primitives. Codex/Claude decoding and checkpoints now live there and serve live
-import and archive replay. Shared fact, identity and metadata values live in
-[`llm-history-types`](crates/types/README.md); callers import those types directly.
-Application requests/results live in explicit `llm_history_app::api` modules.
-Cross-crate forwarding exports and wildcard public exports are rejected by the
-architecture checks. Archive-file operations have one API in
-`llm_history_store::archives`; database workflows go through `History`.
-The [storage crate family](crates/store/README.md) separates engine/native-build
-ownership, shared history persistence and harness-specific table persistence.
-
-Run the application/CLI contract tests with `mise run test`. For a temporary
-before/after CLI comparison, preserve an earlier executable and run:
-
-```sh
-LLM_HISTORY_BASELINE=/path/to/preserved/llm-history mise exec -- \
-  cargo test -p llm-history-cli --test application_contract --locked -- --nocapture
-```
-
-Both sides run on isolated synthetic stores; the comparison covers structured and
-piped output, errors, profile scope, append/replay, usage, search and raw export.
-
-```sh
-llm-history init                      # default Codex and Claude profiles
-llm-history profile add work --harness codex --root ~/.codex-work
-llm-history update
-llm-history search 'repair stale history' --profile work
-llm-history search --mode exact 'git push --force'   # literal string, newest first
-llm-history show MESSAGE_ID --before 2 --after 2
-llm-history similar MESSAGE_ID --limit 10
-llm-history similar MESSAGE_ID --role user --other-sessions --per-session 1
-llm-history sessions
-llm-history usage --by-model
-llm-history sql 'select * from history_help'
-```
-
-The database defaults to `~/.local/share/llm-history-rs/history.duckdb` (`--db`, `LLM_HISTORY_RS_DB`). `--json` gives machine-readable output. Search is lexical by default; `--mode semantic|hybrid` and `--rerank` use the local or `--endpoint` models. `--mode exact` needs no model. When limits omit matches, JSON includes the total `matched` count; the result array gives the count shown. `--kind interactive|subagent|automation|guardian|unknown` limits `search` and `sessions` to one session kind, including hidden subagent and guardian sessions; guardian search is lexical only, and each hit carries the review's `verdict`. Search checks source metadata and refreshes when it detects a change. Unchanged sources stay on the read path. Use `--no-refresh --no-background` to only read the archive.
-
-`search`, `show`, `similar`, and `sessions` use short integer IDs scoped to the
-database. Use the `id` from a search hit with `show` or `similar`. Their JSON
-keeps message text and scope; select `message_no`, `session_no`, and native
-metadata explicitly through SQL when tracing source records.
-
-`similar` compares stored document embeddings and searches the message's
-profile by default. Pass `--profile` to select other profiles explicitly.
-For recurring complaints, filter `--role user`, exclude the anchor's thread
-with `--other-sessions`, and open candidates with `show` before counting incidents.
-It uses the 768-dimensional Gemma 2 index by default (`--dimensions 256` for
-the separate 256-dimensional index). The command doesn't refresh sources or
-run inference; an unindexed message needs `semantic backfill` first.
-
-`sql --limit` caps displayed rows. Put a `LIMIT` in the SQL to constrain the selected rows. DuckDB execution is interrupted after 15 seconds by default; set `sql --timeout-seconds` for a different deadline. The deadline also applies with `--full`.
-
-Profiles are independent stores. Codex profiles read `sessions/` and `archived_sessions/` (including `.jsonl.zst`); Claude profiles read `projects/`. Native IDs are scoped to their profile.
-
-To opt in to Cursor, register its data root (normally `~/.cursor`):
-
-```sh
-llm-history profile add cursor --harness cursor --root ~/.cursor
-llm-history update --source cursor
-llm-history search --source cursor 'a previous decision'
-```
-
-Cursor profiles read local agent JSONL transcripts and CLI chat databases
-under `chats/`. When both describe the same session, the CLI database supplies
-the selected conversation and tool results. A failed snapshot leaves the
-previous archive intact. Cursor's desktop `state.vscdb` and cloud history are
-outside this importer; editor chats with local JSONL are supported.
-
-SQL output bounds headers and text cells with `--max-cell-bytes`, and the complete JSON result with `--max-output-bytes`. Shortened headers use the same names in `columns` and row keys, with distinct suffixes when prefixes collide. JSON reports `truncated`, `truncation_reasons` and `truncated_headers`; `sql --full` returns complete headers and values.
-
-SQL connections include `llm_history_blake3(BLOB)` for a 32-byte digest and
-`llm_history_xxh64(BLOB)` for a seed-zero `UBIGINT` fingerprint. XXH64
-stays unsigned through storage and SQL; JSON emits an exact integer token.
-Clients without native 64-bit JSON integers should parse it losslessly. Use
-`encode(text)` to hash UTF-8 text and `lower(hex(digest))` to display BLAKE3.
+Models go in the shared Hugging Face cache. The llama.cpp runtime goes in `~/.cache/llm-history-rs`, which you can change with `--cache` or `LLM_HISTORY_RS_CACHE`. `scripts/evaluate_models.py` runs the retrieval evaluation over `fixtures/retrieval.json`.
 
 ## Storage
 
-- Native observations and captures retain source positions. Native documents retain the original JSON layout, with selected text and tool strings shared through BLAKE3 content objects. Replay and raw export reconstruct the exact captured bytes. Cursor SQLite exports contain retained rows as JSONL, rather than a copy of the SQLite database. Sources that disappear are flagged `missing` and stay searchable.
-- Each parsed fact is one row of `events`. Python-compatible `canonical_*`, `provider_event_details` and `history_*` surfaces are views. Turn contexts, token counts, epochs, relations, conversation groups and projects are their own tables.
-- `update` skips files whose size and mtime are unchanged and captures changed files together in batched transactions. `reprocess` rebuilds the projection from the archive with stable IDs. New databases use schema 1. Before release, convert earlier development databases offline or use a new `--db`.
-- `db compact` rewrites the file to reclaim space. `raw verify` checks the archive on request; nothing re-verifies it during normal work.
-- Short message and session numbers are assigned once, separately from archive keys. A restored snapshot carries the numbers recorded in that snapshot. Earlier schema 1 archives need an offline backfill on a copy before use with this version.
+- Native observations and captures keep the position of every record in its source. Native documents keep the original JSON layout. The archive stores selected text and tool strings once, as content objects keyed by BLAKE3 hash. Replay and raw export reconstruct the exact captured bytes. A Cursor SQLite export contains the retained rows as JSONL, not a copy of the SQLite database. When a source disappears, the archive flags it `missing` and keeps it searchable.
+- Each parsed fact is one row of `events`. The Python-compatible `canonical_*`, `provider_event_details` and `history_*` names are views. Turn contexts, token counts, epochs, relations, conversation groups and projects have their own tables.
+- `update` skips files whose size and mtime are unchanged and captures the changed files together in batched transactions. `reprocess` rebuilds the parsed facts from the archive and keeps IDs stable. New databases use schema 1. Before release, convert earlier development databases offline or use a new `--db`.
+- Two versions describe a database, and both are constants in this repository. `SCHEMA_VERSION` in `crates/store/history/src/lib.rs` is the table layout, which a database records once. `PARSER_VERSION` in `crates/ingest/src/lib.rs` is the decoder revision, which a database records for every source. `status` prints them as `schema_version` and `parser_version`.
+- A new decoder revision needs no manual step. The next `update` or refreshing `search` rebuilds the parsed facts of every source from the archive, and `status` counts the sources still waiting as `pending_parser_upgrades`. Message IDs, message text and embeddings stay as they were. On a 3.9 GiB archive of 786,000 records, the rebuild from revision 6 to 7 took 41 seconds. This version refuses a database whose `schema_version` differs from its own.
+- `db compact` rewrites the file to reclaim space. `raw verify` checks the archive when you run it. Nothing re-verifies the archive during normal work.
+- The store assigns each short message and session number once, separately from archive keys. A restored snapshot carries the numbers recorded in that snapshot. An earlier schema 1 archive needs an offline backfill on a copy before this version can use it.
 
-Parity with Python is tracked in [docs/parity.md](docs/parity.md).
+[docs/parity.md](docs/parity.md) tracks parity with Python.
