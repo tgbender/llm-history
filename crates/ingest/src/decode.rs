@@ -94,9 +94,10 @@ impl ParserState {
         {
             fact.kind = "compaction".into();
         }
-        // Claude marks injected records with isMeta; the text markers are Codex injections.
+        // Claude marks most injected records with isMeta; the rest, and every Codex
+        // injection, are recognized by the tags the harness wraps them in.
         fact.excluded = match harness {
-            Harness::Claude => crate::claude_code::decode::excluded(v),
+            Harness::Claude => crate::claude_code::decode::excluded(v, &fact),
             Harness::Codex => crate::codex::decode::excluded(&fact),
             Harness::Cursor => fact.excluded,
         };

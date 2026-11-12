@@ -78,3 +78,39 @@ fn exclusion_rules_follow_harness() {
     let codex = &fixture_record(Harness::Codex, "s", text)[1];
     assert!(p.parse(Harness::Codex, codex)[0].excluded);
 }
+
+#[test]
+fn harness_wrappers_in_the_user_role_are_not_user_turns() {
+    let mut p = ParserState::default();
+    let mut excluded = |harness, text: &str| {
+        let records = fixture_record(harness, "s", text);
+        p.parse(harness, records.last().unwrap())[0].excluded
+    };
+    for text in [
+        "<turn_aborted>\nThe user interrupted the previous turn on purpose.\n</turn_aborted>",
+        "<external_codex_apps_open_page>{\"page_id\":null}</external_codex_apps_open_page>",
+        "<external_codex_apps_selected_page_part_1_of_1>snapshot</external_codex_apps_selected_page_part_1_of_1>",
+        "<realtime_delegation><source>transcript_tail_flush</source></realtime_delegation>",
+    ] {
+        assert!(excluded(Harness::Codex, text), "{text}");
+    }
+    // A reply to an agent's question carries what the user answered.
+    let reply = "<send_user_message_question_reply>[{\"answer\":\"yes\"}]</send_user_message_question_reply>";
+    assert!(!excluded(Harness::Codex, reply));
+    for text in [
+        "<local-command-stdout>Login successful</local-command-stdout>",
+        "<task-notification><status>completed</status></task-notification>",
+        "<system-reminder>one</system-reminder>\n<system-reminder>two</system-reminder>",
+    ] {
+        assert!(excluded(Harness::Claude, text), "{text}");
+    }
+    // A reminder in front of what the user typed leaves a user turn, as does a slash command.
+    assert!(!excluded(
+        Harness::Claude,
+        "<system-reminder>context</system-reminder>\nwhat do you make of this?"
+    ));
+    assert!(!excluded(
+        Harness::Claude,
+        "<command-name>/teach</command-name><command-args>teach me UI</command-args>"
+    ));
+}

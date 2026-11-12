@@ -240,6 +240,9 @@ pub(crate) fn excluded(fact: &Fact) -> bool {
         || lower.contains("<instructions>")
         || lower.starts_with("<codex_internal_context")
         || lower.starts_with("<subagent_notification>")
+        || lower.starts_with("<turn_aborted>")
+        || lower.starts_with("<external_codex_apps_")
+        || lower.starts_with("<realtime_delegation>")
 }
 
 pub(crate) fn record_metadata(v: &Value) -> canonical::Record {

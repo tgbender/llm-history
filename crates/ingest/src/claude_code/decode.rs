@@ -212,8 +212,37 @@ fn token_values(usage: &Usage) -> TokenValues {
     }
 }
 
-pub(crate) fn excluded(v: &Value) -> bool {
+/// Tags Claude Code puts around text it writes into a user record.
+const HARNESS_TAGS: [&str; 3] = [
+    "system-reminder",
+    "local-command-stdout",
+    "task-notification",
+];
+
+pub(crate) fn excluded(v: &Value, fact: &Fact) -> bool {
     v["isMeta"].as_bool().unwrap_or(false)
+        || (fact.role == "user" && only_harness_blocks(&fact.text))
+}
+
+/// True when the text is nothing but harness-written blocks. A reminder followed by
+/// what the user typed stays a user message.
+fn only_harness_blocks(text: &str) -> bool {
+    let mut rest = text.trim();
+    let mut blocks = 0;
+    'blocks: while !rest.is_empty() {
+        for tag in HARNESS_TAGS {
+            let (open, close) = (format!("<{tag}>"), format!("</{tag}>"));
+            if let Some(body) = rest.strip_prefix(&open)
+                && let Some(end) = body.find(&close)
+            {
+                rest = body[end + close.len()..].trim_start();
+                blocks += 1;
+                continue 'blocks;
+            }
+        }
+        return false;
+    }
+    blocks > 0
 }
 
 pub(crate) fn record_metadata(v: &Value) -> canonical::Record {
