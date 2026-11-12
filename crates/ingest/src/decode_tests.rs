@@ -114,3 +114,25 @@ fn harness_wrappers_in_the_user_role_are_not_user_turns() {
         "<command-name>/teach</command-name><command-args>teach me UI</command-args>"
     ));
 }
+
+#[test]
+fn a_reply_to_the_agents_questions_reads_as_questions_and_answers() {
+    let mut p = ParserState::default();
+    let replies = "<send_user_message_question_reply> [\
+        {\"questionItemId\":\"x\",\"question\":\"Which account?\",\"answer\":\"Gmail\"},\
+        {\"answer\":\"Wool\",\"question\":\"What kind of socks?\"}] </send_user_message_question_reply>";
+    let records = fixture_record(Harness::Codex, "s", replies);
+    let fact = &p.parse(Harness::Codex, records.last().unwrap())[0];
+    assert_eq!(
+        fact.text,
+        "Q: Which account?\nA: Gmail\n\nQ: What kind of socks?\nA: Wool"
+    );
+    assert!(!fact.excluded);
+    // Anything that isn't that list stays as written.
+    let odd = "<send_user_message_question_reply>not json</send_user_message_question_reply>";
+    let records = fixture_record(Harness::Codex, "s", odd);
+    assert_eq!(
+        p.parse(Harness::Codex, records.last().unwrap())[0].text,
+        odd
+    );
+}

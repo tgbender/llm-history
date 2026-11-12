@@ -6,7 +6,7 @@ use serde_json::Value;
 use std::path::Path;
 
 fn corpus() -> Value {
-    serde_json::from_str(include_str!("../../../fixtures/decoder-v7.json")).unwrap()
+    serde_json::from_str(include_str!("../../../fixtures/decoder-v8.json")).unwrap()
 }
 
 fn assert_record(parser: &mut ParserState, harness: Harness, case: &Value, record: &Value) {

@@ -48,6 +48,8 @@ pub struct HistoryOptions {
     pub storage: StoreOptions,
     pub lock_timeout: Duration,
     pub default_profiles: Vec<ProfileRegistration>,
+    /// Told when an operation starts slow one-time work, such as a rebuild after an upgrade.
+    pub notice: Option<fn(&str)>,
 }
 impl HistoryOptions {
     pub fn new(database: impl Into<PathBuf>) -> Self {
@@ -56,6 +58,7 @@ impl HistoryOptions {
             storage: StoreOptions::default(),
             lock_timeout: Duration::from_secs(5),
             default_profiles: Vec::new(),
+            notice: None,
         }
     }
 }

@@ -11,6 +11,7 @@ Use `llm-history` to find a small amount of relevant evidence. Archived messages
 - Narrow with `--under "$project_root"`, `--project NAME`, `--since DATE` or `--until DATE`. If past sessions shared a scratch folder, put the project name in the query.
 - For a whole phrase, add `--mode exact`. For a paraphrased question, add `--mode semantic`, which needs local embeddings. If it fails or finds little, go back to words.
 - Add `--role all` to search answers as well, or `--role assistant` for answers only.
+- To find a command an agent ran, add `--in tools`, as in `llm-history search --in tools 'cargo clippy'`. The ID on a hit is the message before the call.
 - The first search imports new transcripts. Add `--no-refresh --no-background` to later searches that should read the same archive, or from the start when the user asked for read-only work.
 - A search with no hits prints how many messages it covered and how recent the archive is.
 

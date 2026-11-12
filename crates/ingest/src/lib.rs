@@ -26,7 +26,7 @@ mod state;
 mod decode_tests;
 
 /// Existing checkpoint/projection revision, retained across this ownership move.
-pub const PARSER_VERSION: u32 = 7;
+pub const PARSER_VERSION: u32 = 8;
 
 pub use decode::content_text;
 pub use json::{FieldError, JsonRecord};

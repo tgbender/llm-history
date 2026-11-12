@@ -71,6 +71,14 @@ pub(crate) fn update(history: &History, names: &[String], repair: bool) -> Resul
                 .map(|s| s.id)
                 .collect::<Vec<_>>();
             if !stale.is_empty() {
+                if let Some(notice) = history.options.notice {
+                    notice(&format!(
+                        "Rebuilding parsed history for profile {} ({} sources) after an \
+                         llm-history upgrade. This happens once and can take a minute.",
+                        profile.name,
+                        stale.len()
+                    ));
+                }
                 receipt.errors.extend(
                     reprocess(
                         history,

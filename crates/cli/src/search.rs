@@ -1,7 +1,6 @@
 //! Searching history and finding similar messages.
 use super::*;
-use llm_history_types::query::Mode;
-use llm_history_types::query::SearchRequest;
+use llm_history_types::query::{Mode, SearchRequest, Searched, ToolSearchResponse};
 
 pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
     llm_history_search::check_rerank(args.mode, args.rerank && !args.no_rerank)?;
@@ -19,7 +18,10 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
             args.force_refresh,
         )?
     };
-    let mut embedding = if matches!(args.mode, Mode::Semantic | Mode::Hybrid) {
+    let tools = args.scope == "tools";
+    let mut embedding = if tools {
+        None
+    } else if matches!(args.mode, Mode::Semantic | Mode::Hybrid) {
         Some(engine(&ctx.cache, &args.inference, false)?)
     } else if args.mode == Mode::Auto {
         engine(&ctx.cache, &args.inference, false).ok()
@@ -31,10 +33,11 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
     } else {
         None
     };
-    let scope = match args.role.as_str() {
-        "user" => "user messages",
-        "assistant" => "assistant answers",
-        _ => "messages",
+    let covered = match (tools, args.role.as_str()) {
+        (true, _) => ("tool call", "tool calls"),
+        (false, "user") => ("user message", "user messages"),
+        (false, "assistant") => ("assistant answer", "assistant answers"),
+        _ => ("message", "messages"),
     };
     let s = ctx.history();
     let request = SearchRequest {
@@ -45,7 +48,7 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
             source: args.source.clone(),
             since,
             until,
-            role: (args.role != "all").then_some(args.role),
+            role: (!tools && args.role != "all").then_some(args.role),
             threads: args.thread,
             cwd: args.cwd.map(expand_home),
             under: args.under.map(expand_home),
@@ -63,6 +66,19 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
         rerank_depth: args.rerank_depth as usize,
         explain: args.explain,
     };
+    if tools {
+        print_tool_hits(ctx, &s.search_tools(&request)?, covered)?;
+        if !args.no_background {
+            maybe_background(
+                &ctx.db,
+                &ctx.cache,
+                &args.profile,
+                args.source.as_deref(),
+                &args.inference,
+            );
+        }
+        return Ok(());
+    }
     let mut response = s.search(
         &request,
         embedding.as_mut().map(Engine::embedding),
@@ -98,16 +114,8 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
                 println!("  verdict: {verdict}");
             }
         }
-        // Says what was covered, so an empty result isn't mistaken for a stale archive.
         if let Some(searched) = &response.searched {
-            let through = searched
-                .through
-                .as_deref()
-                .map_or(String::new(), |at| format!("; archive through {at}"));
-            println!(
-                "No matches in {} {scope}{through}.",
-                thousands(searched.messages)
-            );
+            println!("{}", no_matches(searched, covered));
         }
         if let Some(matched) = matched.filter(|&matched| matched > shown) {
             println!(
@@ -126,6 +134,69 @@ pub(crate) fn search(ctx: &Ctx, args: Search) -> Result<()> {
             &args.profile,
             args.source.as_deref(),
             &args.inference,
+        );
+    }
+    Ok(())
+}
+
+/// Says what an empty search covered, so it isn't mistaken for a stale archive.
+fn no_matches(searched: &Searched, (one, many): (&str, &str)) -> String {
+    let through = searched
+        .through
+        .as_deref()
+        .map_or(String::new(), |at| format!("; archive through {at}"));
+    format!(
+        "No matches in {} {}{through}.",
+        thousands(searched.count),
+        if searched.count == 1 { one } else { many }
+    )
+}
+
+/// Tool calls print like message hits. The ID is the message before the call, for `show`.
+fn print_tool_hits(ctx: &Ctx, response: &ToolSearchResponse, covered: (&str, &str)) -> Result<()> {
+    let shown = response.results.len();
+    if ctx.json {
+        let rows = response
+            .results
+            .iter()
+            .map(crate::output::ToolRow::from)
+            .collect::<Vec<_>>();
+        let mut result = json!({ "results": rows });
+        if response.matched > shown {
+            result["matched"] = json!(response.matched);
+        }
+        if let Some(searched) = &response.searched {
+            result["searched"] = serde_json::to_value(searched)?;
+        }
+        return emit(&result, true);
+    }
+    for (at, call) in response.results.iter().enumerate() {
+        let project = if call.project.is_empty() {
+            llm_history_core::project_name(&call.cwd)
+        } else {
+            call.project.clone()
+        };
+        let id = call
+            .message_no
+            .map_or(String::new(), |id| format!("  id={id}"));
+        println!(
+            "{}  {}  {}  {project}  {}{id}  session={}\n  {}",
+            at + 1,
+            call.ts,
+            call.profile,
+            call.tool,
+            call.session_no,
+            call.text
+        );
+    }
+    if let Some(searched) = &response.searched {
+        println!("{}", no_matches(searched, covered));
+    }
+    if response.matched > shown {
+        println!(
+            "{shown} of {} matches shown; \
+             raise --limit, --per-session or --max-output-chars for more",
+            response.matched
         );
     }
     Ok(())

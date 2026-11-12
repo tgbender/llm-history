@@ -84,6 +84,11 @@ pub(crate) fn decode(state: &mut ParserState, v: &Value, kind: &str, fact: &mut 
                     }
                     fact.kind = "message".into();
                     fact.text = content_text(&p["content"]);
+                    if fact.role == "user"
+                        && let Some(reply) = question_reply(&fact.text)
+                    {
+                        fact.text = reply;
+                    }
                 }
                 "function_call" | "custom_tool_call" | "mcp_tool_call" | "local_shell_call" => {
                     fact.kind = "tool_call".into();
@@ -231,6 +236,32 @@ fn token_values(v: &Value) -> TokenValues {
         reasoning: n("reasoning_output_tokens"),
         total: n("total_tokens"),
     }
+}
+
+/// The user's answers to questions the agent asked through a form, as readable text.
+/// Codex records them as a JSON list inside a tag.
+fn question_reply(text: &str) -> Option<String> {
+    let list = text
+        .trim()
+        .strip_prefix("<send_user_message_question_reply>")?
+        .strip_suffix("</send_user_message_question_reply>")?;
+    let replies: Vec<Value> = serde_json::from_str(list.trim()).ok()?;
+    let part = |reply: &Value, key: &str| match &reply[key] {
+        Value::String(text) => text.clone(),
+        Value::Null => String::new(),
+        other => other.to_string(),
+    };
+    let lines: Vec<String> = replies
+        .iter()
+        .map(|reply| {
+            format!(
+                "Q: {}\nA: {}",
+                part(reply, "question"),
+                part(reply, "answer")
+            )
+        })
+        .collect();
+    (!lines.is_empty()).then(|| lines.join("\n\n"))
 }
 
 pub(crate) fn excluded(fact: &Fact) -> bool {

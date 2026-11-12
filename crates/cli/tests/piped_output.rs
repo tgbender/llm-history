@@ -400,7 +400,7 @@ fn a_plain_search_finds_every_word_in_what_the_user_typed() -> Result<()> {
     // The same words as one literal string appear nowhere, and the result says what it covered.
     let exact = json(&["--mode", "exact", "CACHE lun"])?;
     assert!(exact["results"].as_array().unwrap().is_empty(), "{exact}");
-    assert_eq!(exact["searched"]["messages"], 9);
+    assert_eq!(exact["searched"]["count"], 9);
     assert_eq!(exact["searched"]["through"], "2026-10-01T00:00:02Z");
     assert!(plain.get("searched").is_none());
     let nothing = stdout(dir.path(), &["search", "--mode", "exact", "CACHE lun"])?;
@@ -423,7 +423,8 @@ fn a_plain_search_finds_every_word_in_what_the_user_typed() -> Result<()> {
     Ok(())
 }
 
-/// A Codex session: name, working directory, and messages as (role, text).
+/// A Codex session: name, working directory, and messages as (role, text). The role
+/// "tool" records a tool call with the text as its arguments.
 type Session<'a> = (&'a str, &'a str, Vec<(&'a str, String)>);
 
 /// Writes and imports the sessions, with messages one second apart.
@@ -436,15 +437,17 @@ fn write_sessions(home: &std::path::Path, sessions: &[Session]) -> Result<()> {
             "payload":{"id":name,"cwd":cwd}}),
         ];
         for (at, (role, text)) in messages.iter().enumerate() {
-            let (kind, phase) = if *role == "user" {
-                ("input_text", None)
-            } else {
-                ("output_text", Some("final_answer"))
+            let payload = match *role {
+                "user" => json!({"type":"message","role":"user",
+                    "content":[{"type":"input_text","text":text}]}),
+                "tool" => json!({"type":"function_call","name":"exec",
+                    "call_id":format!("call-{at}"),"arguments":text}),
+                _ => json!({"type":"message","role":role,"phase":"final_answer",
+                    "content":[{"type":"output_text","text":text}]}),
             };
             records.push(json!({"type":"response_item",
                 "timestamp":format!("2026-10-01T00:{:02}:{:02}Z", at / 60, at % 60),
-                "payload":{"type":"message","role":role,"phase":phase,
-                "content":[{"type":kind,"text":text}]}}));
+                "payload":payload}));
         }
         fs::write(
             root.join(format!("{name}.jsonl")),
@@ -608,6 +611,83 @@ fn sql_ids_are_the_ids_the_commands_take() -> Result<()> {
     ))?[0];
     assert_eq!(pair["question_message_id"], hit["id"]);
     assert!(pair["answer_message_id"].as_i64().unwrap() < 1_000_000);
+    Ok(())
+}
+
+#[test]
+fn tool_calls_are_searched_only_on_request() -> Result<()> {
+    let dir = tempfile::tempdir()?;
+    write_sessions(
+        dir.path(),
+        &[(
+            "a",
+            "/projects/a",
+            vec![
+                ("user", "please lint the workspace".to_owned()),
+                (
+                    "tool",
+                    r#"{"cmd":"cargo clippy --workspace --all-targets"}"#.to_owned(),
+                ),
+                ("assistant", "lint is clean".to_owned()),
+            ],
+        )],
+    )?;
+    let json = |flags: &[&str]| -> Result<serde_json::Value> {
+        let out = stdout(dir.path(), &[&["--json", "search"], flags].concat())?;
+        Ok(serde_json::from_str(&out)?)
+    };
+    // A message search doesn't see the command.
+    let messages = stdout(dir.path(), &["search", "cargo clippy"])?;
+    assert!(
+        messages.starts_with("No matches in 1 user message;"),
+        "{messages}"
+    );
+    // Asked for, the call is found by its arguments, with the message before it to open.
+    let asked = json(&["lint the workspace"])?["results"][0]["id"].clone();
+    let calls = json(&["--in", "tools", "CLIPPY cargo"])?;
+    let call = &calls["results"][0];
+    assert_eq!(calls["results"].as_array().unwrap().len(), 1, "{calls}");
+    assert_eq!(call["tool"], "exec");
+    assert!(
+        call["text"]
+            .as_str()
+            .unwrap()
+            .contains("cargo clippy --workspace")
+    );
+    assert_eq!(call["id"], asked);
+    let plain = stdout(dir.path(), &["search", "--in", "tools", "clippy"])?;
+    assert!(
+        plain.contains("  exec  id=") && plain.contains("cargo clippy"),
+        "{plain}"
+    );
+    let opened = stdout(dir.path(), &["show", &asked.to_string()])?;
+    assert!(opened.contains("please lint the workspace"), "{opened}");
+    // The words as one phrase appear nowhere, and filters apply as they do to messages.
+    let phrase = json(&["--in", "tools", "--mode", "exact", "clippy cargo"])?;
+    assert!(phrase["results"].as_array().unwrap().is_empty(), "{phrase}");
+    assert_eq!(phrase["searched"]["count"], 1);
+    let elsewhere = stdout(
+        dir.path(),
+        &[
+            "search",
+            "--in",
+            "tools",
+            "clippy",
+            "--under",
+            "/projects/b",
+        ],
+    )?;
+    assert!(
+        elsewhere.starts_with("No matches in 0 tool calls;"),
+        "{elsewhere}"
+    );
+    // Arguments are text to match, not prose to rank.
+    let ranked = run(
+        dir.path(),
+        &["search", "--in", "tools", "--mode", "lexical", "clippy"],
+    )?;
+    assert!(!ranked.status.success(), "{ranked:?}");
+    assert!(String::from_utf8(ranked.stderr)?.contains("literal text"));
     Ok(())
 }
 

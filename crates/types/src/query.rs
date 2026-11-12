@@ -167,11 +167,33 @@ impl std::str::FromStr for Mode {
         }
     }
 }
+/// A tool call found by searching its arguments.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ToolHit {
+    /// The nearest message before the call, which `show` opens.
+    pub message_no: Option<i64>,
+    pub session_no: i64,
+    pub profile: String,
+    pub project: String,
+    pub cwd: String,
+    pub ts: String,
+    pub tool: String,
+    /// The call's arguments, or the passage of them that matched.
+    pub text: String,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ToolSearchResponse {
+    pub results: Vec<ToolHit>,
+    /// Every match before the result caps.
+    pub matched: usize,
+    /// Set when nothing matched.
+    pub searched: Option<Searched>,
+}
 /// What a search with no hits covered, which tells "nothing said" from "not archived yet".
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Searched {
-    /// Messages the filters left to search.
-    pub messages: usize,
+    /// Messages or tool calls the filters left to search.
+    pub count: usize,
     /// When the newest archived message in the selected profiles was written.
     pub through: Option<String>,
 }

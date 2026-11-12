@@ -4,7 +4,7 @@ use llm_history_core::bounded;
 use llm_history_models::{Embedder, Reranker};
 use llm_history_store::Store;
 use llm_history_types::query::Message;
-use llm_history_types::query::{Filter, Mode, SearchRequest, Searched};
+use llm_history_types::query::{Filter, Mode, SearchRequest, Searched, ToolSearchResponse};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::borrow::Borrow;
@@ -276,7 +276,7 @@ pub fn search<S: Borrow<Store>>(
         .is_empty()
         .then(|| -> Result<Searched> {
             Ok(Searched {
-                messages: store.retrieval_counts(&request.filter, None)?.0,
+                count: store.retrieval_counts(&request.filter, None)?.0,
                 through: store.newest_message_at(&request.filter)?,
             })
         })
@@ -392,6 +392,65 @@ pub fn search<S: Borrow<Store>>(
         matched,
         searched,
         details,
+    })
+}
+/// Search the arguments of tool calls, such as shell commands, for literal text. Hits are
+/// newest first and name the message before the call, which `show` opens.
+pub fn search_tools<S: Borrow<Store>>(
+    open: impl Fn() -> Result<S>,
+    request: &SearchRequest,
+) -> Result<ToolSearchResponse> {
+    if request.query.trim().is_empty() || request.limit == 0 || request.per_session == 0 {
+        bail!("query, positive limit and per-session count are required");
+    }
+    if !request.mode.is_literal() {
+        bail!("tool calls are searched as literal text; use --mode words or --mode exact");
+    }
+    let (needles, focus) = if request.mode == Mode::Exact {
+        (vec![request.query.clone()], vec![phrase(&request.query)])
+    } else {
+        (words(&request.query), words(&request.query))
+    };
+    let connection = open()?;
+    let store = connection.borrow();
+    store.validate_project_filter(&request.filter)?;
+    let (calls, matched) = store.tool_call_candidates(
+        &needles,
+        &request.filter,
+        request.per_session,
+        request.limit,
+    )?;
+    let searched = calls
+        .is_empty()
+        .then(|| -> Result<Searched> {
+            Ok(Searched {
+                count: store.tool_call_candidates(&[], &request.filter, 1, 1)?.1,
+                through: store.newest_message_at(&request.filter)?,
+            })
+        })
+        .transpose()?;
+    drop(connection);
+    let mut remaining = request.max_output_chars;
+    let mut results = Vec::new();
+    for mut call in calls {
+        let budget = if request.full {
+            usize::MAX
+        } else {
+            remaining.min(request.snippet_chars)
+        };
+        if budget == 0 {
+            break;
+        }
+        call.text = passage_around(&call.text, &focus, budget, request.redact, request.full);
+        if !request.full {
+            remaining = remaining.saturating_sub(call.text.chars().count());
+        }
+        results.push(call);
+    }
+    Ok(ToolSearchResponse {
+        results,
+        matched,
+        searched,
     })
 }
 /// What the lexical index holds for a message, so snippets show why it matched.

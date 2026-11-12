@@ -68,9 +68,10 @@ checks protect pure decoder modules and prevent storage/model/CLI dependencies.
 Persistence receives captured metadata values through the
 [storage harness owner](../store/README.md); table writers perform no acquisition.
 
-`fixtures/decoder-v7.json` freezes complete facts and serialized checkpoints from
+`fixtures/decoder-v8.json` freezes complete facts and serialized checkpoints from
 the implementation before extraction: ten synthetic cases and 52 records. Revision 7
-changed which user-role records count as harness-written and left these facts as they were. Tests
+changed which user-role records count as harness-written, and revision 8 made Codex
+question replies readable text. Neither changed these facts. Tests
 compare uninterrupted decoding and restoration of existing checkpoints. Resume
 expectations also preserve the original metadata-revision behavior caused by
 fields omitted from checkpoint serialization. Existing public app/CLI contracts

@@ -99,6 +99,33 @@ pub(crate) struct ContextRow {
     pub target: Option<bool>,
 }
 
+/// A tool call found by search. `id` is the message before the call, which `show` opens.
+#[derive(Serialize)]
+pub(crate) struct ToolRow<'a> {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    id: Option<i64>,
+    session_id: i64,
+    profile: &'a str,
+    project: &'a str,
+    ts: &'a str,
+    tool: &'a str,
+    text: &'a str,
+}
+
+impl<'a> From<&'a llm_history_types::query::ToolHit> for ToolRow<'a> {
+    fn from(call: &'a llm_history_types::query::ToolHit) -> Self {
+        Self {
+            id: call.message_no,
+            session_id: call.session_no,
+            profile: &call.profile,
+            project: &call.project,
+            ts: &call.ts,
+            tool: &call.tool,
+            text: &call.text,
+        }
+    }
+}
+
 /// One row of a session read: a numbered user turn, or the last answer without a number.
 #[derive(Serialize)]
 pub(crate) struct TurnRow {

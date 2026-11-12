@@ -102,10 +102,25 @@ impl Store {
         q.sql.push(format!(
             "e.active AND e.kind='message' AND e.text<>'' AND {MESSAGE_RECORD}"
         ));
-        q.profiles(self, &f.profiles, f.source.as_deref())?;
         if let Some(role) = &f.role {
             q.add("e.role=?", role.clone());
         }
+        if llm_history_core::visibility::hides_agent_protocol(f) {
+            q.sql.push(
+                "NOT (history_authorship(e.excluded,e.role,\
+                 cs.session_kind)='agent' AND e.role='user') \
+                 AND NOT coalesce(e.agent_protocol,false)"
+                    .into(),
+            );
+        }
+        self.scope_conditions(&mut q, f)?;
+        Ok(q)
+    }
+
+    /// Profile, session, location and time conditions, shared by message and tool-call
+    /// queries. They name the record `e`, its session `s` and `cs`, and its profile `p`.
+    pub(crate) fn scope_conditions(&self, q: &mut Conditions, f: &Filter) -> Result<()> {
+        q.profiles(self, &f.profiles, f.source.as_deref())?;
         if !f.threads.is_empty() {
             q.add(
                 "list_contains(?::VARCHAR[],s.native_id)",
@@ -118,14 +133,6 @@ impl Store {
         if let Some(kind) = &f.kind {
             q.add("cs.session_kind=?", kind.clone());
         }
-        if llm_history_core::visibility::hides_agent_protocol(f) {
-            q.sql.push(
-                "NOT (history_authorship(e.excluded,e.role,\
-                 cs.session_kind)='agent' AND e.role='user') \
-                 AND NOT coalesce(e.agent_protocol,false)"
-                    .into(),
-            );
-        }
         q.location(f);
         for (bound, op) in [(&f.since, ">="), (&f.until, "<=")] {
             if let Some(bound) = bound {
@@ -136,7 +143,7 @@ impl Store {
                 );
             }
         }
-        Ok(q)
+        Ok(())
     }
 
     /// Bounded ID-ordered materialization for application readers.

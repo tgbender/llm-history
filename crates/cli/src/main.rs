@@ -66,6 +66,8 @@ fn history(db: &Path) -> History {
     let mut options = HistoryOptions::new(db);
     options.storage = store_options();
     options.lock_timeout = Duration::from_secs(5);
+    // On stderr, so a slow first command after an upgrade doesn't look hung.
+    options.notice = Some(|message| eprintln!("{message}"));
     options.default_profiles = [
         ("codex", Harness::Codex, "CODEX_HOME"),
         ("claude", Harness::Claude, "CLAUDE_CONFIG_DIR"),

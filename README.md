@@ -14,6 +14,7 @@ llm-history profile add work --harness codex --root ~/.codex-work
 llm-history update
 llm-history search 'stale repair' --profile work      # your messages with every word, newest first
 llm-history search --mode exact 'git push --force'   # the whole query as one literal string
+llm-history search --in tools 'git push --force'     # commands the agents ran
 llm-history search --mode lexical --role all 'repair stale history'   # ranked, answers included
 llm-history show MESSAGE_ID MESSAGE_ID                # each with two messages either side
 llm-history show --session SESSION_ID                # your turns in order, then the last answer
@@ -31,6 +32,8 @@ The database defaults to `~/.local/share/llm-history-rs/history.duckdb`. Change 
 #### Search
 
 By default, `search` covers the messages you typed and uses `--mode words`. Every word of the query must appear in the message as a case-insensitive string, in any order, and hits are newest first. Each word also matches inside longer words, so `orchestrat` finds `orchestrate` and `orchestration`. Search returns up to 8 hits and 8,000 characters of message text. Raise those limits with `--limit` and `--max-output-chars`.
+
+To find a command an agent ran, add `--in tools`. It searches the arguments of tool calls, such as shell commands, with `--mode words` or `--mode exact`. Each hit names the tool and gives the ID of the message before the call, which `show` opens.
 
 Other modes and roles:
 
@@ -120,6 +123,8 @@ Both executables run on isolated synthetic stores. The comparison covers structu
 
 ## Development
 
+A development build uses your real database unless you pass `--db` or set `LLM_HISTORY_RS_DB`, and it upgrades that database the first time it opens it. An older build then refuses the database. Before you try a development build, save a copy with `llm-history archive create`, or point the build at a scratch database.
+
 ```sh
 mise run build        # development executable
 mise run test         # architecture and workspace tests
@@ -160,7 +165,7 @@ Models go in the shared Hugging Face cache. The llama.cpp runtime goes in `~/.ca
 - `update` skips files whose size and mtime are unchanged and captures the changed files together in batched transactions. `reprocess` rebuilds the parsed facts from the archive and keeps IDs stable. New databases use schema 1. Before release, convert earlier development databases offline or use a new `--db`.
 - Two versions describe a database, and both are constants in this repository. `SCHEMA_VERSION` in `crates/store/history/src/lib.rs` is the table layout, which a database records once. `PARSER_VERSION` in `crates/ingest/src/lib.rs` is the decoder revision, which a database records for every source. `status` prints them as `schema_version` and `parser_version`.
 - A new build upgrades a database the first time it opens it, and no command is needed. It applies any table-layout steps the database is missing, in order, and replaces the views and macros with its own. Schema 2 changed no table. It marks the point where `message_id` and `session_id` in the views became the short numbers, so a 0.1.0 executable refuses a schema 2 database where it would otherwise misread those columns. A build also refuses a database with a newer schema than its own.
-- A new decoder revision needs no manual step either. The next `update` or refreshing `search` rebuilds the parsed facts of every source from the archive, and `status` counts the sources still waiting as `pending_parser_upgrades`. Message IDs, message text and embeddings stay as they were. On a 3.9 GiB archive of 786,000 records, the rebuild from revision 6 to 7 took 41 seconds.
+- A new decoder revision needs no manual step either. The next `update` or refreshing `search` rebuilds the parsed facts of every source from the archive, and `status` counts the sources still waiting as `pending_parser_upgrades`. Message IDs, message text and embeddings stay as they were. On a 3.9 GiB archive of 786,000 records, the rebuild from revision 6 to 7 took 41 seconds. The command that starts a rebuild prints one line on stderr first.
 - `db compact` rewrites the file to reclaim space. `raw verify` checks the archive when you run it. Nothing re-verifies the archive during normal work.
 - The store assigns each short message and session number once, separately from archive keys. A restored snapshot carries the numbers recorded in that snapshot. An earlier schema 1 archive needs an offline backfill on a copy before this version can use it.
 

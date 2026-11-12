@@ -1,6 +1,7 @@
 //! Candidate selection happens in DuckDB; message bodies are fetched after LIMIT.
 use super::*;
 use duckdb::{OptionalExt, types::Value as SqlValue};
+use llm_history_types::query::ToolHit;
 use std::collections::HashMap;
 
 impl Store {
@@ -66,6 +67,91 @@ impl Store {
             .query_row(&query, duckdb::params_from_iter(q.args), |r| {
                 Ok((r.get(0)?, r.get(1)?))
             })?)
+    }
+    /// Tool calls whose arguments contain every needle as a literal, case-insensitive
+    /// string, newest first and capped per session. Each carries the nearest message
+    /// before it. Also returns how many calls matched before the caps, or, with no
+    /// needles, how many the filter leaves in scope.
+    pub fn tool_call_candidates(
+        &self,
+        needles: &[String],
+        f: &Filter,
+        per_session: usize,
+        limit: usize,
+    ) -> Result<(Vec<ToolHit>, usize)> {
+        let mut q = queries::Conditions::new();
+        q.sql.push("f.active AND f.kind='tool_call'".into());
+        self.scope_conditions(&mut q, f)?;
+        let from = format!(
+            "events f \
+             JOIN events e ON e.source_id=f.source_id AND e.ordinal=f.ordinal \
+             AND e.fact_index=0 AND e.active AND e.session_seq IS NOT NULL \
+             JOIN canonical_sessions cs ON cs.id=e.session_id AND cs.active \
+             JOIN sessions s ON s.id=cs.id \
+             JOIN profiles p ON p.id=s.profile_id \
+             JOIN session_numbers sn ON sn.session_id=s.id \
+             WHERE {}",
+            q.clause()
+        );
+        if needles.is_empty() {
+            let count: usize = self.database.connection().query_row(
+                &format!("SELECT count(*) FROM {from}"),
+                duckdb::params_from_iter(q.args),
+                |r| r.get(0),
+            )?;
+            return Ok((Vec::new(), count));
+        }
+        let contains = " AND contains(lower(coalesce(f.arguments_json,f.text)),lower(?))"
+            .repeat(needles.len());
+        let sql = format!(
+            "WITH calls AS (
+                SELECT e.id,e.session_id,e.session_seq,e.timestamp_utc,f.tool,
+                    coalesce(f.arguments_json,f.text) arguments,p.name profile,
+                    coalesce(s.project,'') project,coalesce(s.cwd,'') cwd,sn.session_no,
+                    count(*) OVER () matched
+                FROM {from}{contains}
+                QUALIFY row_number() OVER (
+                    PARTITION BY e.session_id
+                    ORDER BY e.timestamp_utc DESC NULLS LAST,e.id DESC)<=?
+                ORDER BY e.timestamp_utc DESC NULLS LAST,e.id DESC
+                LIMIT ?
+             )
+             SELECT c.matched,c.session_no,c.profile,c.project,c.cwd,
+                coalesce(strftime(c.timestamp_utc,'%Y-%m-%dT%H:%M:%S.%gZ'),''),
+                coalesce(c.tool,''),c.arguments,
+                (SELECT arg_max(mn.message_no,m.session_seq)
+                 FROM events m JOIN message_numbers mn ON mn.event_id=m.id
+                 WHERE m.session_id=c.session_id AND m.session_seq<c.session_seq
+                 AND m.active AND m.kind='message')
+             FROM calls c
+             ORDER BY c.timestamp_utc DESC NULLS LAST,c.id DESC"
+        );
+        let mut args = q.args;
+        args.extend(needles.iter().cloned().map(SqlValue::Text));
+        args.push(SqlValue::BigInt(per_session as i64));
+        args.push(SqlValue::BigInt(limit as i64));
+        let rows = self
+            .database
+            .connection()
+            .prepare(&sql)?
+            .query_map(duckdb::params_from_iter(args), |r| {
+                Ok((
+                    r.get::<_, i64>(0)? as usize,
+                    ToolHit {
+                        session_no: r.get(1)?,
+                        profile: r.get(2)?,
+                        project: r.get(3)?,
+                        cwd: r.get(4)?,
+                        ts: r.get(5)?,
+                        tool: r.get(6)?,
+                        text: r.get(7)?,
+                        message_no: r.get(8)?,
+                    },
+                ))
+            })?
+            .collect::<duckdb::Result<Vec<_>>>()?;
+        let matched = rows.first().map_or(0, |(matched, _)| *matched);
+        Ok((rows.into_iter().map(|(_, hit)| hit).collect(), matched))
     }
     /// When the newest archived message in the filter's profiles was written.
     pub fn newest_message_at(&self, f: &Filter) -> Result<Option<String>> {

@@ -36,6 +36,14 @@ impl History {
             .collect())
     }
 
+    /// Search the arguments of tool calls for literal text. See `search` for refresh.
+    pub fn search_tools(
+        &self,
+        request: &SearchRequest,
+    ) -> Result<llm_history_types::query::ToolSearchResponse> {
+        llm_history_search::search_tools(|| self.open(true), request)
+    }
+
     /// Search retained history only. Refresh and background work are explicit operations.
     pub fn search(
         &self,

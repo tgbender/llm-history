@@ -110,7 +110,7 @@ pub(crate) enum Commands {
     },
     /// Search conversation messages using lexical, semantic, hybrid or exact matching.
     #[command(
-        before_help = "Examples:\n  llm-history search 'words you typed'\n  llm-history search --mode exact 'git push --force' --since 2026-10-01\n  llm-history search --mode semantic --role all 'why did the import slow down'"
+        before_help = "Examples:\n  llm-history search 'words you typed'\n  llm-history search --mode exact 'git push --force' --since 2026-10-01\n  llm-history search --in tools 'cargo clippy'"
     )]
     Search(Box<Search>),
     /// Find messages similar to an indexed message using its stored embeddings.
@@ -386,6 +386,10 @@ pub(crate) struct Search {
     /// How the query is matched.
     #[arg(long, default_value = "words", value_parser = search_modes())]
     pub(crate) mode: Mode,
+    /// What to search: messages, or the arguments of tool calls such as shell commands.
+    /// Tool calls take --mode words or exact and ignore --role.
+    #[arg(long = "in", default_value = "messages", value_parser = ["messages", "tools"])]
+    pub(crate) scope: String,
     /// Rerank candidates using the configured local Qwen model or endpoint; needs --mode lexical, semantic or hybrid.
     #[arg(hide_short_help = true, long)]
     pub(crate) rerank: bool,
