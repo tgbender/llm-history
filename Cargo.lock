@@ -1605,7 +1605,7 @@ checksum = "47d9d19d1d6efa0109d2f65ff4c85cddd50bd572e5a00127ab10987290bcefae"
 
 [[package]]
 name = "llm-history-app"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1623,7 +1623,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-cli"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1645,7 +1645,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-core"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "blake3",
@@ -1662,7 +1662,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-ingest"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1678,7 +1678,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-models"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "hex",
@@ -1696,7 +1696,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-search"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1713,7 +1713,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-store"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "blake3",
@@ -1738,7 +1738,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-store-engine"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "blake3",
@@ -1752,7 +1752,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-store-harnesses"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "duckdb",
@@ -1762,7 +1762,7 @@ dependencies = [
 
 [[package]]
 name = "llm-history-types"
-version = "0.2.0-dev"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "serde",
