@@ -35,7 +35,7 @@ fn candidate(
     source: &Path,
     destination: &Path,
     verified: Option<&ArchiveInfo>,
-) -> Result<(tempfile::NamedTempFile, ArchiveInfo)> {
+) -> Result<(tempfile::TempPath, ArchiveInfo)> {
     let temp = tempfile::Builder::new()
         .prefix(".history-publish-")
         .tempfile_in(destination.parent().context("destination needs a parent")?)?;
@@ -46,14 +46,16 @@ fn candidate(
         std::fs::set_permissions(temp.path(), std::fs::Permissions::from_mode(0o600))?;
     }
     temp.as_file().sync_all()?;
+    // Windows refuses DuckDB the file while this writable handle is open.
+    let temp = temp.into_temp_path();
     // This path is private and unpublished; the caller holds the destination lock.
     let verification = if let Some(verified) = verified {
-        if std::fs::metadata(temp.path())?.len() != verified.bytes {
+        if std::fs::metadata(&temp)?.len() != verified.bytes {
             bail!("archive changed during copy");
         }
         verified.clone()
     } else {
-        inspect(&Store::open_locked(temp.path(), true, None, false)?, false)?
+        inspect(&Store::open_locked(&temp, true, None, false)?, false)?
     };
     Ok((temp, verification))
 }
@@ -127,13 +129,18 @@ impl Store {
             json!({"database":path,"before_bytes":before,"after_bytes":after,"saved_bytes":before.saturating_sub(after)}),
         )
     }
-    pub fn snapshot(&self, to: &Path) -> Result<ArchiveInfo> {
+    /// Copies the checkpointed database file to `to`. The store is closed first because
+    /// Windows lets nothing else read a database DuckDB holds open for writing; the
+    /// writer lock stays held until the copy is published.
+    pub fn snapshot(self, to: &Path) -> Result<ArchiveInfo> {
         if self.read_only {
             bail!("archive creation requires the writer lock");
         }
         let to = database_path(to)?;
         self.database.connection().execute_batch("CHECKPOINT")?;
-        publish_copy(&self.path, &to)
+        let Store { database, path, .. } = self;
+        let _lock = database.close();
+        publish_copy(&path, &to)
     }
 }
 pub fn restore_archive(
@@ -159,6 +166,9 @@ pub fn restore_archive(
     let archived_previous = if destination.exists() {
         let current = Store::open_locked(&destination, false, None, false)?;
         current.database.connection().execute_batch("CHECKPOINT")?;
+        // Close DuckDB first: Windows lets nothing else read or replace a database it
+        // holds open for writing. `_lock` still excludes other llm-history processes.
+        drop(current);
         let before = fingerprint(&destination)?;
         let directory = destination.with_file_name(format!(
             "{}.archives",
@@ -170,7 +180,6 @@ pub fn restore_archive(
         if fingerprint(&destination)? != before {
             bail!("active database changed while archiving; restore aborted");
         }
-        drop(current); // Close DuckDB/WAL handles before Windows file replacement.
         Some(backup)
     } else {
         None

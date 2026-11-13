@@ -30,6 +30,7 @@ fn restore_requires_permission_backs_up_active_data_and_keeps_a_stable_lock() ->
     store.add_profile("personal", Harness::Codex, &root, None, None)?;
     crate::tests::fixtures::capture(&store, &[], false)?;
     let snapshot = store.snapshot(&archive)?;
+    let store = Store::open(&db, false)?;
     assert_eq!(verify_archive(&archive)?.bytes, snapshot.bytes);
     write_history(&root, "new")?;
     crate::tests::fixtures::capture(&store, &[], false)?;
@@ -87,7 +88,6 @@ fn corrupt_archive_leaves_active_database_and_absent_destination_untouched() -> 
     store.add_profile("personal", Harness::Codex, &root, None, None)?;
     crate::tests::fixtures::capture(&store, &[], false)?;
     store.snapshot(&archive)?;
-    drop(store);
     std::fs::write(&archive, b"not a DuckDB database")?;
     let before = std::fs::read(&db)?;
     assert!(restore_archive(&archive, &db, true).is_err());
