@@ -244,7 +244,7 @@ fn a_failed_source_keeps_its_dates_while_other_sources_in_the_batch_rebuild() ->
         "UPDATE native_documents SET raw_size=1 WHERE hash IN (\
          SELECT r.payload_hash FROM native_observations r \
          JOIN generations g ON g.id=r.generation_id \
-         JOIN sources s ON s.id=g.source_id WHERE s.source_key='sessions/bad.jsonl');\
+         JOIN sources s ON s.id=g.source_id WHERE ends_with(s.source_key,'bad.jsonl'));\
          UPDATE events SET text='stale' WHERE kind='message' AND session_id IN (\
          SELECT id FROM sessions WHERE native_id='good')",
     )?;

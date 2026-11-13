@@ -244,7 +244,7 @@ fn mixed_batch_preserves_sequences_and_identical_repair_keeps_raw_ids() -> Resul
     store.export_raw(
         checkpoints
             .iter()
-            .find(|s| s.key.ends_with("/b.jsonl"))
+            .find(|s| Path::new(&s.key).ends_with("b.jsonl"))
             .unwrap()
             .id,
         Some(1),
@@ -343,7 +343,9 @@ fn compaction_epochs_carry_across_flushes_and_seed_once_on_append() -> Result<()
     let actual = projected(&store)?;
     let epoch_order = |rows: &[(String, u64, i64, i64, i64)]| {
         rows.iter()
-            .map(|(key, ordinal, epoch, _, _)| (key.ends_with("/a.jsonl"), *ordinal, *epoch))
+            .map(|(key, ordinal, epoch, _, _)| {
+                (Path::new(key).ends_with("a.jsonl"), *ordinal, *epoch)
+            })
             .collect::<Vec<_>>()
     };
     assert_eq!(

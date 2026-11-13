@@ -50,7 +50,7 @@ fn compressed_sessions_are_captured() -> Result<()> {
     assert_eq!(receipt.imported, 1);
     assert_eq!(texts(&store)?, ["alpha", "bravo"]);
     let (key, uri, missing) = sources(&store)?.remove(0);
-    assert_eq!(key, Path::new("sessions/a.jsonl").to_string_lossy());
+    assert_eq!(key, Path::new("sessions").join("a.jsonl").to_string_lossy());
     assert!(uri.ends_with("a.jsonl.zst") && !missing);
     let id: i64 = store
         .database

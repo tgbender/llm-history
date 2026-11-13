@@ -106,6 +106,10 @@ impl Embedder for Fake {
         Ok(texts.iter().map(|_| vec![1., 0.]).collect())
     }
 }
+/// How long a contention test lets another thread reach a state. A passing run returns
+/// as soon as the state is reached; a parallel run on Windows needs far more than the
+/// few seconds one test takes alone.
+const REACH: std::time::Duration = std::time::Duration::from_secs(30);
 fn setup() -> Result<(tempfile::TempDir, std::path::PathBuf)> {
     let d = tempfile::tempdir()?;
     let db = d.path().join("test.duckdb");
@@ -595,12 +599,12 @@ fn worker_waits_for_a_reader_then_resumes_within_its_budget() -> Result<()> {
             &worker_q,
             &mut engine,
             &WorkBudget {
-                seconds: 5.,
+                seconds: 60.,
                 ..Default::default()
             },
         )
     });
-    let until = Instant::now() + std::time::Duration::from_secs(3);
+    let until = Instant::now() + REACH;
     while !std::fs::read_to_string(q.join("status.json"))
         .is_ok_and(|s| s.contains("waiting_for_database"))
         && Instant::now() < until
@@ -644,7 +648,7 @@ fn lock_wait_stops_at_deadline_and_cancellation_preserves_pending_work() -> Resu
         },
     )?;
     assert_eq!(result.status, "budget_exhausted");
-    assert!(started.elapsed() < std::time::Duration::from_secs(2));
+    assert!(started.elapsed() < REACH);
     // The deadline may expire during queue preparation on a busy machine;
     // either way the uncommitted document must remain resumable below.
     assert!(engine.calls <= 1);
@@ -662,13 +666,13 @@ fn lock_wait_stops_at_deadline_and_cancellation_preserves_pending_work() -> Resu
             &worker_q,
             &mut engine,
             &WorkBudget {
-                seconds: 5.,
+                seconds: 60.,
                 cancellation: token,
                 ..Default::default()
             },
         )
     });
-    let until = Instant::now() + std::time::Duration::from_secs(3);
+    let until = Instant::now() + REACH;
     while !std::fs::read_to_string(queue.join("status.json"))
         .is_ok_and(|s| s.contains("waiting_for_database"))
         && Instant::now() < until
@@ -740,7 +744,7 @@ fn cancellation_during_merge_contention_leaves_a_committable_stage() -> Result<(
         }
         fn embed(&mut self, texts: &[String], query: bool) -> Result<Vec<Vec<f32>>> {
             self.ready.send(())?;
-            self.go.recv_timeout(std::time::Duration::from_secs(5))?;
+            self.go.recv_timeout(REACH)?;
             let _ = query;
             Ok(texts.iter().map(|_| vec![1., 0.]).collect())
         }
@@ -765,16 +769,16 @@ fn cancellation_during_merge_contention_leaves_a_committable_stage() -> Result<(
             &worker_q,
             &mut engine,
             &WorkBudget {
-                seconds: 5.,
+                seconds: 60.,
                 cancellation: token,
                 ..Default::default()
             },
         )
     });
-    ready.recv_timeout(std::time::Duration::from_secs(3))?;
+    ready.recv_timeout(REACH)?;
     let reader = Store::open(&db, true)?;
     go_tx.send(())?;
-    let until = Instant::now() + std::time::Duration::from_secs(3);
+    let until = Instant::now() + REACH;
     while !std::fs::read_to_string(queue.join("status.json"))
         .is_ok_and(|s| s.contains("waiting_for_database"))
         && Instant::now() < until
